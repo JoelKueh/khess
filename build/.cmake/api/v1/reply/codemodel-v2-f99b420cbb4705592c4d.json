@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Release-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "khess",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "cblib::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cblib-Release-6b48e06c333db4fa62d2.json",
+					"name" : "cblib",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "cibyl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cibyl-Release-ba60bf8825eac2774ad3.json",
+					"name" : "cibyl",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "kcsrv::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-kcsrv-Release-0e7289ebc9aad8bdb274.json",
+					"name" : "kcsrv",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "khess::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-khess-Release-0a845e7fc7da18d55e55.json",
+					"name" : "khess",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build",
+		"source" : "/home/joel/src/repos/khess"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
