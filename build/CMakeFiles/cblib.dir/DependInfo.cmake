@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/joel/src/repos/khess/src/cblib/cblib.c" "CMakeFiles/cblib.dir/src/cblib/cblib.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/cblib.c.o.d"
   "/home/joel/src/repos/khess/src/cblib/tables/magical.c" "CMakeFiles/cblib.dir/src/cblib/tables/magical.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/tables/magical.c.o.d"
   "/home/joel/src/repos/khess/src/cblib/tables/normal.c" "CMakeFiles/cblib.dir/src/cblib/tables/normal.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/tables/normal.c.o.d"
   )

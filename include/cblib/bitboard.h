@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-#include "board_const.h"
+#include "board/board_const.h"
 
 typedef struct {
     uint64_t color[2];

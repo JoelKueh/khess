@@ -45,28 +45,28 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "cblib::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-cblib-Release-6b48e06c333db4fa62d2.json",
+					"jsonFile" : "target-cblib-Release-82283931effef3e01360.json",
 					"name" : "cblib",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "cibyl::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-cibyl-Release-ba60bf8825eac2774ad3.json",
+					"jsonFile" : "target-cibyl-Release-eea1f79a8eb2c9d1a21e.json",
 					"name" : "cibyl",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "kcsrv::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-kcsrv-Release-0e7289ebc9aad8bdb274.json",
+					"jsonFile" : "target-kcsrv-Release-47a649a72ca378f4ff45.json",
 					"name" : "kcsrv",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "khess::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-khess-Release-0a845e7fc7da18d55e55.json",
+					"jsonFile" : "target-khess-Release-685d4c749f9cc56b3c80.json",
 					"name" : "khess",
 					"projectIndex" : 0
 				}
@@ -76,7 +76,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build",
+		"build" : "/home/joel/src/repos/khess/build",
 		"source" : "/home/joel/src/repos/khess"
 	},
 	"version" : 

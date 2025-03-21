@@ -1,6 +1,6 @@
-/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/cblib.dir
-/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/cibyl.dir
-/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/kcsrv.dir
-/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/khess.dir
-/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/edit_cache.dir
-/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/rebuild_cache.dir
+/home/joel/src/repos/khess/build/CMakeFiles/cblib.dir
+/home/joel/src/repos/khess/build/CMakeFiles/cibyl.dir
+/home/joel/src/repos/khess/build/CMakeFiles/kcsrv.dir
+/home/joel/src/repos/khess/build/CMakeFiles/khess.dir
+/home/joel/src/repos/khess/build/CMakeFiles/edit_cache.dir
+/home/joel/src/repos/khess/build/CMakeFiles/rebuild_cache.dir

@@ -60,7 +60,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/joel/src/repos/khess
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/joel/mnt/LinuxExtern/src/repos/khess/build
+CMAKE_BINARY_DIR = /home/joel/src/repos/khess/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles /home/joel/mnt/LinuxExtern/src/repos/khess/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/src/repos/khess/build/CMakeFiles /home/joel/src/repos/khess/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/joel/src/repos/khess/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -167,6 +167,30 @@ khess: cmake_check_build_system
 khess/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/khess.dir/build.make CMakeFiles/khess.dir/build
 .PHONY : khess/fast
+
+src/cblib/cblib.o: src/cblib/cblib.c.o
+.PHONY : src/cblib/cblib.o
+
+# target to build an object file
+src/cblib/cblib.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cblib.c.o
+.PHONY : src/cblib/cblib.c.o
+
+src/cblib/cblib.i: src/cblib/cblib.c.i
+.PHONY : src/cblib/cblib.i
+
+# target to preprocess a source file
+src/cblib/cblib.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cblib.c.i
+.PHONY : src/cblib/cblib.c.i
+
+src/cblib/cblib.s: src/cblib/cblib.c.s
+.PHONY : src/cblib/cblib.s
+
+# target to generate assembly for a file
+src/cblib/cblib.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cblib.c.s
+.PHONY : src/cblib/cblib.c.s
 
 src/cblib/tables/magical.o: src/cblib/tables/magical.c.o
 .PHONY : src/cblib/tables/magical.o
@@ -300,6 +324,9 @@ help:
 	@echo "... cibyl"
 	@echo "... kcsrv"
 	@echo "... khess"
+	@echo "... src/cblib/cblib.o"
+	@echo "... src/cblib/cblib.i"
+	@echo "... src/cblib/cblib.s"
 	@echo "... src/cblib/tables/magical.o"
 	@echo "... src/cblib/tables/magical.i"
 	@echo "... src/cblib/tables/magical.s"

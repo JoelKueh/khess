@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 add_library(cblib
 	src/cblib/tables/magical.c
 	src/cblib/tables/normal.c
+	src/cblib/cblib.c
 )
 target_include_directories(cblib
 	PRIVATE

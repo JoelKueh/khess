@@ -4,10 +4,78 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <errno.h>
 
-#include "board_const.h"
+#include "board/board_const.h"
+#include "move.h"
+
+#define CB_STACK_INIT_SIZE 50
 
 typedef uint16_t cb_history_t;
+typedef struct {
+    cb_history_t hist;
+    cb_move_t move;
+} cb_hist_ele_t;
+typedef struct {
+    cb_hist_ele_t *data;
+    int count;
+    int size;
+} cb_hist_stack_t;
+
+/**
+ * Sets the size of *hist to hist->count + CB_STACK_INIT_SIZE elements.
+ */
+inline int cb_hist_stack_reserve(cb_hist_stack_t *hist)
+{
+    hist->data = (cb_hist_ele_t *)realloc(hist->data,
+            (hist->count + CB_STACK_INIT_SIZE) * sizeof(cb_hist_ele_t));
+    if (hist->data == NULL)
+        return ENOMEM;
+    hist->size += CB_STACK_INIT_SIZE;
+    return 0;
+}
+
+/**
+ * Initializes a history stack.
+ */
+inline int cb_hist_stack_init(cb_hist_stack_t *hist)
+{
+    if ((hist->data = (cb_hist_ele_t *)malloc(CB_STACK_INIT_SIZE * sizeof(cb_hist_ele_t))) == NULL)
+        return ENOMEM;
+    hist->count = 0;
+    hist->size = CB_STACK_INIT_SIZE;
+    return 0;
+}
+
+/**
+ * Frees a history stack.
+ */
+inline void cb_hist_stack_free(cb_hist_stack_t *hist)
+{
+    free(hist->data);
+}
+
+/**
+ * Pushes a history element to the stack.
+ */
+inline int cb_hist_stack_push(cb_hist_stack_t *hist, cb_hist_ele_t ele)
+{
+    if (hist->count == hist->size) {
+        if (cb_hist_stack_reserve(hist))
+            return ENOMEM;
+    }
+    hist->data[hist->count++] = ele;
+    return 0;
+}
+
+/**
+ * Returns the top elment of the history stack and removes it.
+ */
+inline cb_hist_ele_t cb_hist_stack_pop(cb_hist_stack_t *hist)
+{
+    return hist->data[--hist->count];
+}
 
 /**
  * Returns true if the player has the right to king side castle, false otherwise.

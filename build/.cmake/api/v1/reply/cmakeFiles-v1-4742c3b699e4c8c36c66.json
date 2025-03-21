@@ -6,7 +6,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/3.30.8/CMakeSystem.cmake"
+			"path" : "build/CMakeFiles/3.30.8/CMakeSystem.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -20,11 +20,11 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/3.30.8/CMakeCCompiler.cmake"
+			"path" : "build/CMakeFiles/3.30.8/CMakeCCompiler.cmake"
 		},
 		{
 			"isGenerated" : true,
-			"path" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/3.30.8/CMakeCXXCompiler.cmake"
+			"path" : "build/CMakeFiles/3.30.8/CMakeCXXCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -130,7 +130,7 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build",
+		"build" : "/home/joel/src/repos/khess/build",
 		"source" : "/home/joel/src/repos/khess"
 	},
 	"version" : 

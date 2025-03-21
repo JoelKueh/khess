@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-#include "board_const.h"
+#include "board/board_const.h"
 
 typedef struct {
     enum cb_m_pid data[64];

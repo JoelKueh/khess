@@ -38,16 +38,16 @@ const uint16_t CB_MV_FLAG_MASK = 0xF << 12;
 /**
  * Types to hold move information
  */
-typedef uint16_t move_t;
+typedef uint16_t cb_move_t;
 typedef struct {
-    move_t moves[CB_MAX_NUM_MOVES];
+    cb_move_t moves[CB_MAX_NUM_MOVES];
     uint8_t head;
 } cb_mvlst_t;
 
 /**
  * Returns the "to" square for the move as a 6-bit integer.
  */
-inline uint8_t cb_mv_get_to(move_t mv)
+inline uint8_t cb_mv_get_to(cb_move_t mv)
 {
     return mv & CB_MV_TO_MASK;
 }
@@ -55,7 +55,7 @@ inline uint8_t cb_mv_get_to(move_t mv)
 /**
  * Returns the from square for the move as a 6-bit integer.
  */
-inline uint8_t cb_mv_get_from(move_t mv)
+inline uint8_t cb_mv_get_from(cb_move_t mv)
 {
     return mv & CB_MV_FROM_MASK;
 }
@@ -63,7 +63,7 @@ inline uint8_t cb_mv_get_from(move_t mv)
 /**
  * Returns the flags for the move as a cb_move_flags.
  */
-inline uint8_t cb_mv_get_flags(move_t mv)
+inline uint8_t cb_mv_get_flags(cb_move_t mv)
 {
     return mv & CB_MV_FLAG_MASK;
 }
@@ -95,7 +95,7 @@ inline void cb_mvlst_clear(cb_mvlst_t *mvlst)
 /**
  * Pushes an element to the move list.
  */
-inline void cb_mvlst_push(cb_mvlst_t *mvlst, move_t move)
+inline void cb_mvlst_push(cb_mvlst_t *mvlst, cb_move_t move)
 {
     mvlst->moves[mvlst->head] = move;
 }
@@ -105,7 +105,7 @@ inline void cb_mvlst_push(cb_mvlst_t *mvlst, move_t move)
  * This function does not perform bounds checking.
  * User must guarantee that move list has elements in it.
  */
-inline move_t cb_mvlst_pop(cb_mvlst_t *mvlst)
+inline cb_move_t cb_mvlst_pop(cb_mvlst_t *mvlst)
 {
     return mvlst->moves[--mvlst->head];
 }
@@ -113,7 +113,7 @@ inline move_t cb_mvlst_pop(cb_mvlst_t *mvlst)
 /**
  * Returns the move at a specified index.
  */
-inline move_t cb_mvlst_at(cb_mvlst_t *mvlst, uint8_t idx)
+inline cb_move_t cb_mvlst_at(cb_mvlst_t *mvlst, uint8_t idx)
 {
     return mvlst->moves[idx];
 }

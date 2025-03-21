@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build"
+			"value" : "/home/joel/src/repos/khess/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -559,7 +559,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/pkgRedirects"
+			"value" : "/home/joel/src/repos/khess/build/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -1243,7 +1243,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/joel/mnt/LinuxExtern/src/repos/khess/build"
+			"value" : "/home/joel/src/repos/khess/build"
 		},
 		{
 			"name" : "khess_IS_TOP_LEVEL",
