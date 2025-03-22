@@ -11,7 +11,7 @@
 /**
  * Enum holding the different flags that a move can contain
  */
-enum cb_move_flags {
+typedef enum {
     CB_MV_QUIET                =  0 << 12,
     CB_MV_DOUBLE_PAWN_PUSH     =  1 << 12,
     CB_MV_KING_SIDE_CASTLE     =  2 << 12,
@@ -26,7 +26,7 @@ enum cb_move_flags {
     CB_MV_BISHOP_PROMO_CAPTURE = 13 << 12,
     CB_MV_ROOK_PROMO_CAPTURE   = 14 << 12,
     CB_MV_QUEEN_PROMO_CAPTURE  = 15 << 12
-};
+} cb_mv_flag_t;
 
 /**
  * Masks for different sections of the move.

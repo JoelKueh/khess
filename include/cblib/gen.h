@@ -14,7 +14,7 @@ typedef struct {
     uint64_t pins[9];
 } cb_state_tables_t;
 
-void gen_moves(cb_mvlst_t mvlst, cb_board
+void gen_moves(cb_mvlst_t mvlst, 
 
 #endif /* CB_GEN_H */
 

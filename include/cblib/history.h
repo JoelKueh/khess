@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "board/board_const.h"
+#include "board_const.h"
 #include "move.h"
 
 #define CB_STACK_INIT_SIZE 50
@@ -80,7 +80,7 @@ inline cb_hist_ele_t cb_hist_stack_pop(cb_hist_stack_t *hist)
 /**
  * Returns true if the player has the right to king side castle, false otherwise.
  */
-inline bool cb_hist_has_ksc(cb_history_t hist, enum cb_color color)
+inline bool cb_hist_has_ksc(cb_history_t hist, cb_color_t color)
 {
     return (hist & 0b1000 >> color * 2) != 0;
 }
@@ -88,7 +88,7 @@ inline bool cb_hist_has_ksc(cb_history_t hist, enum cb_color color)
 /**
  * Returns true if the player still has the right to queen side castle, false otherwise.
  */
-inline bool cb_hist_has_qsc(cb_history_t hist, enum cb_color color)
+inline bool cb_hist_has_qsc(cb_history_t hist, cb_color_t color)
 {
     return (hist & 0b100 >> color * 2) != 0;
 }
@@ -97,7 +97,7 @@ inline bool cb_hist_has_qsc(cb_history_t hist, enum cb_color color)
 /**
  * Removes the right to king side castle.
  */
-inline void cb_hist_remove_ksc(cb_history_t *hist, enum cb_color color)
+inline void cb_hist_remove_ksc(cb_history_t *hist, cb_color_t color)
 {
     *hist &= ~0b1000 >> (color * 2);
 }
@@ -105,7 +105,7 @@ inline void cb_hist_remove_ksc(cb_history_t *hist, enum cb_color color)
 /**
  * Removes the right to queen side castle.
  */
-inline void cb_hist_remove_qsc(cb_history_t *hist, enum cb_color color)
+inline void cb_hist_remove_qsc(cb_history_t *hist, cb_color_t color)
 {
     *hist &= ~0b100 >> (color * 2);
 }
@@ -113,7 +113,7 @@ inline void cb_hist_remove_qsc(cb_history_t *hist, enum cb_color color)
 /**
  * Removes all castling rights for a specified color.
  */
-inline void cb_hist_remove_castle(cb_history_t *hist, enum cb_color color)
+inline void cb_hist_remove_castle(cb_history_t *hist, cb_color_t color)
 {
     *hist &= ~0b1100 >> (color * 2);
 }
@@ -122,7 +122,7 @@ inline void cb_hist_remove_castle(cb_history_t *hist, enum cb_color color)
 /**
  * Adds king side castling right.
  */
-inline void cb_hist_add_ksc(cb_history_t *hist, enum cb_color color)
+inline void cb_hist_add_ksc(cb_history_t *hist, cb_color_t color)
 {
     *hist |= 0b1000 >> (color * 2);
 }
@@ -130,7 +130,7 @@ inline void cb_hist_add_ksc(cb_history_t *hist, enum cb_color color)
 /**
  * Adds queen side castling right.
  */
-inline void cb_hist_add_qsc(cb_history_t *hist, enum cb_color color)
+inline void cb_hist_add_qsc(cb_history_t *hist, cb_color_t color)
 {
     *hist |= 0b100 >> (color * 2);
 }
@@ -138,7 +138,7 @@ inline void cb_hist_add_qsc(cb_history_t *hist, enum cb_color color)
 /**
  * Removes all castling rights for specified color.
  */
-inline void cb_hist_add_castle(cb_history_t *hist, enum cb_color color)
+inline void cb_hist_add_castle(cb_history_t *hist, cb_color_t color)
 {
     *hist |= 0b1100 >> (color * 2);
 }
@@ -172,7 +172,7 @@ inline void cb_hist_decay_enp(cb_history_t *hist)
 /**
  * Sets up this move state to hold a captured piece.
  */
-inline void cb_hist_set_captured_piece(cb_history_t *hist, enum cb_bb_pid pid)
+inline void cb_hist_set_captured_piece(cb_history_t *hist, cb_ptype_t pid)
 {
     *hist = (*hist & ~HIST_ENP_COL) | (HIST_ENP_COL << 5);
     *hist &= ~HIST_ENP_AVAILABLE;

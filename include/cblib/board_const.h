@@ -6,12 +6,12 @@
 
 #define ENEMY_COLOR(c) (!c)
 
-enum cb_color {
-    C_WHITE = 1,
-    C_BLACK = 0
-};
+typedef enum {
+    CB_WHITE = 1,
+    CB_BLACK = 0
+} cb_color_t;
 
-enum cb_m_pid {
+typedef enum  {
     M_PID_EMPTY = 0b0000,
 
     M_PID_WHITE_PAWN   = 0b0001,
@@ -27,9 +27,9 @@ enum cb_m_pid {
     M_PID_BLACK_ROOK   = 0b1100,
     M_PID_BLACK_QUEEN  = 0b1101,
     M_PID_BLACK_KING   = 0b1110
-};
+} cb_pid_t;
 
-enum cb_bb_pid {
+typedef enum {
     BB_PID_PAWN   = 0,
     BB_PID_KNIGHT = 1,
     BB_PID_BISHOP = 2,
@@ -37,7 +37,7 @@ enum cb_bb_pid {
     BB_PID_QUEEN  = 4,
     BB_PID_KING   = 5,
     BB_PID_EMPTY  = 6
-};
+} cb_ptype_t;
 
 const uint16_t HIST_INIT_BOARD_STATE = 0b0;
 const uint16_t HIST_ENP_COL          = 0b11100000;
@@ -94,5 +94,30 @@ const uint64_t BB_BLACK_KING_SIDE_CASTLE_OCCUPANCY  = 0x0000000000000060;
 const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_OCCUPANCY = 0x000000000000000E;
 const uint64_t BB_BLACK_KING_SIDE_CASTLE_CHECK      = 0x0000000000000070;
 const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_CHECK     = 0x000000000000001C;
+
+inline uint8_t peek_rbit(uint64_t bb)
+{
+#if __has_builtin (__builtin_ctzl)
+    return __builtin_ctzl(bb);
+#else
+#   error __builtin_ctzl not supported!
+#endif
+}
+
+inline uint8_t pop_rbit(uint64_t *bb)
+{
+    uint8_t idx = peek_rbit(*bb);
+    *bb ^= UINT64_C(1) << idx;
+    return idx;
+}
+
+inline uint8_t popcnt(uint64_t bb)
+{
+#if __has_builtin (__builtin_popcountl)
+    return __builtin_popcountl(bb);
+#else
+#   error __builtin_popcountl not supported!
+#endif
+}
 
 #endif /* CB_BOARD_CONST */

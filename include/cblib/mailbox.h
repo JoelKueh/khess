@@ -4,18 +4,18 @@
 
 #include <stdint.h>
 
-#include "board/board_const.h"
+#include "board_const.h"
 
 typedef struct {
-    enum cb_m_pid data[64];
+    uint8_t data[64]; /* This is an array of cb_ptype_t but it is stored as a uint8_t. */
 } cb_mailbox_t;
 
-inline uint8_t cb_m_at_sq(cb_mailbox_t *mailbox, uint8_t sq)
+inline cb_ptype_t cb_m_at_sq(cb_mailbox_t *mailbox, uint8_t sq)
 {
     return mailbox->data[sq];
 }
 
-inline uint8_t cb_m_at(cb_mailbox_t *mailbox, uint8_t row, uint8_t col)
+inline cb_ptype_t cb_m_at(cb_mailbox_t *mailbox, uint8_t row, uint8_t col)
 {
     return cb_m_at_sq(mailbox, row * 8 + col);
 }

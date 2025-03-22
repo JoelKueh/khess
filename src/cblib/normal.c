@@ -1,8 +1,8 @@
 
 #include <string.h>
 
-#include "tables/tables.h"
-#include "board/bitboard.h"
+#include "tables.h"
+#include "bitboard.h"
 
 uint64_t pawn_atks[2][64];
 uint64_t knight_atks[64];
@@ -125,7 +125,7 @@ void cb_init_normal_tables()
     gen_to_from_table();
 }
 
-uint64_t cb_read_pawn_atk_msk(uint8_t sq, enum cb_color color)
+uint64_t cb_read_pawn_atk_msk(uint8_t sq, cb_color_t color)
 {
     return pawn_atks[sq][color];
 }
