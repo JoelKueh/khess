@@ -1,10 +1,12 @@
 file(REMOVE_RECURSE
   "CMakeFiles/cblib.dir/src/cblib/cblib.c.o"
   "CMakeFiles/cblib.dir/src/cblib/cblib.c.o.d"
-  "CMakeFiles/cblib.dir/src/cblib/tables/magical.c.o"
-  "CMakeFiles/cblib.dir/src/cblib/tables/magical.c.o.d"
-  "CMakeFiles/cblib.dir/src/cblib/tables/normal.c.o"
-  "CMakeFiles/cblib.dir/src/cblib/tables/normal.c.o.d"
+  "CMakeFiles/cblib.dir/src/cblib/gen.c.o"
+  "CMakeFiles/cblib.dir/src/cblib/gen.c.o.d"
+  "CMakeFiles/cblib.dir/src/cblib/magical.c.o"
+  "CMakeFiles/cblib.dir/src/cblib/magical.c.o.d"
+  "CMakeFiles/cblib.dir/src/cblib/normal.c.o"
+  "CMakeFiles/cblib.dir/src/cblib/normal.c.o.d"
   "libcblib.a"
   "libcblib.pdb"
 )

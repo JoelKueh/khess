@@ -130,6 +130,19 @@ cblib/fast:
 .PHONY : cblib/fast
 
 #=============================================================================
+# Target rules for targets named debug
+
+# Build rule for target.
+debug: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 debug
+.PHONY : debug
+
+# fast build rule for target.
+debug/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/build
+.PHONY : debug/fast
+
+#=============================================================================
 # Target rules for targets named cibyl
 
 # Build rule for target.
@@ -192,53 +205,77 @@ src/cblib/cblib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cblib.c.s
 .PHONY : src/cblib/cblib.c.s
 
-src/cblib/tables/magical.o: src/cblib/tables/magical.c.o
-.PHONY : src/cblib/tables/magical.o
+src/cblib/gen.o: src/cblib/gen.c.o
+.PHONY : src/cblib/gen.o
 
 # target to build an object file
-src/cblib/tables/magical.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/tables/magical.c.o
-.PHONY : src/cblib/tables/magical.c.o
+src/cblib/gen.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/gen.c.o
+.PHONY : src/cblib/gen.c.o
 
-src/cblib/tables/magical.i: src/cblib/tables/magical.c.i
-.PHONY : src/cblib/tables/magical.i
+src/cblib/gen.i: src/cblib/gen.c.i
+.PHONY : src/cblib/gen.i
 
 # target to preprocess a source file
-src/cblib/tables/magical.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/tables/magical.c.i
-.PHONY : src/cblib/tables/magical.c.i
+src/cblib/gen.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/gen.c.i
+.PHONY : src/cblib/gen.c.i
 
-src/cblib/tables/magical.s: src/cblib/tables/magical.c.s
-.PHONY : src/cblib/tables/magical.s
+src/cblib/gen.s: src/cblib/gen.c.s
+.PHONY : src/cblib/gen.s
 
 # target to generate assembly for a file
-src/cblib/tables/magical.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/tables/magical.c.s
-.PHONY : src/cblib/tables/magical.c.s
+src/cblib/gen.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/gen.c.s
+.PHONY : src/cblib/gen.c.s
 
-src/cblib/tables/normal.o: src/cblib/tables/normal.c.o
-.PHONY : src/cblib/tables/normal.o
+src/cblib/magical.o: src/cblib/magical.c.o
+.PHONY : src/cblib/magical.o
 
 # target to build an object file
-src/cblib/tables/normal.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/tables/normal.c.o
-.PHONY : src/cblib/tables/normal.c.o
+src/cblib/magical.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/magical.c.o
+.PHONY : src/cblib/magical.c.o
 
-src/cblib/tables/normal.i: src/cblib/tables/normal.c.i
-.PHONY : src/cblib/tables/normal.i
+src/cblib/magical.i: src/cblib/magical.c.i
+.PHONY : src/cblib/magical.i
 
 # target to preprocess a source file
-src/cblib/tables/normal.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/tables/normal.c.i
-.PHONY : src/cblib/tables/normal.c.i
+src/cblib/magical.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/magical.c.i
+.PHONY : src/cblib/magical.c.i
 
-src/cblib/tables/normal.s: src/cblib/tables/normal.c.s
-.PHONY : src/cblib/tables/normal.s
+src/cblib/magical.s: src/cblib/magical.c.s
+.PHONY : src/cblib/magical.s
 
 # target to generate assembly for a file
-src/cblib/tables/normal.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/tables/normal.c.s
-.PHONY : src/cblib/tables/normal.c.s
+src/cblib/magical.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/magical.c.s
+.PHONY : src/cblib/magical.c.s
+
+src/cblib/normal.o: src/cblib/normal.c.o
+.PHONY : src/cblib/normal.o
+
+# target to build an object file
+src/cblib/normal.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/normal.c.o
+.PHONY : src/cblib/normal.c.o
+
+src/cblib/normal.i: src/cblib/normal.c.i
+.PHONY : src/cblib/normal.i
+
+# target to preprocess a source file
+src/cblib/normal.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/normal.c.i
+.PHONY : src/cblib/normal.c.i
+
+src/cblib/normal.s: src/cblib/normal.c.s
+.PHONY : src/cblib/normal.s
+
+# target to generate assembly for a file
+src/cblib/normal.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/normal.c.s
+.PHONY : src/cblib/normal.c.s
 
 src/cibyl/cibyl.o: src/cibyl/cibyl.c.o
 .PHONY : src/cibyl/cibyl.o
@@ -263,6 +300,30 @@ src/cibyl/cibyl.s: src/cibyl/cibyl.c.s
 src/cibyl/cibyl.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cibyl.dir/build.make CMakeFiles/cibyl.dir/src/cibyl/cibyl.c.s
 .PHONY : src/cibyl/cibyl.c.s
+
+src/debug/debug.o: src/debug/debug.c.o
+.PHONY : src/debug/debug.o
+
+# target to build an object file
+src/debug/debug.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/src/debug/debug.c.o
+.PHONY : src/debug/debug.c.o
+
+src/debug/debug.i: src/debug/debug.c.i
+.PHONY : src/debug/debug.i
+
+# target to preprocess a source file
+src/debug/debug.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/src/debug/debug.c.i
+.PHONY : src/debug/debug.c.i
+
+src/debug/debug.s: src/debug/debug.c.s
+.PHONY : src/debug/debug.s
+
+# target to generate assembly for a file
+src/debug/debug.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/src/debug/debug.c.s
+.PHONY : src/debug/debug.c.s
 
 src/kcsrv/kcsrv.o: src/kcsrv/kcsrv.c.o
 .PHONY : src/kcsrv/kcsrv.o
@@ -322,20 +383,27 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... cblib"
 	@echo "... cibyl"
+	@echo "... debug"
 	@echo "... kcsrv"
 	@echo "... khess"
 	@echo "... src/cblib/cblib.o"
 	@echo "... src/cblib/cblib.i"
 	@echo "... src/cblib/cblib.s"
-	@echo "... src/cblib/tables/magical.o"
-	@echo "... src/cblib/tables/magical.i"
-	@echo "... src/cblib/tables/magical.s"
-	@echo "... src/cblib/tables/normal.o"
-	@echo "... src/cblib/tables/normal.i"
-	@echo "... src/cblib/tables/normal.s"
+	@echo "... src/cblib/gen.o"
+	@echo "... src/cblib/gen.i"
+	@echo "... src/cblib/gen.s"
+	@echo "... src/cblib/magical.o"
+	@echo "... src/cblib/magical.i"
+	@echo "... src/cblib/magical.s"
+	@echo "... src/cblib/normal.o"
+	@echo "... src/cblib/normal.i"
+	@echo "... src/cblib/normal.s"
 	@echo "... src/cibyl/cibyl.o"
 	@echo "... src/cibyl/cibyl.i"
 	@echo "... src/cibyl/cibyl.s"
+	@echo "... src/debug/debug.o"
+	@echo "... src/debug/debug.i"
+	@echo "... src/debug/debug.s"
 	@echo "... src/kcsrv/kcsrv.o"
 	@echo "... src/kcsrv/kcsrv.i"
 	@echo "... src/kcsrv/kcsrv.s"

@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/debug.dir/src/debug/debug.c.o -o debug

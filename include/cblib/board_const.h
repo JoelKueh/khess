@@ -6,37 +6,45 @@
 
 #define ENEMY_COLOR(c) (!c)
 
+/* Error codes for different operations that can take place. */
+typedef enum {
+    CB_EABORT = -1,
+    CB_EOK = 0,
+    CB_EINVAL = 1,
+    CB_EILLEGAL = 2
+} cb_error_t;
+
 typedef enum {
     CB_WHITE = 1,
     CB_BLACK = 0
 } cb_color_t;
 
 typedef enum  {
-    M_PID_EMPTY = 0b0000,
+    CB_PID_EMPTY = 0b0000,
 
-    M_PID_WHITE_PAWN   = 0b0001,
-    M_PID_WHITE_KNIGHT = 0b0010,
-    M_PID_WHITE_BISHOP = 0b0011,
-    M_PID_WHITE_ROOK   = 0b0100,
-    M_PID_WHITE_QUEEN  = 0b0101,
-    M_PID_WHITE_KING   = 0b0110,
+    CB_PID_WHITE_PAWN   = 0b0001,
+    CB_PID_WHITE_KNIGHT = 0b0010,
+    CB_PID_WHITE_BISHOP = 0b0011,
+    CB_PID_WHITE_ROOK   = 0b0100,
+    CB_PID_WHITE_QUEEN  = 0b0101,
+    CB_PID_WHITE_KING   = 0b0110,
 
-    M_PID_BLACK_PAWN   = 0b1001,
-    M_PID_BLACK_KNIGHT = 0b1010,
-    M_PID_BLACK_BISHOP = 0b1011,
-    M_PID_BLACK_ROOK   = 0b1100,
-    M_PID_BLACK_QUEEN  = 0b1101,
-    M_PID_BLACK_KING   = 0b1110
+    CB_PID_BLACK_PAWN   = 0b1001,
+    CB_PID_BLACK_KNIGHT = 0b1010,
+    CB_PID_BLACK_BISHOP = 0b1011,
+    CB_PID_BLACK_ROOK   = 0b1100,
+    CB_PID_BLACK_QUEEN  = 0b1101,
+    CB_PID_BLACK_KING   = 0b1110
 } cb_pid_t;
 
 typedef enum {
-    BB_PID_PAWN   = 0,
-    BB_PID_KNIGHT = 1,
-    BB_PID_BISHOP = 2,
-    BB_PID_ROOK   = 3,
-    BB_PID_QUEEN  = 4,
-    BB_PID_KING   = 5,
-    BB_PID_EMPTY  = 6
+    CB_PTYPE_PAWN   = 0,
+    CB_PTYPE_KNIGHT = 1,
+    CB_PTYPE_BISHOP = 2,
+    CB_PTYPE_ROOK   = 3,
+    CB_PTYPE_QUEEN  = 4,
+    CB_PTYPE_KING   = 5,
+    CB_PTYPE_EMPTY  = 6
 } cb_ptype_t;
 
 const uint16_t HIST_INIT_BOARD_STATE = 0b0;

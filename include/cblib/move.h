@@ -63,7 +63,7 @@ inline uint8_t cb_mv_get_from(cb_move_t mv)
 /**
  * Returns the flags for the move as a cb_move_flags.
  */
-inline uint8_t cb_mv_get_flags(cb_move_t mv)
+inline uint16_t cb_mv_get_flags(cb_move_t mv)
 {
     return mv & CB_MV_FLAG_MASK;
 }

@@ -10,13 +10,24 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
 # Add the chessboard library.
 add_library(cblib
-	src/cblib/tables/magical.c
-	src/cblib/tables/normal.c
+	src/cblib/magical.c
+	src/cblib/normal.c
+	src/cblib/gen.c
 	src/cblib/cblib.c
 )
 target_include_directories(cblib
 	PRIVATE
 		${PROJECT_SOURCE_DIR}/include/cblib
+)
+
+# Add the debug executable.
+add_executable(debug
+	src/debug/debug.c
+)
+target_include_directories(debug
+	PRIVATE
+		${PROJECT_SOURCE_DIR}/include/cblib
+		${PROJECT_SOURCE_DIR}/include/debug
 )
 
 # Create the engine executable.

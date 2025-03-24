@@ -9,8 +9,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/joel/src/repos/khess/src/cblib/cblib.c" "CMakeFiles/cblib.dir/src/cblib/cblib.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/cblib.c.o.d"
-  "/home/joel/src/repos/khess/src/cblib/tables/magical.c" "CMakeFiles/cblib.dir/src/cblib/tables/magical.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/tables/magical.c.o.d"
-  "/home/joel/src/repos/khess/src/cblib/tables/normal.c" "CMakeFiles/cblib.dir/src/cblib/tables/normal.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/tables/normal.c.o.d"
+  "/home/joel/src/repos/khess/src/cblib/gen.c" "CMakeFiles/cblib.dir/src/cblib/gen.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/gen.c.o.d"
+  "/home/joel/src/repos/khess/src/cblib/magical.c" "CMakeFiles/cblib.dir/src/cblib/magical.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/magical.c.o.d"
+  "/home/joel/src/repos/khess/src/cblib/normal.c" "CMakeFiles/cblib.dir/src/cblib/normal.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/normal.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

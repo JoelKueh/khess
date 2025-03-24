@@ -3,8 +3,8 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "tables/tables.h"
-#include "board/bitboard.h" /* Need pop_rbit */
+#include "tables.h"
+#include "board_const.h"
 
 const uint8_t NUM_BISHOP_BITS[64] = {
     6, 5, 5, 5, 5, 5, 5, 6,

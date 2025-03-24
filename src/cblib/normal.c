@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "tables.h"
-#include "bitboard.h"
+#include "board.h"
 
 uint64_t pawn_atks[2][64];
 uint64_t knight_atks[64];
@@ -62,7 +62,7 @@ void gen_king_atk_table()
 /**
  * Get the direction of the ray that extends from sq1 to sq2.
  */
-uint8_t get_ray_direction(uint8_t sq1, uint8_t sq2)
+uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2)
 {
     int8_t sq1_rank = sq1 / 8;
     int8_t sq1_file = sq1 % 8;
@@ -89,7 +89,7 @@ uint8_t get_connecting_ray(uint8_t sq1, uint8_t sq2)
     uint8_t direction;
 
     /* Get the ray direction. */
-    if ((direction = get_ray_direction(sq1, sq2)) == CB_DIR_INVALID) {
+    if ((direction = cb_get_ray_direction(sq1, sq2)) == CB_DIR_INVALID) {
         return mask;
     }
 

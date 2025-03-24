@@ -149,7 +149,12 @@ inline void cb_hist_add_castle(cb_history_t *hist, cb_color_t color)
  */
 inline bool cb_hist_enp_availiable(cb_history_t hist)
 {
-    return (hist & HIST_ENP_COL) != 0;
+    return (hist & HIST_ENP_AVAILABLE) != 0;
+}
+
+inline uint8_t cb_hist_enp_col(cb_history_t hist)
+{
+    return (hist & HIST_ENP_COL) >> 5;
 }
 
 /**
@@ -174,8 +179,13 @@ inline void cb_hist_decay_enp(cb_history_t *hist)
  */
 inline void cb_hist_set_captured_piece(cb_history_t *hist, cb_ptype_t pid)
 {
-    *hist = (*hist & ~HIST_ENP_COL) | (HIST_ENP_COL << 5);
+    *hist = (*hist & ~HIST_ENP_COL) | (pid << 5);
     *hist &= ~HIST_ENP_AVAILABLE;
+}
+
+inline cb_ptype_t cb_hist_get_captured_piece(cb_history_t *hist)
+{
+    return (*hist & HIST_ENP_COL) >> 5;
 }
 
 

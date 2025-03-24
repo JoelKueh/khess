@@ -22,6 +22,7 @@ typedef enum {
 
 /* Array that maps directions to offsets. */
 const uint8_t dir_offset_mapping[8] = { 1, -7, -8, -9, -1, 7, 8, 9 };
+uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2);
 
 /* Functions to initialize tables that will be used by the move generator. */
 int cb_init_magic_tables();
