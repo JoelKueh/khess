@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/debug.dir/src/debug/debug.c.o CMakeFiles/debug.dir/src/debug/perft.c.o -o debug  libcblib.a

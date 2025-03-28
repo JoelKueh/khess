@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcblib.a CMakeFiles/cblib.dir/src/cblib/magical.c.o CMakeFiles/cblib.dir/src/cblib/normal.c.o CMakeFiles/cblib.dir/src/cblib/gen.c.o CMakeFiles/cblib.dir/src/cblib/cblib.c.o CMakeFiles/cblib.dir/src/cblib/cbconst.c.o CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o
-/usr/bin/ranlib libcblib.a

@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/kcsrv.dir/src/kcsrv/kcsrv.c.o -o kcsrv

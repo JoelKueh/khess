@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/khess.dir/src/khess/khess.c.o -o khess
