@@ -2,35 +2,36 @@
 #include <string.h>
 
 #include "gen.h"
+#include "board.h"
 #include "tables.h"
 
-inline uint64_t pawn_smear(uint64_t pawns, cb_color_t color)
+static inline uint64_t pawn_smear(uint64_t pawns, cb_color_t color)
 {
     return color == CB_WHITE ?
         (pawns >> 9 & ~BB_RIGHT_COL) | (pawns >> 7 & ~BB_LEFT_COL) :
         (pawns << 7 & ~BB_RIGHT_COL) | (pawns << 9 & ~BB_LEFT_COL);
 }
 
-inline uint64_t pawn_smear_left(uint64_t pawns, cb_color_t color)
+static inline uint64_t pawn_smear_left(uint64_t pawns, cb_color_t color)
 {
     return color == CB_WHITE ?
         (pawns >> 9 & ~BB_RIGHT_COL) :
         (pawns << 9 & ~BB_LEFT_COL);
 }
 
-inline uint64_t pawn_smear_forward(uint64_t pawns, cb_color_t color)
+static inline uint64_t pawn_smear_forward(uint64_t pawns, cb_color_t color)
 {
     return color == CB_WHITE ? pawns >> 8 : pawns << 8;
 }
 
-inline uint64_t pawn_smear_right(uint64_t pawns, cb_color_t color)
+static inline uint64_t pawn_smear_right(uint64_t pawns, cb_color_t color)
 {
     return color == CB_WHITE ?
         (pawns >> 7 & ~BB_LEFT_COL) :
         (pawns << 7 & ~BB_RIGHT_COL);
 }
 
-inline void append_pushes(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t pushes)
+static inline void append_pushes(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t pushes)
 {
     uint8_t target;
     uint8_t sq;
@@ -42,7 +43,7 @@ inline void append_pushes(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t pushes)
     }
 }
 
-inline void append_doubles(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t doubles)
+static inline void append_doubles(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t doubles)
 {
     uint8_t target;
     uint8_t sq;
@@ -54,7 +55,8 @@ inline void append_doubles(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t double
     }
 }
 
-inline void append_left_attacks(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t left_attacks)
+static inline void append_left_attacks(cb_mvlst_t *mvlst, cb_board_t *board,
+                                       uint64_t left_attacks)
 {
     uint8_t target;
     uint8_t sq;
@@ -66,7 +68,8 @@ inline void append_left_attacks(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t l
     }
 }
 
-inline void append_right_attacks(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t right_attacks)
+static inline void append_right_attacks(cb_mvlst_t *mvlst, cb_board_t *board,
+                                        uint64_t right_attacks)
 {
     uint8_t target;
     uint8_t sq;
@@ -78,7 +81,7 @@ inline void append_right_attacks(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t 
     }
 }
 
-inline void append_left_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t left_promos)
+static inline void append_left_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t left_promos)
 {
     uint8_t target;
     uint8_t sq;
@@ -93,7 +96,8 @@ inline void append_left_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t le
     }
 }
 
-inline void append_forward_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t forward_promos)
+static inline void append_forward_promos(cb_mvlst_t *mvlst, cb_board_t *board,
+                                         uint64_t forward_promos)
 {
     uint8_t target;
     uint8_t sq;
@@ -108,7 +112,7 @@ inline void append_forward_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t
     }
 }
 
-inline void append_right_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t right_promos)
+static inline void append_right_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t right_promos)
 {
     uint8_t target;
     uint8_t sq;
@@ -131,17 +135,17 @@ void append_pawn_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *
     /* Remove all of the pinned pawns and add back those that lie on a left ray. */
     uint8_t left_pin_dir = board->turn == CB_WHITE ? CB_DIR_UL : CB_DIR_DR;
     uint64_t left_pin_mask = state->pins[left_pin_dir];
-    uint8_t left_pawns = (pawns & ~state->pins[8]) | (pawns & left_pin_mask);
+    uint64_t left_pawns = (pawns & ~state->pins[8]) | (pawns & left_pin_mask);
 
     /* Remove all of the pinned pawns and add back those that lie on a forward ray. */
     uint8_t forward_pin_dir = board->turn == CB_WHITE ? CB_DIR_UL : CB_DIR_DR;
     uint64_t forward_pin_mask = state->pins[forward_pin_dir];
-    uint8_t forward_pawns = (pawns & ~state->pins[8]) | (pawns & forward_pin_mask);
+    uint64_t forward_pawns = (pawns & ~state->pins[8]) | (pawns & forward_pin_mask);
 
     /* Remove all of the pinned pawns and add back those that lie on a right ray. */
     uint8_t right_pin_dir = board->turn == CB_WHITE ? CB_DIR_UL : CB_DIR_DR;
     uint64_t right_pin_mask = state->pins[right_pin_dir];
-    uint8_t right_pawns = (pawns & ~state->pins[8]) | (pawns & right_pin_mask);
+    uint64_t right_pawns = (pawns & ~state->pins[8]) | (pawns & right_pin_mask);
 
     /* Generate masks for pawns moving left and right. */
     uint64_t left_smear = pawn_smear_left(left_pawns, board->turn);
@@ -193,7 +197,7 @@ void append_simple_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t
     pieces ^= board->bb.piece[board->turn][CB_PTYPE_PAWN];
     while (pieces) {
         sq = pop_rbit(&pieces);
-        mvmsk = gen_legal_mv_mask(board, state, sq);
+        mvmsk = cb_gen_legal_mv_mask(board, state, sq);
         while (mvmsk) {
             target = pop_rbit(&mvmsk);
             flags = (UINT64_C(1) << target) & board->bb.occ ? CB_MV_CAPTURE : CB_MV_QUIET;
@@ -202,7 +206,7 @@ void append_simple_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t
     }
 }
 
-inline bool ksc_legal(cb_board_t *board, cb_state_tables_t *state)
+static inline bool ksc_legal(cb_board_t *board, cb_state_tables_t *state)
 {
     cb_history_t hist = board->hist.data[board->hist.count - 1].hist;
     uint64_t occ_mask = board->turn == CB_WHITE ? BB_WHITE_KING_SIDE_CASTLE_OCCUPANCY :
@@ -215,7 +219,7 @@ inline bool ksc_legal(cb_board_t *board, cb_state_tables_t *state)
         && cb_hist_has_ksc(hist, board->turn);
 }
 
-inline bool qsc_legal(cb_board_t *board, cb_state_tables_t *state)
+static inline bool qsc_legal(cb_board_t *board, cb_state_tables_t *state)
 {
     cb_history_t hist = board->hist.data[board->hist.count - 1].hist;
     uint64_t occ_mask = board->turn == CB_WHITE ? BB_WHITE_QUEEN_SIDE_CASTLE_OCCUPANCY :
@@ -292,7 +296,7 @@ void append_enp_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *s
     }
 }
 
-void gen_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *state)
+void cb_gen_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *state)
 {
     cb_mvlst_clear(mvlst);
     append_pawn_moves(mvlst, board, state);
@@ -318,20 +322,21 @@ uint64_t gen_pseudo_mv_mask(cb_ptype_t ptype, cb_color_t pcolor, uint8_t sq, uin
         case CB_PTYPE_KING:
             return cb_read_king_atk_msk(sq);
         case CB_PTYPE_EMPTY:
-            assert(false & "invalid piece type for pseudo legal move generation");
+            assert(false && "invalid piece type for pseudo legal move generation");
             return 0;
     }
 }
 
-inline uint64_t pin_adjust(cb_board_t *board, cb_state_tables_t *state, uint8_t sq, uint64_t moves)
+static inline uint64_t pin_adjust(cb_board_t *board, cb_state_tables_t *state, uint8_t sq,
+                                  uint64_t moves)
 {
     uint64_t mask;
     uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
     uint8_t dir = cb_get_ray_direction(king_sq, sq);
-    return moves & state->pins[dir];
+    return state->pins[dir] == 0 ? moves : moves & state->pins[dir];
 }
 
-uint64_t gen_legal_mv_mask(cb_board_t *board, cb_state_tables_t *state, uint8_t sq)
+uint64_t cb_gen_legal_mv_mask(cb_board_t *board, cb_state_tables_t *state, uint8_t sq)
 {
     /* Generate the pseudo moves. */
     cb_ptype_t ptype = cb_ptype_at_sq(board, sq);
@@ -346,7 +351,7 @@ uint64_t gen_legal_mv_mask(cb_board_t *board, cb_state_tables_t *state, uint8_t 
     return moves;
 }
 
-inline uint64_t gen_threats(cb_board_t *board)
+static inline uint64_t gen_threats(cb_board_t *board)
 {
     uint64_t threats;
     uint8_t sq;
@@ -371,7 +376,7 @@ inline uint64_t gen_threats(cb_board_t *board)
     return threats;
 }
 
-inline uint64_t gen_checks(cb_board_t *board, uint64_t threats)
+static inline uint64_t gen_checks(cb_board_t *board, uint64_t threats)
 {
     uint64_t *pieces = board->bb.piece[!board->turn];
     uint64_t king = board->bb.piece[board->turn][CB_PTYPE_KING];
@@ -394,7 +399,7 @@ inline uint64_t gen_checks(cb_board_t *board, uint64_t threats)
     return checks;
 }
 
-inline uint64_t gen_check_blocks(cb_board_t *board, uint64_t checks)
+static inline uint64_t gen_check_blocks(cb_board_t *board, uint64_t checks)
 {
     if (checks == 0)
         return BB_FULL;
@@ -406,21 +411,21 @@ inline uint64_t gen_check_blocks(cb_board_t *board, uint64_t checks)
     return cb_read_tf_table(king_sq, check_sq);
 }
 
-inline uint64_t xray_bishop_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)
+static inline uint64_t xray_bishop_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)
 {
     uint64_t attacks = cb_read_bishop_atk_msk(sq, occ);
     blockers &= attacks;
     return attacks ^ cb_read_bishop_atk_msk(sq, occ ^ blockers);
 }
 
-inline uint64_t xray_rook_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)
+static inline uint64_t xray_rook_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)
 {
     uint64_t attacks = cb_read_rook_atk_msk(sq, occ);
     blockers &= attacks;
     return attacks ^ cb_read_rook_atk_msk(sq, occ ^ blockers);
 }
 
-inline void gen_pins(uint64_t pins[9], cb_board_t *board)
+static inline void gen_pins(uint64_t pins[9], cb_board_t *board)
 {
     uint64_t king = board->bb.piece[board->turn][CB_PTYPE_KING];
     uint64_t king_sq = peek_rbit(king);
@@ -430,7 +435,7 @@ inline void gen_pins(uint64_t pins[9], cb_board_t *board)
     uint8_t sq, dir;
 
     /* Set all of the pins to full bitboards. */
-    memset(pins, 0xFF, 9 * sizeof(uint64_t));
+    memset(pins, 0, 10 * sizeof(uint64_t));
 
     /* Get all of the first pinners. */
     pinner = xray_bishop_attacks(occ, blockers, king_sq)
@@ -440,6 +445,7 @@ inline void gen_pins(uint64_t pins[9], cb_board_t *board)
         sq = pop_rbit(&pinner);
         dir = cb_get_ray_direction(king_sq, sq);
         pins[dir] = cb_read_tf_table(sq, king_sq);
+        pins[8] ^= pins[dir];
     }
 
     /* Get all of the second pinners. */
@@ -450,10 +456,11 @@ inline void gen_pins(uint64_t pins[9], cb_board_t *board)
         sq = pop_rbit(&pinner);
         dir = cb_get_ray_direction(king_sq, sq);
         pins[dir] = cb_read_tf_table(sq, king_sq);
+        pins[8] ^= pins[dir];
     }
 }
 
-void gen_board_tables(cb_state_tables_t *state, cb_board_t *board)
+void cb_gen_board_tables(cb_state_tables_t *state, cb_board_t *board)
 {
     state->threats = gen_threats(board);
     state->checks = gen_checks(board, state->threats);

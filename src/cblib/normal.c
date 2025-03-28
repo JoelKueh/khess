@@ -12,9 +12,9 @@ uint64_t to_from_table[64][64];
 /**
  * Generates a lookup table from a set of offsets on each square.
  */
-void gen_table_from_offsets(uint64_t table[64], const uint8_t offsets[], uint8_t offset_len)
+void gen_table_from_offsets(uint64_t table[64], const int8_t offsets[], uint8_t offset_len)
 {
-    uint64_t i, j, sq;
+    int i, j, sq;
 
     /* Zero the table. */
     memset(table, 0, 64 * sizeof(uint64_t));
@@ -42,21 +42,21 @@ void gen_table_from_offsets(uint64_t table[64], const uint8_t offsets[], uint8_t
 
 void gen_pawn_atk_table()
 {
-    const uint8_t OFFSETS[2][8] = {{7, 9}, {-7, -9}};
+    const int8_t OFFSETS[2][8] = {{7, 9}, {-7, -9}};
     gen_table_from_offsets(pawn_atks[0], OFFSETS[0], 2);
     gen_table_from_offsets(pawn_atks[1], OFFSETS[1], 2);
 }
 
 void gen_knight_atk_table()
 {
-    const uint8_t OFFSETS[8] = {-17, -15, -10, -6, 6, 10, 15, 17};
-    gen_table_from_offsets(knight_atks, OFFSETS, 2);
+    const int8_t OFFSETS[8] = {-17, -15, -10, -6, 6, 10, 15, 17};
+    gen_table_from_offsets(knight_atks, OFFSETS, 8);
 }
 
 void gen_king_atk_table()
 {
-    const uint8_t OFFSETS[8] = {9, 8, 7, 1, -1, -7, -8, -9};
-    gen_table_from_offsets(knight_atks, OFFSETS, 2);
+    const int8_t OFFSETS[8] = {9, 8, 7, 1, -1, -7, -8, -9};
+    gen_table_from_offsets(king_atks, OFFSETS, 8);
 }
 
 /**

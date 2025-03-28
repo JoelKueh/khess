@@ -8,6 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/joel/src/repos/khess/src/cblib/cbconst.c" "CMakeFiles/cblib.dir/src/cblib/cbconst.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/cbconst.c.o.d"
+  "/home/joel/src/repos/khess/src/cblib/cbdbg.c" "CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o.d"
   "/home/joel/src/repos/khess/src/cblib/cblib.c" "CMakeFiles/cblib.dir/src/cblib/cblib.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/cblib.c.o.d"
   "/home/joel/src/repos/khess/src/cblib/gen.c" "CMakeFiles/cblib.dir/src/cblib/gen.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/gen.c.o.d"
   "/home/joel/src/repos/khess/src/cblib/magical.c" "CMakeFiles/cblib.dir/src/cblib/magical.c.o" "gcc" "CMakeFiles/cblib.dir/src/cblib/magical.c.o.d"

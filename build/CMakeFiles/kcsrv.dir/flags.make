@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = -I/home/joel/src/repos/khess/include/kcsrv
 
-C_FLAGS = -O3 -DNDEBUG
+C_FLAGS = -g
 

@@ -1,25 +1,39 @@
 
+#include <string.h>
 #include <stdio.h>
 
 #include "cblib.h"
+#include "tables.h"
 
-cb_error_t cb_board_from_fen(cb_board_t *board, const char *fen)
+cb_errno_t cb_board_init(cb_error_t *err, cb_board_t *board)
 {
+    cb_errno_t result;
+    if ((result = cb_hist_stack_init(&board->hist)) != 0)
+        return cb_mkerr(err, result, "malloc: %s\n", strerror(errno));
+    if (cb_init_magic_tables())
+        return cb_mkerr(err, result, "malloc: %s\n", strerror(errno));
+    cb_init_normal_tables();
 
+    return 0;
 }
 
-cb_error_t cb_board_from_uci(cb_board_t *board, const char *fen)
+void cb_board_free(cb_board_t *board)
 {
-
+    cb_hist_stack_free(&board->hist);
 }
 
-cb_error_t cb_board_from_pgn(cb_board_t *board, const char *fen)
+cb_errno_t cb_reserve_for_make(cb_error_t *err, cb_board_t *board, uint32_t added_depth)
 {
-
+    int result;
+    if ((result = cb_hist_stack_reserve(&board->hist, added_depth)) != 0) {
+        return cb_mkerr(err, result, "realloc: %s\n", strerror(errno));
+    }
+    return 0;
 }
 
-cb_error_t cb_make(cb_board_t *board, const cb_move_t mv)
+void cb_make(cb_board_t *board, const cb_move_t mv)
 {
+    cb_errno_t result;
     cb_history_t old_state = board->hist.data[board->hist.count - 1].hist;
     cb_hist_ele_t new_ele;
     cb_mv_flag_t flag = cb_mv_get_flags(mv);
@@ -137,12 +151,7 @@ cb_error_t cb_make(cb_board_t *board, const cb_move_t mv)
     board->turn = !board->turn;
     new_ele.hist = new_state;
     new_ele.move = mv;
-    if (cb_hist_stack_push(&board->hist, new_ele)) {
-        perror("realloc");
-        return CB_EABORT;
-    }
-
-    return 0;
+    cb_hist_stack_push(&board->hist, new_ele);
 }
 
 void cb_unmake(cb_board_t *board)
@@ -242,3 +251,273 @@ void cb_unmake(cb_board_t *board)
             break;
     }
 }
+
+cb_errno_t cb_mv_from_short_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *board,
+                                  const char *algbr)
+{
+    assert(false && "not yet implemented");
+    return 0;
+}
+
+cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *board,
+                                const char *algbr)
+{
+    uint8_t to, from;
+    uint16_t flag;
+    cb_mvlst_t mvlst;
+    cb_move_t temp_mv;
+    cb_state_tables_t state;
+    int i;
+
+    /* Make sure that the length of the algebraic string is 4 or 5 characters. */
+    if (strlen(algbr) != 4 && strlen(algbr) != 5) {
+        return cb_mkerr(err, CB_EINVAL, "invalid move string length");
+    }
+
+    /* Get the information about the move itself. */
+    from = algbr[0] - 'a';
+    from += ('8' - algbr[1]) * 8;
+    to = algbr[2] - 'a';
+    to += ('8' - algbr[3]) * 8;
+
+    /* Verify that the characters inputted were valid. */
+    if (from < 0 || from >= 64 || to < 0 || to >= 64)
+        return cb_mkerr(err, CB_EINVAL, "invalid character in move");
+
+    /* Find the move in the list of generated moves and return the match. */
+    *mv = CB_INVALID_MOVE;
+    cb_gen_board_tables(&state, board);
+    cb_gen_moves(&mvlst, board, &state);
+    for (i = 0; i < cb_mvlst_size(&mvlst); i++) {
+        temp_mv = cb_mvlst_at(&mvlst, i);
+        if (cb_mv_get_from(temp_mv) == from && cb_mv_get_to(temp_mv) == to) {
+            *mv = temp_mv;
+            break;
+        }
+    }
+
+    /* Check if the move was not valid. */
+    if (*mv == CB_INVALID_MOVE) {
+        return cb_mkerr(err, CB_EILLEGAL, "illegal move specified");
+    }
+
+    /* Adjust the move for information about promotions. */
+    flag = cb_mv_get_flags(*mv);
+    if (flag & (1 << 15)) { /* Check if this is a promotion. */
+        flag &= 0b1100 << 12; /* Remove the lower two bits from the flag. */
+
+        /* Check what the piece type is for a promotion and add the offset to turn
+         * the piece type for the capture into what we want. */
+        switch (algbr[4]) {
+            case 'n':
+                flag += 0;
+                break;
+            case 'b':
+                flag += 1;
+                break;
+            case 'r':
+                flag += 2;
+                break;
+            case 'q':
+                flag += 3;
+                break;
+            default:
+                return cb_mkerr(err, CB_EINVAL, "invlaid character in move");
+        }
+
+        /* Recreate the move. */
+        *mv = cb_mv_from_data(from, to, flag);
+    }
+
+    return 0;
+}
+
+cb_errno_t parse_fen_main(cb_error_t *err, cb_board_t *board, char *fen_main)
+{
+    uint8_t sq = 0;
+    uint8_t row = 0;
+    char c;
+    int i = 0;
+    cb_color_t pcolor;
+
+    /* Error handling. */
+    if (fen_main == NULL)
+        return cb_mkerr(err, CB_EINVAL, "missing fen body");
+
+    /* Parse the main portion of the fen string. */
+    while ((c = fen_main[i++]) != '\0') {
+        if ('1' <= c && c <= '8') {
+            sq += c - '0';
+            /* Check if we should have had a '/' in our input string by now. */
+            if (sq < row * 8 || sq > row * 8 + 8)
+                return cb_mkerr(err, CB_EINVAL, "row overrun without encountering '/'");
+        } else if (c == 'p' || c == 'P') {
+            cb_write_piece(board, sq, CB_PTYPE_PAWN, c < 'a' ? CB_WHITE : CB_BLACK);
+            sq++;
+        } else if (c == 'n' || c == 'N') {
+            cb_write_piece(board, sq, CB_PTYPE_KNIGHT, c < 'a' ? CB_WHITE : CB_BLACK);
+            sq++;
+        } else if (c == 'b' || c == 'B') {
+            cb_write_piece(board, sq, CB_PTYPE_BISHOP, c < 'a' ? CB_WHITE : CB_BLACK);
+            sq++;
+        } else if (c == 'r' || c == 'R') {
+            cb_write_piece(board, sq, CB_PTYPE_ROOK, c < 'a' ? CB_WHITE : CB_BLACK);
+            sq++;
+        } else if (c == 'q' || c == 'Q') {
+            cb_write_piece(board, sq, CB_PTYPE_QUEEN, c < 'a' ? CB_WHITE : CB_BLACK);
+            sq++;
+        } else if (c == 'k' || c == 'K') {
+            cb_write_piece(board, sq, CB_PTYPE_KING, c < 'a' ? CB_WHITE : CB_BLACK);
+            sq++;
+        } else if (c == '/') {
+            /* If we are not at the end of the row, we don't want to get a '/'. */
+            if (sq % 8 != 0)
+                return cb_mkerr(err, CB_EINVAL, "encountered '/' before the end of a row");
+            row += 1;
+        } else {
+            /* Any invalid characters return an error. */
+            return cb_mkerr(err, CB_EINVAL, "invalid character in fen body");
+        }
+    }
+
+    /* Throw errors for the write head not being at the end of the board. */
+    if (sq != 64)
+        return cb_mkerr(err, CB_EINVAL, "unexpected end to fen body");
+
+    return 0;
+}
+
+cb_errno_t parse_fen_turn(cb_error_t *err, cb_board_t *board, char *fen_turn)
+{
+    /* Error handling. */
+    if (fen_turn == NULL)
+        return cb_mkerr(err, CB_EINVAL, "missing fen turn");
+
+    /* Set the turn in the board. */
+    if (*fen_turn == 'w') {
+        board->turn = CB_WHITE;
+    } else if (*fen_turn == 'b') {
+        board->turn = CB_BLACK;
+    } else {
+        return cb_mkerr(err, CB_EINVAL, "unexpected character in fen turn");
+    }
+    
+    return 0;
+}
+
+cb_errno_t parse_fen_rights(cb_error_t *err, cb_board_t *board, char *fen_rights)
+{
+    int i = 0;
+    char c;
+
+    /* Error handling. */
+    if (fen_rights == NULL)
+        return cb_mkerr(err, CB_EINVAL, "missing fen rights");
+
+    /* Set the rights based on the token. */
+    while ((c = fen_rights[i++]) != '\0') {
+        if (c == 'K') {
+            cb_hist_add_ksc(&board->hist.data[board->hist.count - 1].hist, CB_WHITE);
+        } else if (c == 'Q') {
+            cb_hist_add_qsc(&board->hist.data[board->hist.count - 1].hist, CB_WHITE);
+        } else if (c == 'k') {
+            cb_hist_add_ksc(&board->hist.data[board->hist.count - 1].hist, CB_BLACK);
+        } else if (c == 'q') {
+            cb_hist_add_qsc(&board->hist.data[board->hist.count - 1].hist, CB_BLACK);
+        } else if (c == '-') {
+            return 0;
+        } else {
+            return cb_mkerr(err, CB_EINVAL, "unexpected character in fen rights");
+        }
+    }
+
+    return 0;
+}
+
+cb_errno_t parse_fen_enp(cb_error_t *err, cb_board_t *board, char *fen_enp)
+{
+    /* Error handling. */
+    if (fen_enp == NULL)
+        return cb_mkerr(err, CB_EINVAL, "missing fen rights");
+    if (strlen(fen_enp) == 1) {
+        if (fen_enp[0] != '-')
+            return cb_mkerr(err, CB_EINVAL, "invalid character in fen enp");
+        return 0;
+    }
+    if (strlen(fen_enp) != 2)
+        return cb_mkerr(err, CB_EINVAL, "invalid fen enpassant length");
+    if (fen_enp[0] < 'a' || fen_enp[0] > 'h')
+        return cb_mkerr(err, CB_EINVAL, "invalid character in fen enp");
+
+    /* Set the square based on the token. */
+    cb_hist_set_enp(&board->hist.data[board->hist.count - 1].hist, fen_enp[0] - 'a');
+
+    return 0;
+}
+
+cb_errno_t parse_fen_hlfmv(cb_error_t *err, cb_board_t *board, char *fen_hlfmv)
+{
+    int hlfmv;
+    char *endptr;
+
+    if (fen_hlfmv != NULL) {
+        errno = 0;
+        hlfmv = strtol(fen_hlfmv, &endptr, 10);
+        if (errno || *endptr != '\0')
+            return cb_mkerr(err, CB_EINVAL, "invalid halfmove number");
+        cb_hist_set_halfmove_clk(&board->hist.data[board->hist.count - 1].move, hlfmv);
+    }
+
+    return 0;
+}
+
+cb_errno_t cb_board_from_fen(cb_error_t *err, cb_board_t *board, char *fen)
+{
+    cb_errno_t result;
+
+    char *fen_main = strtok(fen, " \n");
+    char *fen_turn = strtok(NULL, " \n");
+    char *fen_rights = strtok(NULL, " \n");
+    char *fen_enp = strtok(NULL, " \n");
+    char *fen_hlfmv = strtok(NULL, " \n");
+
+    cb_wipe_board(board);
+    if ((result = cb_reserve_for_make(err, board, 1)) != 0)
+        return cb_mkerr(err, CB_EABORT, "realloc: %s", strerror(errno));
+    cb_hist_stack_push(&board->hist, CB_INIT_STATE);
+    if ((result = parse_fen_main(err, board, fen_main)) != 0)
+        return result;
+    if ((result = parse_fen_turn(err, board, fen_turn)) != 0)
+        return result;
+    if ((result = parse_fen_rights(err, board, fen_rights)) != 0)
+        return result;
+    if ((result = parse_fen_enp(err, board, fen_enp)) != 0)
+        return result;
+    if ((result = parse_fen_hlfmv(err, board, fen_hlfmv)) != 0)
+        return result;
+
+    return 0;
+}
+
+cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *fen)
+{
+    assert(false && "not yet implemented");
+    return 0;
+}
+
+cb_errno_t cb_board_from_pgn(cb_error_t *err, cb_board_t *board, char *fen)
+{
+    assert(false && "not yet implemented");
+    return 0;
+}
+
+cb_errno_t cb_mkerr(cb_error_t *err, cb_errno_t cb_errno, char *format, ...)
+{
+    va_list args;
+    err->num = cb_errno;
+    va_start(args, format);
+    vsnprintf(err->desc, CB_ERROR_STRLEN, format, args);
+    va_end(args);
+    return cb_errno;
+}
+

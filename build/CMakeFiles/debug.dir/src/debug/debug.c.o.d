@@ -16,7 +16,7 @@ CMakeFiles/debug.dir/src/debug/debug.c.o: \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
  /usr/include/bits/types/cookie_io_functions_t.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/floatn.h \
- /usr/include/bits/floatn-common.h /usr/include/bits/stdio.h \
+ /usr/include/bits/floatn-common.h \
  /home/joel/src/repos/khess/include/cblib/cblib.h \
  /home/joel/src/repos/khess/include/cblib/board.h \
  /usr/lib/gcc/x86_64-redhat-linux/14/include/stdint.h \
@@ -27,7 +27,7 @@ CMakeFiles/debug.dir/src/debug/debug.c.o: \
  /usr/include/assert.h /usr/include/errno.h /usr/include/bits/errno.h \
  /usr/include/linux/errno.h /usr/include/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
- /home/joel/src/repos/khess/include/cblib/board_const.h \
+ /home/joel/src/repos/khess/include/cblib/cbconst.h \
  /home/joel/src/repos/khess/include/cblib/history.h /usr/include/stdlib.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
  /usr/include/sys/types.h /usr/include/bits/types/clock_t.h \
@@ -43,6 +43,8 @@ CMakeFiles/debug.dir/src/debug/debug.c.o: \
  /usr/include/bits/pthreadtypes-arch.h \
  /usr/include/bits/atomic_wide_counter.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
+ /usr/include/bits/stdlib-float.h \
  /home/joel/src/repos/khess/include/cblib/move.h \
- /home/joel/src/repos/khess/include/cblib/gen.h
+ /home/joel/src/repos/khess/include/cblib/gen.h \
+ /home/joel/src/repos/khess/include/cblib/cbdbg.h \
+ /home/joel/src/repos/khess/include/debug/perft.h

@@ -4,7 +4,9 @@
 #include <assert.h>
 
 #include "tables.h"
-#include "board_const.h"
+#include "cbconst.h"
+
+const uint8_t dir_offset_mapping[8] = { 1, -7, -8, -9, -1, 7, 8, 9 };
 
 const uint8_t NUM_BISHOP_BITS[64] = {
     6, 5, 5, 5, 5, 5, 5, 6,
@@ -171,7 +173,7 @@ uint64_t rook_occ_mask[64];
 uint64_t *bishop_atks[64];
 uint64_t *rook_atks[64];
 
-inline uint16_t get_bishop_key(uint8_t sq, uint64_t occ)
+static inline uint16_t get_bishop_key(uint8_t sq, uint64_t occ)
 {
     /* Hash the occupancy mask and compute the key. */
     occ &= bishop_occ_mask[sq];
@@ -179,7 +181,7 @@ inline uint16_t get_bishop_key(uint8_t sq, uint64_t occ)
     return occ >> (64 - NUM_BISHOP_BITS[sq]);
 }
 
-inline uint16_t get_rook_key(uint8_t sq, uint64_t occ)
+static inline uint16_t get_rook_key(uint8_t sq, uint64_t occ)
 {
     /* Hash the occupancy mask and compute the key. */
     occ &= rook_occ_mask[sq];
@@ -219,7 +221,7 @@ uint64_t cb_read_rook_atk_msk(uint8_t sq, uint64_t occ)
  */
 uint64_t get_rook_occ_mask(uint8_t sq)
 {
-    uint64_t result;
+    uint64_t result = 0;
     int8_t source_rank = sq / 8;
     int8_t source_file = sq % 8;
     int8_t rank;
@@ -270,7 +272,7 @@ uint64_t get_rook_occ_mask(uint8_t sq)
  */
 uint64_t get_bishop_occ_mask(uint8_t sq)
 {
-    uint64_t result;
+    uint64_t result = 0;
     int8_t source_rank = sq / 8;
     int8_t source_file = sq % 8;
     int8_t rank;
@@ -288,7 +290,7 @@ uint64_t get_bishop_occ_mask(uint8_t sq)
     /* Down-Left */
     rank = source_rank + 1;
     file = source_file - 1;
-    while (rank >= 1) {
+    while (rank <= 6 && file >= 1) {
         result |= UINT64_C(1) << (file + rank * 8);
         rank++;
         file--;
@@ -297,7 +299,7 @@ uint64_t get_bishop_occ_mask(uint8_t sq)
     /* Up-Right */
     rank = source_rank - 1;
     file = source_file + 1;
-    while (file >= 1) {
+    while (rank >= 1 && file <= 6) {
         result |= UINT64_C(1) << (file + rank * 8);
         rank--;
         file++;
@@ -306,7 +308,7 @@ uint64_t get_bishop_occ_mask(uint8_t sq)
     /* Up-Left */
     rank = source_rank - 1;
     file = source_file - 1;
-    while (file <= 6) {
+    while (rank >= 1 && file >= 1) {
         result |= UINT64_C(1) << (file + rank * 8);
         rank--;
         file--;
@@ -322,7 +324,7 @@ uint64_t get_bishop_occ_mask(uint8_t sq)
  */
 uint64_t get_rook_atk_mask(uint8_t sq, uint64_t occ)
 {
-    uint64_t result;
+    uint64_t result = 0;
     int8_t source_rank = sq / 8;
     int8_t source_file = sq % 8;
     int8_t rank;
@@ -330,7 +332,7 @@ uint64_t get_rook_atk_mask(uint8_t sq, uint64_t occ)
 
     /* Down */
     rank = source_rank + 1;
-    while (rank <= 6) {
+    while (rank <= 7) {
         result |= UINT64_C(1) << (source_file + rank * 8);
         if (occ & (UINT64_C(1) << (source_file + rank * 8)))
             break;
@@ -339,7 +341,7 @@ uint64_t get_rook_atk_mask(uint8_t sq, uint64_t occ)
 
     /* Up */
     rank = source_rank - 1;
-    while (rank >= 1) {
+    while (rank >= 0) {
         result |= UINT64_C(1) << (source_file + rank * 8);
         if (occ & (UINT64_C(1) << (source_file + rank * 8)))
             break;
@@ -348,7 +350,7 @@ uint64_t get_rook_atk_mask(uint8_t sq, uint64_t occ)
 
     /* Right */
     file = source_file + 1;
-    while (file <= 6) {
+    while (file <= 7) {
         result |= UINT64_C(1) << (file + source_rank * 8);
         if (occ & (UINT64_C(1) << (file + source_rank * 8)))
             break;
@@ -357,7 +359,7 @@ uint64_t get_rook_atk_mask(uint8_t sq, uint64_t occ)
 
     /* Left */
     file = source_file - 1;
-    while (file >= 1) {
+    while (file >= 0) {
         result |= UINT64_C(1) << (file + source_rank * 8);
         if (occ & (UINT64_C(1) << (file + source_rank * 8)))
             break;
@@ -374,7 +376,7 @@ uint64_t get_rook_atk_mask(uint8_t sq, uint64_t occ)
  */
 uint64_t get_bishop_atk_mask(uint8_t sq, uint64_t occ)
 {
-    uint64_t result;
+    uint64_t result = 0;
     int8_t source_rank = sq / 8;
     int8_t source_file = sq % 8;
     int8_t rank;
@@ -383,7 +385,7 @@ uint64_t get_bishop_atk_mask(uint8_t sq, uint64_t occ)
     /* Down-Right */
     rank = source_rank + 1;
     file = source_file + 1;
-    while (rank <= 6 && file <= 6) {
+    while (rank <= 7 && file <= 7) {
         result |= UINT64_C(1) << (file + rank * 8);
         if (occ & (UINT64_C(1) << (file + rank * 8)))
             break;
@@ -394,7 +396,7 @@ uint64_t get_bishop_atk_mask(uint8_t sq, uint64_t occ)
     /* Down-Left */
     rank = source_rank + 1;
     file = source_file - 1;
-    while (rank >= 1) {
+    while (rank <= 7 && file >= 0) {
         result |= UINT64_C(1) << (file + rank * 8);
         if (occ & (UINT64_C(1) << (file + rank * 8)))
             break;
@@ -405,7 +407,7 @@ uint64_t get_bishop_atk_mask(uint8_t sq, uint64_t occ)
     /* Up-Right */
     rank = source_rank - 1;
     file = source_file + 1;
-    while (file >= 1) {
+    while (rank >= 0 && file <= 7) {
         result |= UINT64_C(1) << (file + rank * 8);
         if (occ & (UINT64_C(1) << (file + rank * 8)))
             break;
@@ -416,7 +418,7 @@ uint64_t get_bishop_atk_mask(uint8_t sq, uint64_t occ)
     /* Up-Left */
     rank = source_rank - 1;
     file = source_file - 1;
-    while (file <= 6) {
+    while (rank >= 0 && file >= 0) {
         result |= UINT64_C(1) << (file + rank * 8);
         if (occ & (UINT64_C(1) << (file + rank * 8)))
             break;
@@ -433,7 +435,7 @@ uint64_t get_bishop_atk_mask(uint8_t sq, uint64_t occ)
  */
 uint64_t map_index_to_occ_mask(uint16_t idx, uint8_t num_bits, uint64_t occ_mask)
 {
-    uint64_t result;
+    uint64_t result = 0;
     uint8_t pos;
     uint8_t i;
 
@@ -467,13 +469,14 @@ int gen_bishop_table()
     /* Loop over all squares and compute the corresponding table. */
     for (sq = 0; sq < 64; sq++) {
         /* Allocate space for the table on the heap. */
-        if ((table = calloc(0, NUM_BISHOP_BITS[sq])) == 0) {
+        if ((table = calloc(1 << NUM_BISHOP_BITS[sq], sizeof(uint64_t))) == 0) {
             result = ENOMEM;
             goto out_free_tables;
         };
 
         /* Generate the corresponding occupancy mask. */
         occ = get_bishop_occ_mask(sq);
+        bishop_occ_mask[sq] = occ;
 
         /* Loop over all possible occupancies and generate the correct attack sets. */
         for (idx = 0; idx < (1 << NUM_BISHOP_BITS[sq]); idx++) {
@@ -523,13 +526,14 @@ int gen_rook_table()
     /* Loop over all squares and compute the corresponding table. */
     for (sq = 0; sq < 64; sq++) {
         /* Allocate space for the table on the heap. */
-        if ((table = calloc(0, NUM_ROOK_BITS[sq])) == 0) {
+        if ((table = calloc(1 << NUM_ROOK_BITS[sq], 64)) == NULL) {
             result = ENOMEM;
             goto out_free_tables;
         };
 
         /* Generate the corresponding occupancy mask. */
         occ = get_rook_occ_mask(sq);
+        rook_occ_mask[sq] = occ;
 
         /* Loop over all possible occupancies and generate the correct attack sets. */
         for (idx = 0; idx < (1 << NUM_ROOK_BITS[sq]); idx++) {
@@ -585,6 +589,7 @@ int cb_init_magic_tables()
         goto out_no_cleanup;
     if ((result = gen_rook_table()) < 0)
         goto out_cleanup_bishop;
+    goto out_no_cleanup;
 
 out_cleanup_bishop:
     cleanup_bishop_tables();

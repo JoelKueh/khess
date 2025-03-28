@@ -181,6 +181,54 @@ khess/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/khess.dir/build.make CMakeFiles/khess.dir/build
 .PHONY : khess/fast
 
+src/cblib/cbconst.o: src/cblib/cbconst.c.o
+.PHONY : src/cblib/cbconst.o
+
+# target to build an object file
+src/cblib/cbconst.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cbconst.c.o
+.PHONY : src/cblib/cbconst.c.o
+
+src/cblib/cbconst.i: src/cblib/cbconst.c.i
+.PHONY : src/cblib/cbconst.i
+
+# target to preprocess a source file
+src/cblib/cbconst.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cbconst.c.i
+.PHONY : src/cblib/cbconst.c.i
+
+src/cblib/cbconst.s: src/cblib/cbconst.c.s
+.PHONY : src/cblib/cbconst.s
+
+# target to generate assembly for a file
+src/cblib/cbconst.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cbconst.c.s
+.PHONY : src/cblib/cbconst.c.s
+
+src/cblib/cbdbg.o: src/cblib/cbdbg.c.o
+.PHONY : src/cblib/cbdbg.o
+
+# target to build an object file
+src/cblib/cbdbg.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o
+.PHONY : src/cblib/cbdbg.c.o
+
+src/cblib/cbdbg.i: src/cblib/cbdbg.c.i
+.PHONY : src/cblib/cbdbg.i
+
+# target to preprocess a source file
+src/cblib/cbdbg.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cbdbg.c.i
+.PHONY : src/cblib/cbdbg.c.i
+
+src/cblib/cbdbg.s: src/cblib/cbdbg.c.s
+.PHONY : src/cblib/cbdbg.s
+
+# target to generate assembly for a file
+src/cblib/cbdbg.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cblib.dir/build.make CMakeFiles/cblib.dir/src/cblib/cbdbg.c.s
+.PHONY : src/cblib/cbdbg.c.s
+
 src/cblib/cblib.o: src/cblib/cblib.c.o
 .PHONY : src/cblib/cblib.o
 
@@ -325,6 +373,30 @@ src/debug/debug.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/src/debug/debug.c.s
 .PHONY : src/debug/debug.c.s
 
+src/debug/perft.o: src/debug/perft.c.o
+.PHONY : src/debug/perft.o
+
+# target to build an object file
+src/debug/perft.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/src/debug/perft.c.o
+.PHONY : src/debug/perft.c.o
+
+src/debug/perft.i: src/debug/perft.c.i
+.PHONY : src/debug/perft.i
+
+# target to preprocess a source file
+src/debug/perft.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/src/debug/perft.c.i
+.PHONY : src/debug/perft.c.i
+
+src/debug/perft.s: src/debug/perft.c.s
+.PHONY : src/debug/perft.s
+
+# target to generate assembly for a file
+src/debug/perft.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/debug.dir/build.make CMakeFiles/debug.dir/src/debug/perft.c.s
+.PHONY : src/debug/perft.c.s
+
 src/kcsrv/kcsrv.o: src/kcsrv/kcsrv.c.o
 .PHONY : src/kcsrv/kcsrv.o
 
@@ -386,6 +458,12 @@ help:
 	@echo "... debug"
 	@echo "... kcsrv"
 	@echo "... khess"
+	@echo "... src/cblib/cbconst.o"
+	@echo "... src/cblib/cbconst.i"
+	@echo "... src/cblib/cbconst.s"
+	@echo "... src/cblib/cbdbg.o"
+	@echo "... src/cblib/cbdbg.i"
+	@echo "... src/cblib/cbdbg.s"
 	@echo "... src/cblib/cblib.o"
 	@echo "... src/cblib/cblib.i"
 	@echo "... src/cblib/cblib.s"
@@ -404,6 +482,9 @@ help:
 	@echo "... src/debug/debug.o"
 	@echo "... src/debug/debug.i"
 	@echo "... src/debug/debug.s"
+	@echo "... src/debug/perft.o"
+	@echo "... src/debug/perft.i"
+	@echo "... src/debug/perft.s"
 	@echo "... src/kcsrv/kcsrv.o"
 	@echo "... src/kcsrv/kcsrv.i"
 	@echo "... src/kcsrv/kcsrv.s"

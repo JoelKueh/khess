@@ -1,4 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/cblib.dir/src/cblib/cbconst.c.o"
+  "CMakeFiles/cblib.dir/src/cblib/cbconst.c.o.d"
+  "CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o"
+  "CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o.d"
   "CMakeFiles/cblib.dir/src/cblib/cblib.c.o"
   "CMakeFiles/cblib.dir/src/cblib/cblib.c.o.d"
   "CMakeFiles/cblib.dir/src/cblib/gen.c.o"

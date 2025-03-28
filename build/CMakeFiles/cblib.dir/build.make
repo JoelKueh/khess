@@ -125,12 +125,42 @@ CMakeFiles/cblib.dir/src/cblib/cblib.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cblib.dir/src/cblib/cblib.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/joel/src/repos/khess/src/cblib/cblib.c -o CMakeFiles/cblib.dir/src/cblib/cblib.c.s
 
+CMakeFiles/cblib.dir/src/cblib/cbconst.c.o: CMakeFiles/cblib.dir/flags.make
+CMakeFiles/cblib.dir/src/cblib/cbconst.c.o: /home/joel/src/repos/khess/src/cblib/cbconst.c
+CMakeFiles/cblib.dir/src/cblib/cbconst.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/cblib.dir/src/cblib/cbconst.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/cbconst.c.o -MF CMakeFiles/cblib.dir/src/cblib/cbconst.c.o.d -o CMakeFiles/cblib.dir/src/cblib/cbconst.c.o -c /home/joel/src/repos/khess/src/cblib/cbconst.c
+
+CMakeFiles/cblib.dir/src/cblib/cbconst.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/cblib.dir/src/cblib/cbconst.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/joel/src/repos/khess/src/cblib/cbconst.c > CMakeFiles/cblib.dir/src/cblib/cbconst.c.i
+
+CMakeFiles/cblib.dir/src/cblib/cbconst.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cblib.dir/src/cblib/cbconst.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/joel/src/repos/khess/src/cblib/cbconst.c -o CMakeFiles/cblib.dir/src/cblib/cbconst.c.s
+
+CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: CMakeFiles/cblib.dir/flags.make
+CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: /home/joel/src/repos/khess/src/cblib/cbdbg.c
+CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o -MF CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o.d -o CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o -c /home/joel/src/repos/khess/src/cblib/cbdbg.c
+
+CMakeFiles/cblib.dir/src/cblib/cbdbg.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/cblib.dir/src/cblib/cbdbg.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/joel/src/repos/khess/src/cblib/cbdbg.c > CMakeFiles/cblib.dir/src/cblib/cbdbg.c.i
+
+CMakeFiles/cblib.dir/src/cblib/cbdbg.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cblib.dir/src/cblib/cbdbg.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/joel/src/repos/khess/src/cblib/cbdbg.c -o CMakeFiles/cblib.dir/src/cblib/cbdbg.c.s
+
 # Object files for target cblib
 cblib_OBJECTS = \
 "CMakeFiles/cblib.dir/src/cblib/magical.c.o" \
 "CMakeFiles/cblib.dir/src/cblib/normal.c.o" \
 "CMakeFiles/cblib.dir/src/cblib/gen.c.o" \
-"CMakeFiles/cblib.dir/src/cblib/cblib.c.o"
+"CMakeFiles/cblib.dir/src/cblib/cblib.c.o" \
+"CMakeFiles/cblib.dir/src/cblib/cbconst.c.o" \
+"CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o"
 
 # External object files for target cblib
 cblib_EXTERNAL_OBJECTS =
@@ -139,9 +169,11 @@ libcblib.a: CMakeFiles/cblib.dir/src/cblib/magical.c.o
 libcblib.a: CMakeFiles/cblib.dir/src/cblib/normal.c.o
 libcblib.a: CMakeFiles/cblib.dir/src/cblib/gen.c.o
 libcblib.a: CMakeFiles/cblib.dir/src/cblib/cblib.c.o
+libcblib.a: CMakeFiles/cblib.dir/src/cblib/cbconst.c.o
+libcblib.a: CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o
 libcblib.a: CMakeFiles/cblib.dir/build.make
 libcblib.a: CMakeFiles/cblib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C static library libcblib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking C static library libcblib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/cblib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cblib.dir/link.txt --verbose=$(VERBOSE)
 

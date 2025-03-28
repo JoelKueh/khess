@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/debug.dir/src/debug/debug.c.o"
   "CMakeFiles/debug.dir/src/debug/debug.c.o.d"
+  "CMakeFiles/debug.dir/src/debug/perft.c.o"
+  "CMakeFiles/debug.dir/src/debug/perft.c.o.d"
   "debug"
   "debug.pdb"
 )

@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "board_const.h"
+#include "cbconst.h"
 
 /* Enum that contains different direcitons for rays on the board. */
 typedef enum {
@@ -17,11 +17,12 @@ typedef enum {
     CB_DIR_DL = 5,
     CB_DIR_D  = 6,
     CB_DIR_DR = 7,
-    CB_DIR_INVALID = 8
+    CB_DIR_UNION = 8,
+    CB_DIR_INVALID = 9
 } cb_dir_t;
 
 /* Array that maps directions to offsets. */
-const uint8_t dir_offset_mapping[8] = { 1, -7, -8, -9, -1, 7, 8, 9 };
+extern const uint8_t dir_offset_mapping[8];
 uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2);
 
 /* Functions to initialize tables that will be used by the move generator. */

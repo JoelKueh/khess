@@ -4,8 +4,8 @@
 
 #include "cblib.h"
 
-void perft_cheat(cb_board_t *board, int depth);
-void perft(cb_board_t *board, int depth);
+int perft_cheat(cb_board_t *board, int depth);
+int perft(cb_board_t *board, int depth);
 
 #endif /* DBG_PERFT_H */
 

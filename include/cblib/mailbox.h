@@ -4,14 +4,15 @@
 
 #include <stdint.h>
 
-#include "board_const.h"
+#include "cbconst.h"
+#include "board.h"
 
-inline cb_ptype_t cb_m_at_sq(cb_mailbox_t *mailbox, uint8_t sq)
+static inline cb_ptype_t cb_m_at_sq(cb_mailbox_t *mailbox, uint8_t sq)
 {
     return mailbox->data[sq];
 }
 
-inline cb_ptype_t cb_m_at(cb_mailbox_t *mailbox, uint8_t row, uint8_t col)
+static inline cb_ptype_t cb_m_at(cb_mailbox_t *mailbox, uint8_t row, uint8_t col)
 {
     return cb_m_at_sq(mailbox, row * 8 + col);
 }

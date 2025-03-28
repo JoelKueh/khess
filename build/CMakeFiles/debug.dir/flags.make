@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = -I/home/joel/src/repos/khess/include/cblib -I/home/joel/src/repos/khess/include/debug
 
-C_FLAGS = -O3 -DNDEBUG
+C_FLAGS = -g
 

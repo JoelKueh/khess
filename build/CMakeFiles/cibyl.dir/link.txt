@@ -1,1 +1,1 @@
-/usr/bin/cc -O3 -DNDEBUG CMakeFiles/cibyl.dir/src/cibyl/cibyl.c.o -o cibyl
+/usr/bin/cc -g CMakeFiles/cibyl.dir/src/cibyl/cibyl.c.o -o cibyl

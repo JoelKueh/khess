@@ -1,49 +1,67 @@
 [
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -O3 -DNDEBUG -o CMakeFiles/cblib.dir/src/cblib/magical.c.o -c /home/joel/src/repos/khess/src/cblib/magical.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -g -o CMakeFiles/cblib.dir/src/cblib/magical.c.o -c /home/joel/src/repos/khess/src/cblib/magical.c",
   "file": "/home/joel/src/repos/khess/src/cblib/magical.c",
   "output": "CMakeFiles/cblib.dir/src/cblib/magical.c.o"
 },
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -O3 -DNDEBUG -o CMakeFiles/cblib.dir/src/cblib/normal.c.o -c /home/joel/src/repos/khess/src/cblib/normal.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -g -o CMakeFiles/cblib.dir/src/cblib/normal.c.o -c /home/joel/src/repos/khess/src/cblib/normal.c",
   "file": "/home/joel/src/repos/khess/src/cblib/normal.c",
   "output": "CMakeFiles/cblib.dir/src/cblib/normal.c.o"
 },
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -O3 -DNDEBUG -o CMakeFiles/cblib.dir/src/cblib/gen.c.o -c /home/joel/src/repos/khess/src/cblib/gen.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -g -o CMakeFiles/cblib.dir/src/cblib/gen.c.o -c /home/joel/src/repos/khess/src/cblib/gen.c",
   "file": "/home/joel/src/repos/khess/src/cblib/gen.c",
   "output": "CMakeFiles/cblib.dir/src/cblib/gen.c.o"
 },
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -O3 -DNDEBUG -o CMakeFiles/cblib.dir/src/cblib/cblib.c.o -c /home/joel/src/repos/khess/src/cblib/cblib.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -g -o CMakeFiles/cblib.dir/src/cblib/cblib.c.o -c /home/joel/src/repos/khess/src/cblib/cblib.c",
   "file": "/home/joel/src/repos/khess/src/cblib/cblib.c",
   "output": "CMakeFiles/cblib.dir/src/cblib/cblib.c.o"
 },
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -I/home/joel/src/repos/khess/include/debug -O3 -DNDEBUG -o CMakeFiles/debug.dir/src/debug/debug.c.o -c /home/joel/src/repos/khess/src/debug/debug.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -g -o CMakeFiles/cblib.dir/src/cblib/cbconst.c.o -c /home/joel/src/repos/khess/src/cblib/cbconst.c",
+  "file": "/home/joel/src/repos/khess/src/cblib/cbconst.c",
+  "output": "CMakeFiles/cblib.dir/src/cblib/cbconst.c.o"
+},
+{
+  "directory": "/home/joel/src/repos/khess/build",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -g -o CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o -c /home/joel/src/repos/khess/src/cblib/cbdbg.c",
+  "file": "/home/joel/src/repos/khess/src/cblib/cbdbg.c",
+  "output": "CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o"
+},
+{
+  "directory": "/home/joel/src/repos/khess/build",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -I/home/joel/src/repos/khess/include/debug -g -o CMakeFiles/debug.dir/src/debug/debug.c.o -c /home/joel/src/repos/khess/src/debug/debug.c",
   "file": "/home/joel/src/repos/khess/src/debug/debug.c",
   "output": "CMakeFiles/debug.dir/src/debug/debug.c.o"
 },
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cibyl -O3 -DNDEBUG -o CMakeFiles/cibyl.dir/src/cibyl/cibyl.c.o -c /home/joel/src/repos/khess/src/cibyl/cibyl.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cblib -I/home/joel/src/repos/khess/include/debug -g -o CMakeFiles/debug.dir/src/debug/perft.c.o -c /home/joel/src/repos/khess/src/debug/perft.c",
+  "file": "/home/joel/src/repos/khess/src/debug/perft.c",
+  "output": "CMakeFiles/debug.dir/src/debug/perft.c.o"
+},
+{
+  "directory": "/home/joel/src/repos/khess/build",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/cibyl -g -o CMakeFiles/cibyl.dir/src/cibyl/cibyl.c.o -c /home/joel/src/repos/khess/src/cibyl/cibyl.c",
   "file": "/home/joel/src/repos/khess/src/cibyl/cibyl.c",
   "output": "CMakeFiles/cibyl.dir/src/cibyl/cibyl.c.o"
 },
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/kcsrv -O3 -DNDEBUG -o CMakeFiles/kcsrv.dir/src/kcsrv/kcsrv.c.o -c /home/joel/src/repos/khess/src/kcsrv/kcsrv.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/kcsrv -g -o CMakeFiles/kcsrv.dir/src/kcsrv/kcsrv.c.o -c /home/joel/src/repos/khess/src/kcsrv/kcsrv.c",
   "file": "/home/joel/src/repos/khess/src/kcsrv/kcsrv.c",
   "output": "CMakeFiles/kcsrv.dir/src/kcsrv/kcsrv.c.o"
 },
 {
   "directory": "/home/joel/src/repos/khess/build",
-  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/khess -O3 -DNDEBUG -o CMakeFiles/khess.dir/src/khess/khess.c.o -c /home/joel/src/repos/khess/src/khess/khess.c",
+  "command": "/usr/bin/cc  -I/home/joel/src/repos/khess/include/khess -g -o CMakeFiles/khess.dir/src/khess/khess.c.o -c /home/joel/src/repos/khess/src/khess/khess.c",
   "file": "/home/joel/src/repos/khess/src/khess/khess.c",
   "output": "CMakeFiles/khess.dir/src/khess/khess.c.o"
 }
