@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = -I/home/joel/src/repos/khess/include/cibyl
 
-C_FLAGS = -g
+C_FLAGS = -g -mavx2
 

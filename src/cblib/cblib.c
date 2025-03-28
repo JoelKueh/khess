@@ -5,6 +5,40 @@
 #include "cblib.h"
 #include "tables.h"
 
+void cb_mv_to_uci_algbr(char *buf, cb_move_t move)
+{
+    buf[0] = cb_mv_get_from(move) % 8 + 'a';
+    buf[1] = '8' - cb_mv_get_from(move) / 8;
+    buf[2] = cb_mv_get_to(move) % 8 + 'a';
+    buf[3] = '8' - cb_mv_get_to(move) / 8;
+
+    switch (cb_mv_get_flags(move)) {
+        case CB_MV_KNIGHT_PROMO:
+        case CB_MV_KNIGHT_PROMO_CAPTURE:
+            buf[4] = 'n';
+            buf[5] = '\0';
+            break;
+        case CB_MV_BISHOP_PROMO:
+        case CB_MV_BISHOP_PROMO_CAPTURE:
+            buf[4] = 'b';
+            buf[5] = '\0';
+            break;
+        case CB_MV_ROOK_PROMO:
+        case CB_MV_ROOK_PROMO_CAPTURE:
+            buf[4] = 'r';
+            buf[5] = '\0';
+            break;
+        case CB_MV_QUEEN_PROMO:
+        case CB_MV_QUEEN_PROMO_CAPTURE:
+            buf[4] = 'q';
+            buf[5] = '\0';
+            break;
+        default:
+            buf[4] = '\0';
+            break;
+    }
+}
+
 cb_errno_t cb_board_init(cb_error_t *err, cb_board_t *board)
 {
     cb_errno_t result;
@@ -64,7 +98,7 @@ void cb_make(cb_board_t *board, const cb_move_t mv)
         case CB_MV_CAPTURE:
             ptype = cb_ptype_at_sq(board, from);
             cap_ptype = cb_ptype_at_sq(board, to);
-            cb_hist_set_captured_piece(&new_state, CB_PTYPE_EMPTY);
+            cb_hist_set_captured_piece(&new_state, cap_ptype);
             cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, ptype, board->turn, cap_ptype, !board->turn);
             cb_delete_piece(board, from, ptype, board->turn);
@@ -185,7 +219,7 @@ void cb_unmake(cb_board_t *board)
             ptype = cb_ptype_at_sq(board, to);
             cap_ptype = cb_hist_get_captured_piece(&old_ele.hist);
             cb_write_piece(board, from, ptype, board->turn);
-            cb_replace_piece(board, to, ptype, board->turn, cap_ptype, !board->turn);
+            cb_replace_piece(board, to, cap_ptype, !board->turn, ptype, board->turn);
             break;
         case CB_MV_KING_SIDE_CASTLE:
             rook_from = board->turn ? M_WHITE_KING_SIDE_ROOK_START :
@@ -499,9 +533,32 @@ cb_errno_t cb_board_from_fen(cb_error_t *err, cb_board_t *board, char *fen)
     return 0;
 }
 
-cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *fen)
+cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *uci)
 {
-    assert(false && "not yet implemented");
+    cb_errno_t result;
+    char *moves;
+    char *algbr;
+    cb_move_t mv;
+
+    /* Locate the beginning of the string of moves. */
+    if ((moves = strstr(uci, "moves ")) != NULL) {
+        *(moves - 1) = '\0';
+        moves += 6;
+    }
+
+    /* Parse the fen main section. */
+    if ((result = cb_board_from_fen(err, board, uci)) != 0)
+        return result;
+
+    /* Parse the list of moves. */
+    algbr = strtok(moves, " \n");
+    while (algbr != NULL) {
+        if ((result = cb_mv_from_uci_algbr(err, &mv, board, algbr)) != 0)
+            return result;
+        cb_make(board, mv);
+        algbr = strtok(NULL, " \n");
+    }
+
     return 0;
 }
 

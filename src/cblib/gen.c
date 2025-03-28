@@ -4,6 +4,7 @@
 #include "gen.h"
 #include "board.h"
 #include "tables.h"
+#include "cbdbg.h"
 
 static inline uint64_t pawn_smear(uint64_t pawns, cb_color_t color)
 {
@@ -132,26 +133,29 @@ void append_pawn_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *
     /* Get the mask of pawns that we want to evaluate. */
     uint64_t pawns = board->bb.piece[board->turn][CB_PTYPE_PAWN];
 
+    /* TODO: REMOVE ME.
+    cb_print_state(stdout, state); *;/
+
     /* Remove all of the pinned pawns and add back those that lie on a left ray. */
-    uint8_t left_pin_dir = board->turn == CB_WHITE ? CB_DIR_UL : CB_DIR_DR;
+    uint8_t left_pin_dir = board->turn == CB_WHITE ? CB_DIR_DR : CB_DIR_UL;
     uint64_t left_pin_mask = state->pins[left_pin_dir];
     uint64_t left_pawns = (pawns & ~state->pins[8]) | (pawns & left_pin_mask);
 
     /* Remove all of the pinned pawns and add back those that lie on a forward ray. */
-    uint8_t forward_pin_dir = board->turn == CB_WHITE ? CB_DIR_UL : CB_DIR_DR;
+    uint8_t forward_pin_dir = board->turn == CB_WHITE ? CB_DIR_D : CB_DIR_U;
     uint64_t forward_pin_mask = state->pins[forward_pin_dir];
     uint64_t forward_pawns = (pawns & ~state->pins[8]) | (pawns & forward_pin_mask);
 
     /* Remove all of the pinned pawns and add back those that lie on a right ray. */
-    uint8_t right_pin_dir = board->turn == CB_WHITE ? CB_DIR_UL : CB_DIR_DR;
+    uint8_t right_pin_dir = board->turn == CB_WHITE ? CB_DIR_DL : CB_DIR_UR;
     uint64_t right_pin_mask = state->pins[right_pin_dir];
     uint64_t right_pawns = (pawns & ~state->pins[8]) | (pawns & right_pin_mask);
 
     /* Generate masks for pawns moving left and right. */
     uint64_t left_smear = pawn_smear_left(left_pawns, board->turn);
-    uint64_t left_attacks = left_smear & board->bb.color[board->turn];
+    uint64_t left_attacks = left_smear & board->bb.color[!board->turn];
     uint64_t right_smear = pawn_smear_right(right_pawns, board->turn);
-    uint64_t right_attacks = right_smear & board->bb.color[board->turn];
+    uint64_t right_attacks = right_smear & board->bb.color[!board->turn];
 
     /* Generate masks for pushing pawns. */
     uint64_t forward_smear = pawn_smear_forward(forward_pawns, board->turn);
@@ -182,8 +186,8 @@ void append_pawn_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *
     append_left_attacks(mvlst, board, left_attacks);
     append_right_attacks(mvlst, board, right_attacks);
     append_forward_promos(mvlst, board, forward_promos);
-    append_left_promos(mvlst, board, left_attacks);
-    append_right_promos(mvlst, board, right_attacks);
+    append_left_promos(mvlst, board, left_promos);
+    append_right_promos(mvlst, board, right_promos);
 }
 
 void append_simple_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *state)
@@ -252,6 +256,10 @@ void append_castle_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t
 
 void append_enp_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *state)
 {
+    /* Exit early if there is not availiable enpassant. */
+    if (!cb_hist_enp_availiable(board->hist.data[board->hist.count - 1].hist))
+        return;
+
     /* Get the swares relavent to the piece that can enpassant. */
     cb_history_t hist = board->hist.data[board->hist.count - 1].hist;
     uint8_t enp_row_start = board->turn == CB_WHITE ? M_BLACK_MIN_ENPASSANT_TARGET :

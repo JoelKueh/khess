@@ -15,7 +15,7 @@ depth = int(sys.argv[2])
 fish_path = "stockfish"
 script_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.abspath(script_dir + "/..")
-rchess_path = root_dir + "/target/release/cli-debug"
+rchess_path = root_dir + "/build/debug"
 move_regex = r"([a-zA-z][1-8][a-zA-z][1-8][nbrq]?): ([1-9]\d*|0)"
 
 
@@ -48,7 +48,7 @@ def perft_get_counts(driver, fen, depth, moves):
 
 
 # Compile the release version of the code.
-comp_command = f"cd {root_dir}; cargo build --release"
+comp_command = f"cd {root_dir}/build; cmake --build ./"
 compiler = subprocess.run(comp_command, shell=True)
 
 moves = []

@@ -56,7 +56,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/joel/src/repos/khess
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/joel/src/repos/khess/build
+CMAKE_BINARY_DIR = /home/joel/mnt/LinuxExtern/src/repos/khess/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/cblib.dir/depend.make
@@ -72,7 +72,7 @@ include CMakeFiles/cblib.dir/flags.make
 CMakeFiles/cblib.dir/src/cblib/magical.c.o: CMakeFiles/cblib.dir/flags.make
 CMakeFiles/cblib.dir/src/cblib/magical.c.o: /home/joel/src/repos/khess/src/cblib/magical.c
 CMakeFiles/cblib.dir/src/cblib/magical.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/cblib.dir/src/cblib/magical.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/cblib.dir/src/cblib/magical.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/magical.c.o -MF CMakeFiles/cblib.dir/src/cblib/magical.c.o.d -o CMakeFiles/cblib.dir/src/cblib/magical.c.o -c /home/joel/src/repos/khess/src/cblib/magical.c
 
 CMakeFiles/cblib.dir/src/cblib/magical.c.i: cmake_force
@@ -86,7 +86,7 @@ CMakeFiles/cblib.dir/src/cblib/magical.c.s: cmake_force
 CMakeFiles/cblib.dir/src/cblib/normal.c.o: CMakeFiles/cblib.dir/flags.make
 CMakeFiles/cblib.dir/src/cblib/normal.c.o: /home/joel/src/repos/khess/src/cblib/normal.c
 CMakeFiles/cblib.dir/src/cblib/normal.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/cblib.dir/src/cblib/normal.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/cblib.dir/src/cblib/normal.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/normal.c.o -MF CMakeFiles/cblib.dir/src/cblib/normal.c.o.d -o CMakeFiles/cblib.dir/src/cblib/normal.c.o -c /home/joel/src/repos/khess/src/cblib/normal.c
 
 CMakeFiles/cblib.dir/src/cblib/normal.c.i: cmake_force
@@ -100,7 +100,7 @@ CMakeFiles/cblib.dir/src/cblib/normal.c.s: cmake_force
 CMakeFiles/cblib.dir/src/cblib/gen.c.o: CMakeFiles/cblib.dir/flags.make
 CMakeFiles/cblib.dir/src/cblib/gen.c.o: /home/joel/src/repos/khess/src/cblib/gen.c
 CMakeFiles/cblib.dir/src/cblib/gen.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/cblib.dir/src/cblib/gen.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/cblib.dir/src/cblib/gen.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/gen.c.o -MF CMakeFiles/cblib.dir/src/cblib/gen.c.o.d -o CMakeFiles/cblib.dir/src/cblib/gen.c.o -c /home/joel/src/repos/khess/src/cblib/gen.c
 
 CMakeFiles/cblib.dir/src/cblib/gen.c.i: cmake_force
@@ -114,7 +114,7 @@ CMakeFiles/cblib.dir/src/cblib/gen.c.s: cmake_force
 CMakeFiles/cblib.dir/src/cblib/cblib.c.o: CMakeFiles/cblib.dir/flags.make
 CMakeFiles/cblib.dir/src/cblib/cblib.c.o: /home/joel/src/repos/khess/src/cblib/cblib.c
 CMakeFiles/cblib.dir/src/cblib/cblib.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/cblib.dir/src/cblib/cblib.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/cblib.dir/src/cblib/cblib.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/cblib.c.o -MF CMakeFiles/cblib.dir/src/cblib/cblib.c.o.d -o CMakeFiles/cblib.dir/src/cblib/cblib.c.o -c /home/joel/src/repos/khess/src/cblib/cblib.c
 
 CMakeFiles/cblib.dir/src/cblib/cblib.c.i: cmake_force
@@ -128,7 +128,7 @@ CMakeFiles/cblib.dir/src/cblib/cblib.c.s: cmake_force
 CMakeFiles/cblib.dir/src/cblib/cbconst.c.o: CMakeFiles/cblib.dir/flags.make
 CMakeFiles/cblib.dir/src/cblib/cbconst.c.o: /home/joel/src/repos/khess/src/cblib/cbconst.c
 CMakeFiles/cblib.dir/src/cblib/cbconst.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/cblib.dir/src/cblib/cbconst.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/cblib.dir/src/cblib/cbconst.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/cbconst.c.o -MF CMakeFiles/cblib.dir/src/cblib/cbconst.c.o.d -o CMakeFiles/cblib.dir/src/cblib/cbconst.c.o -c /home/joel/src/repos/khess/src/cblib/cbconst.c
 
 CMakeFiles/cblib.dir/src/cblib/cbconst.c.i: cmake_force
@@ -142,7 +142,7 @@ CMakeFiles/cblib.dir/src/cblib/cbconst.c.s: cmake_force
 CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: CMakeFiles/cblib.dir/flags.make
 CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: /home/joel/src/repos/khess/src/cblib/cbdbg.c
 CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: CMakeFiles/cblib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o -MF CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o.d -o CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o -c /home/joel/src/repos/khess/src/cblib/cbdbg.c
 
 CMakeFiles/cblib.dir/src/cblib/cbdbg.c.i: cmake_force
@@ -173,7 +173,7 @@ libcblib.a: CMakeFiles/cblib.dir/src/cblib/cbconst.c.o
 libcblib.a: CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o
 libcblib.a: CMakeFiles/cblib.dir/build.make
 libcblib.a: CMakeFiles/cblib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/joel/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking C static library libcblib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking C static library libcblib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/cblib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cblib.dir/link.txt --verbose=$(VERBOSE)
 
@@ -186,6 +186,6 @@ CMakeFiles/cblib.dir/clean:
 .PHONY : CMakeFiles/cblib.dir/clean
 
 CMakeFiles/cblib.dir/depend:
-	cd /home/joel/src/repos/khess/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/joel/src/repos/khess /home/joel/src/repos/khess /home/joel/src/repos/khess/build /home/joel/src/repos/khess/build /home/joel/src/repos/khess/build/CMakeFiles/cblib.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/joel/mnt/LinuxExtern/src/repos/khess/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/joel/src/repos/khess /home/joel/src/repos/khess /home/joel/mnt/LinuxExtern/src/repos/khess/build /home/joel/mnt/LinuxExtern/src/repos/khess/build /home/joel/mnt/LinuxExtern/src/repos/khess/build/CMakeFiles/cblib.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/cblib.dir/depend
 

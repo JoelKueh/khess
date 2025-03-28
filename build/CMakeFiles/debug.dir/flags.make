@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I/home/joel/src/repos/khess/include/cblib -I/home/joel/src/repos/khess/include/debug
+C_INCLUDES = -I/home/joel/src/repos/khess/include/cblib -I/home/joel/src/repos/khess/include/debug -I/home/joel/src/repos/khess/include/utils
 
-C_FLAGS = -g
+C_FLAGS = -g -mavx2
 

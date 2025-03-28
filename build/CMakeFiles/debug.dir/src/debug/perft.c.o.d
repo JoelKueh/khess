@@ -49,4 +49,6 @@ CMakeFiles/debug.dir/src/debug/perft.c.o: \
  /usr/include/bits/stdlib-float.h \
  /home/joel/src/repos/khess/include/cblib/move.h \
  /home/joel/src/repos/khess/include/cblib/gen.h \
- /home/joel/src/repos/khess/include/cblib/cbdbg.h
+ /home/joel/src/repos/khess/include/cblib/cbdbg.h \
+ /home/joel/src/repos/khess/include/utils/crosstime.h \
+ /usr/include/inttypes.h

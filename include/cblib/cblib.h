@@ -22,6 +22,7 @@ cb_errno_t cb_mv_from_short_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *bo
                                   const char *algbr);
 cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *board,
                                 const char *algbr);
+void cb_mv_to_uci_algbr(char buf[6], cb_move_t mv);
 
 /* Functions for making and unmaking moves on a board. */
 cb_errno_t cb_reserve_for_make(cb_error_t *err, cb_board_t *board, uint32_t added_depth);

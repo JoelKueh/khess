@@ -3,7 +3,7 @@
 
 # Relative path conversion top directories.
 set(CMAKE_RELATIVE_PATH_TOP_SOURCE "/home/joel/src/repos/khess")
-set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/joel/src/repos/khess/build")
+set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/joel/mnt/LinuxExtern/src/repos/khess/build")
 
 # Force unix paths in dependencies.
 set(CMAKE_FORCE_UNIX_PATHS 1)

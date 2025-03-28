@@ -91,6 +91,7 @@ CMakeFiles/debug.dir/src/debug/perft.c.o: /home/joel/src/repos/khess/src/debug/p
   /home/joel/src/repos/khess/include/cblib/history.h \
   /home/joel/src/repos/khess/include/cblib/move.h \
   /home/joel/src/repos/khess/include/debug/perft.h \
+  /home/joel/src/repos/khess/include/utils/crosstime.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
@@ -151,6 +152,7 @@ CMakeFiles/debug.dir/src/debug/perft.c.o: /home/joel/src/repos/khess/src/debug/p
   /usr/include/features.h \
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
+  /usr/include/inttypes.h \
   /usr/include/linux/errno.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
@@ -170,7 +172,11 @@ CMakeFiles/debug.dir/src/debug/perft.c.o: /home/joel/src/repos/khess/src/debug/p
 
 /usr/include/time.h:
 
+/usr/include/inttypes.h:
+
 /usr/include/bits/time.h:
+
+/home/joel/src/repos/khess/include/utils/crosstime.h:
 
 /home/joel/src/repos/khess/src/debug/perft.c:
 

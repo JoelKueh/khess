@@ -9,6 +9,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
+add_compile_options(-mavx2)
+
 # Add the chessboard library.
 add_library(cblib
 	src/cblib/magical.c
@@ -21,6 +23,7 @@ add_library(cblib
 target_include_directories(cblib
 	PRIVATE
 		${PROJECT_SOURCE_DIR}/include/cblib
+		${PROJECT_SOURCE_DIR}/include/utils
 )
 
 # Add the debug executable.
@@ -32,6 +35,7 @@ target_include_directories(debug
 	PRIVATE
 		${PROJECT_SOURCE_DIR}/include/cblib
 		${PROJECT_SOURCE_DIR}/include/debug
+		${PROJECT_SOURCE_DIR}/include/utils
 )
 target_link_libraries(debug
 	cblib

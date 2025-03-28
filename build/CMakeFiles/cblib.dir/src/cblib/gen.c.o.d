@@ -43,4 +43,6 @@ CMakeFiles/cblib.dir/src/cblib/gen.c.o: \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/bits/stdlib-float.h \
  /home/joel/src/repos/khess/include/cblib/move.h \
- /home/joel/src/repos/khess/include/cblib/tables.h
+ /home/joel/src/repos/khess/include/cblib/tables.h \
+ /home/joel/src/repos/khess/include/cblib/cbdbg.h \
+ /home/joel/src/repos/khess/include/cblib/board.h

@@ -25,7 +25,7 @@ int handle_position(cb_board_t *board)
 
     /* Execute the command. */
     if (strcmp(token, "fen") == 0) {
-        if ((result = cb_board_from_fen(&err, board, game_str)) != 0) {
+        if ((result = cb_board_from_uci(&err, board, game_str)) != 0) {
             fprintf(stderr, "cb_board_from_fen: %s\n", err.desc);
             return result;
         }

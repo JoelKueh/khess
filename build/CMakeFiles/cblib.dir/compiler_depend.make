@@ -44,6 +44,8 @@ CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: /home/joel/src/repos/khess/src/cblib/c
   /home/joel/src/repos/khess/include/cblib/board.h \
   /home/joel/src/repos/khess/include/cblib/cbconst.h \
   /home/joel/src/repos/khess/include/cblib/cbdbg.h \
+  /home/joel/src/repos/khess/include/cblib/cblib.h \
+  /home/joel/src/repos/khess/include/cblib/gen.h \
   /home/joel/src/repos/khess/include/cblib/history.h \
   /home/joel/src/repos/khess/include/cblib/move.h \
   /usr/include/alloca.h \
@@ -202,6 +204,7 @@ CMakeFiles/cblib.dir/src/cblib/cblib.c.o: /home/joel/src/repos/khess/src/cblib/c
 CMakeFiles/cblib.dir/src/cblib/gen.c.o: /home/joel/src/repos/khess/src/cblib/gen.c \
   /home/joel/src/repos/khess/include/cblib/board.h \
   /home/joel/src/repos/khess/include/cblib/cbconst.h \
+  /home/joel/src/repos/khess/include/cblib/cbdbg.h \
   /home/joel/src/repos/khess/include/cblib/gen.h \
   /home/joel/src/repos/khess/include/cblib/history.h \
   /home/joel/src/repos/khess/include/cblib/move.h \
@@ -438,8 +441,6 @@ CMakeFiles/cblib.dir/src/cblib/normal.c.o: /home/joel/src/repos/khess/src/cblib/
 
 /home/joel/src/repos/khess/include/cblib/tables.h:
 
-/home/joel/src/repos/khess/include/cblib/gen.h:
-
 /home/joel/src/repos/khess/src/cblib/cblib.c:
 
 /usr/include/sys/types.h:
@@ -461,6 +462,12 @@ CMakeFiles/cblib.dir/src/cblib/normal.c.o: /home/joel/src/repos/khess/src/cblib/
 /usr/include/bits/types/__sigset_t.h:
 
 /usr/include/bits/thread-shared-types.h:
+
+/usr/include/bits/types/time_t.h:
+
+/usr/include/bits/struct_rwlock.h:
+
+/usr/include/bits/struct_mutex.h:
 
 /usr/include/gnu/stubs.h:
 
@@ -540,13 +547,13 @@ CMakeFiles/cblib.dir/src/cblib/normal.c.o: /home/joel/src/repos/khess/src/cblib/
 
 /usr/include/bits/time64.h:
 
+/home/joel/src/repos/khess/include/cblib/gen.h:
+
 /home/joel/src/repos/khess/include/cblib/cblib.h:
 
 /usr/include/bits/byteswap.h:
 
 /usr/include/gnu/stubs-64.h:
-
-/usr/include/bits/struct_mutex.h:
 
 /usr/include/sys/cdefs.h:
 
@@ -559,10 +566,6 @@ CMakeFiles/cblib.dir/src/cblib/normal.c.o: /home/joel/src/repos/khess/src/cblib/
 /usr/lib/gcc/x86_64-redhat-linux/14/include/stdarg.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/14/include/stddef.h:
-
-/usr/include/bits/types/time_t.h:
-
-/usr/include/bits/struct_rwlock.h:
 
 /home/joel/src/repos/khess/src/cblib/cbdbg.c:
 

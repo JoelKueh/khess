@@ -1,5 +1,6 @@
 
 #include "cbdbg.h"
+#include "cblib.h"
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -10,6 +11,22 @@
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 #define PRINT_BUF_LEN 1024
+
+void cb_print_mv_hist(FILE *f, cb_board_t *board)
+{
+    int i = 0;
+    cb_move_t mv;
+    char buf[PRINT_BUF_LEN];
+    cb_hist_stack_t *hist = &board->hist;
+
+    /* First move isn't valid. */
+    for (i = 1; i < (hist->count - 1); i++) {
+        cb_mv_to_uci_algbr(buf, hist->data[i].move);
+        fprintf(f, "%s -> ", buf);
+    }
+    cb_mv_to_uci_algbr(buf, hist->data[i].move);
+    fprintf(f, "%s\n", buf);
+}
 
 void cb_print_board_ascii(FILE *f, cb_board_t *board)
 {

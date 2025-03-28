@@ -44,4 +44,7 @@ CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o: \
  /usr/include/bits/atomic_wide_counter.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/bits/stdlib-float.h \
- /home/joel/src/repos/khess/include/cblib/move.h
+ /home/joel/src/repos/khess/include/cblib/move.h \
+ /home/joel/src/repos/khess/include/cblib/cblib.h \
+ /home/joel/src/repos/khess/include/cblib/gen.h \
+ /home/joel/src/repos/khess/include/cblib/cbdbg.h

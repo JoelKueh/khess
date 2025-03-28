@@ -6,7 +6,7 @@
 #include "tables.h"
 #include "cbconst.h"
 
-const uint8_t dir_offset_mapping[8] = { 1, -7, -8, -9, -1, 7, 8, 9 };
+const int8_t dir_offset_mapping[8] = { 1, -7, -8, -9, -1, 7, 8, 9 };
 
 const uint8_t NUM_BISHOP_BITS[64] = {
     6, 5, 5, 5, 5, 5, 5, 6,

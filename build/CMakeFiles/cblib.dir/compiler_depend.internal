@@ -46,6 +46,8 @@ CMakeFiles/cblib.dir/src/cblib/cbdbg.c.o
  /home/joel/src/repos/khess/include/cblib/board.h
  /home/joel/src/repos/khess/include/cblib/cbconst.h
  /home/joel/src/repos/khess/include/cblib/cbdbg.h
+ /home/joel/src/repos/khess/include/cblib/cblib.h
+ /home/joel/src/repos/khess/include/cblib/gen.h
  /home/joel/src/repos/khess/include/cblib/history.h
  /home/joel/src/repos/khess/include/cblib/move.h
  /usr/include/alloca.h
@@ -206,6 +208,7 @@ CMakeFiles/cblib.dir/src/cblib/gen.c.o
  /home/joel/src/repos/khess/src/cblib/gen.c
  /home/joel/src/repos/khess/include/cblib/board.h
  /home/joel/src/repos/khess/include/cblib/cbconst.h
+ /home/joel/src/repos/khess/include/cblib/cbdbg.h
  /home/joel/src/repos/khess/include/cblib/gen.h
  /home/joel/src/repos/khess/include/cblib/history.h
  /home/joel/src/repos/khess/include/cblib/move.h

@@ -73,7 +73,7 @@ uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2)
     /* This line is a mess, but it does convert from square and file to ray direction. */
     direction = (sq1_rank == sq2_rank) ? (sq1 < sq2 ? CB_DIR_R : CB_DIR_L) :
         (sq1_file == sq2_file) ? (sq1 < sq2 ? CB_DIR_D : CB_DIR_U) :
-        (sq1_file + sq1_rank == sq1_file + sq2_rank) ? (sq1 < sq2 ? CB_DIR_DL : CB_DIR_UR) :
+        (sq1_file + sq1_rank == sq2_file + sq2_rank) ? (sq1 < sq2 ? CB_DIR_DL : CB_DIR_UR) :
         (sq1_file - sq1_rank == sq2_file - sq2_rank) ? (sq1 < sq2 ? CB_DIR_DR : CB_DIR_UL) :
         CB_DIR_INVALID;
 
@@ -83,7 +83,7 @@ uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2)
 /**
  * Generate the ray that connects sq1 and sq2.
  */
-uint8_t get_connecting_ray(uint8_t sq1, uint8_t sq2)
+uint8_t get_connecting_ray(uint64_t sq1, uint64_t sq2)
 {
     uint64_t mask = 0;
     uint8_t direction;
@@ -94,6 +94,7 @@ uint8_t get_connecting_ray(uint8_t sq1, uint8_t sq2)
     }
 
     /* Slide along the ray until we reach the destination. */
+    mask = 0;
     while (sq1 != sq2) {
         mask |= UINT64_C(1) << sq1;
         sq1 += dir_offset_mapping[direction];
@@ -127,7 +128,7 @@ void cb_init_normal_tables()
 
 uint64_t cb_read_pawn_atk_msk(uint8_t sq, cb_color_t color)
 {
-    return pawn_atks[sq][color];
+    return pawn_atks[color][sq];
 }
 
 uint64_t cb_read_knight_atk_msk(uint8_t sq)
