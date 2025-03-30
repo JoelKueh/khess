@@ -245,7 +245,7 @@ void cb_unmake(cb_board_t *board)
             direction = board->turn ? 8 : -8;
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
             cb_delete_piece(board, to, CB_PTYPE_PAWN, board->turn);
-            cb_write_piece(board, from + direction, CB_PTYPE_PAWN, !board->turn);
+            cb_write_piece(board, to + direction, CB_PTYPE_PAWN, !board->turn);
             break;
         case CB_MV_KNIGHT_PROMO:
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
@@ -298,8 +298,8 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
 {
     uint8_t to, from;
     uint16_t flag;
-    cb_mvlst_t mvlst;
     cb_move_t temp_mv;
+    cb_mvlst_t mvlst;
     cb_state_tables_t state;
     int i;
 
@@ -319,9 +319,9 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
         return cb_mkerr(err, CB_EINVAL, "invalid character in move");
 
     /* Find the move in the list of generated moves and return the match. */
-    *mv = CB_INVALID_MOVE;
     cb_gen_board_tables(&state, board);
     cb_gen_moves(&mvlst, board, &state);
+    *mv = CB_INVALID_MOVE;
     for (i = 0; i < cb_mvlst_size(&mvlst); i++) {
         temp_mv = cb_mvlst_at(&mvlst, i);
         if (cb_mv_get_from(temp_mv) == from && cb_mv_get_to(temp_mv) == to) {
@@ -537,7 +537,7 @@ cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *uci)
 {
     cb_errno_t result;
     char *moves;
-    char *algbr;
+    char *algbr = NULL;
     cb_move_t mv;
 
     /* Locate the beginning of the string of moves. */
@@ -549,6 +549,10 @@ cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *uci)
     /* Parse the fen main section. */
     if ((result = cb_board_from_fen(err, board, uci)) != 0)
         return result;
+
+    /* If there is no moves string, then go on with your life. */
+    if (moves == NULL)
+        return 0;
 
     /* Parse the list of moves. */
     algbr = strtok(moves, " \n");

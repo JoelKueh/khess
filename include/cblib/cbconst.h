@@ -86,7 +86,7 @@ typedef struct {
     uint64_t threats;
     uint64_t checks;
     uint64_t check_blocks;
-    uint64_t pins[9];
+    uint64_t pins[10];
 } cb_state_tables_t;
 
 typedef struct {

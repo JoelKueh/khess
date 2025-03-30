@@ -11,5 +11,6 @@ void cb_print_board_ascii(FILE *f, cb_board_t *board);
 void cb_print_board_utf8(FILE *f, cb_board_t *board);
 void cb_print_bitboard(FILE *f, cb_board_t *board);
 void cb_print_state(FILE *f, cb_state_tables_t *state);
+void cb_print_moves(FILE *f, cb_mvlst_t *mvlst);
 
 #endif /* CB_DEBUG_H */

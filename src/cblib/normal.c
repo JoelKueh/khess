@@ -83,7 +83,7 @@ uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2)
 /**
  * Generate the ray that connects sq1 and sq2.
  */
-uint8_t get_connecting_ray(uint64_t sq1, uint64_t sq2)
+uint64_t get_connecting_ray(uint64_t sq1, uint64_t sq2)
 {
     uint64_t mask = 0;
     uint8_t direction;

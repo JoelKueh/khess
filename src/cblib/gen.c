@@ -292,12 +292,12 @@ void append_enp_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *s
         bishop_threats = cb_read_bishop_atk_msk(king_sq, new_occ)
             & (board->bb.piece[!board->turn][CB_PTYPE_BISHOP]
                 | board->bb.piece[!board->turn][CB_PTYPE_QUEEN]);
-        if (!bishop_threats) continue;
+        if (bishop_threats) continue;
 
         rook_threats = cb_read_rook_atk_msk(king_sq, new_occ)
             & (board->bb.piece[!board->turn][CB_PTYPE_ROOK]
                 | board->bb.piece[!board->turn][CB_PTYPE_QUEEN]);
-        if (!bishop_threats) continue;
+        if (rook_threats) continue;
 
         /* Push the move if it doesn't cause any problems. */
         cb_mvlst_push(mvlst, mv);
@@ -416,7 +416,7 @@ static inline uint64_t gen_check_blocks(cb_board_t *board, uint64_t checks)
 
     uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
     uint8_t check_sq = peek_rbit(checks);
-    return cb_read_tf_table(king_sq, check_sq);
+    return cb_read_tf_table(check_sq, king_sq);
 }
 
 static inline uint64_t xray_bishop_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)
@@ -433,7 +433,7 @@ static inline uint64_t xray_rook_attacks(uint64_t occ, uint64_t blockers, uint64
     return attacks ^ cb_read_rook_atk_msk(sq, occ ^ blockers);
 }
 
-static inline void gen_pins(uint64_t pins[9], cb_board_t *board)
+static inline void gen_pins(uint64_t pins[10], cb_board_t *board)
 {
     uint64_t king = board->bb.piece[board->turn][CB_PTYPE_KING];
     uint64_t king_sq = peek_rbit(king);

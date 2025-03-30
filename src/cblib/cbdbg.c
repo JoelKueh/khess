@@ -152,3 +152,15 @@ void cb_print_state(FILE *f, cb_state_tables_t *state)
     }
     fprintf(f, "\n");
 }
+
+void cb_print_moves(FILE *f, cb_mvlst_t *mvlst)
+{
+    char buf[6];
+    int i;
+
+    for (i = 0; i < cb_mvlst_size(mvlst); i++) {
+        cb_mv_to_uci_algbr(buf, cb_mvlst_at(mvlst, i));
+        fprintf(f, "%s ", buf);
+    }
+    fprintf(f, "\n");
+}

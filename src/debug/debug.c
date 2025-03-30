@@ -70,7 +70,7 @@ int handle_move(cb_board_t *board)
     /* Error handling. */
     if (token == NULL) {
         printf("Invalid move command. Usage:\n"
-               "move <uci_algbr>\n");
+               "m <uci_algbr>\n");
         return 1;
     }
 
@@ -101,13 +101,24 @@ int handle_debug(cb_board_t *board)
     /* Slice one token off of the command. */
     char *token = strtok(NULL, " \n");
     cb_state_tables_t state;
+    cb_mvlst_t mvlst;
+
+    /* Error handling. */
+    if (token == NULL) {
+        printf("Invalid move command. Usage:\n"
+               "dbg <state/board/moves>\n");
+        return 1;
+    }
 
     /* Parse the first token in the command. */
     cb_gen_board_tables(&state, board);
+    cb_gen_moves(&mvlst, board, &state);
     if (strcmp(token, "state") == 0)
         cb_print_state(stdout, &state);
     else if (strcmp(token, "board") == 0)
         cb_print_bitboard(stdout, board);
+    else if (strcmp(token, "moves") == 0)
+        cb_print_moves(stdout, &mvlst);
     else 
         printf("Invalid command\n");
     
