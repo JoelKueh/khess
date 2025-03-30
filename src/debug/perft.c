@@ -114,7 +114,7 @@ int perft(cb_board_t *board, int depth)
     end_time = time_ns();
     printf("\n");
     printf("Nodes searched: %" PRIu64 "\n", total);
-    printf("Time: %" PRIu64 "us\n", (end_time - start_time) / 1000);
+    printf("Time: %.3fms\n", (end_time - start_time) / 1000000.0);
     printf("\n");
 
     return 0;
@@ -165,7 +165,7 @@ int perft_cheat(cb_board_t *board, int depth)
     end_time = time_ns();
     printf("\n");
     printf("Nodes searched: %" PRIu64 "\n", total);
-    printf("Time: %" PRIu64 "us\n", (end_time - start_time) / 1000);
+    printf("Time: %" PRIu64 "ms\n", (end_time - start_time) / 1000000);
     printf("\n");
 
     return 0;

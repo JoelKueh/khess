@@ -137,18 +137,15 @@ void append_pawn_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *
     cb_print_state(stdout, state); *;/
 
     /* Remove all of the pinned pawns and add back those that lie on a left ray. */
-    uint8_t left_pin_dir = board->turn == CB_WHITE ? CB_DIR_DR : CB_DIR_UL;
-    uint64_t left_pin_mask = state->pins[left_pin_dir];
+    uint64_t left_pin_mask = state->pins[CB_DIR_DR] | state->pins[CB_DIR_UL];
     uint64_t left_pawns = (pawns & ~state->pins[8]) | (pawns & left_pin_mask);
 
     /* Remove all of the pinned pawns and add back those that lie on a forward ray. */
-    uint8_t forward_pin_dir = board->turn == CB_WHITE ? CB_DIR_D : CB_DIR_U;
-    uint64_t forward_pin_mask = state->pins[forward_pin_dir];
+    uint64_t forward_pin_mask = state->pins[CB_DIR_D] | state->pins[CB_DIR_U];
     uint64_t forward_pawns = (pawns & ~state->pins[8]) | (pawns & forward_pin_mask);
 
     /* Remove all of the pinned pawns and add back those that lie on a right ray. */
-    uint8_t right_pin_dir = board->turn == CB_WHITE ? CB_DIR_DL : CB_DIR_UR;
-    uint64_t right_pin_mask = state->pins[right_pin_dir];
+    uint64_t right_pin_mask = state->pins[CB_DIR_DL] | state->pins[CB_DIR_UR];
     uint64_t right_pawns = (pawns & ~state->pins[8]) | (pawns & right_pin_mask);
 
     /* Generate masks for pawns moving left and right. */
@@ -416,7 +413,7 @@ static inline uint64_t gen_check_blocks(cb_board_t *board, uint64_t checks)
 
     uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
     uint8_t check_sq = peek_rbit(checks);
-    return cb_read_tf_table(check_sq, king_sq);
+    return cb_read_tf_table(check_sq, king_sq) | (UINT64_C(1) << check_sq);
 }
 
 static inline uint64_t xray_bishop_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)

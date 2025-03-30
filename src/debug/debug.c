@@ -151,7 +151,7 @@ int handle_perft(cb_board_t *board)
         printf("Depth must be a base 10 integer");
     }
 
-    return perft(board, depth);
+    return perft_cheat(board, depth);
 }
 
 int handle_go(cb_board_t *board)
