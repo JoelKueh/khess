@@ -170,11 +170,11 @@ void append_pawn_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *
     double_moves &= state->check_blocks;
 
     /* Select the moves that cuase a promotion. */
-    uint64_t left_promos = left_attacks & BB_TOP_ROW & BB_BOTTOM_ROW;
+    uint64_t left_promos = left_attacks & (BB_TOP_ROW | BB_BOTTOM_ROW);
     left_attacks ^= left_promos;
-    uint64_t right_promos = right_attacks & BB_TOP_ROW & BB_BOTTOM_ROW;
+    uint64_t right_promos = right_attacks & (BB_TOP_ROW | BB_BOTTOM_ROW);
     right_attacks ^= right_promos;
-    uint64_t forward_promos = forward_moves & BB_TOP_ROW & BB_BOTTOM_ROW;
+    uint64_t forward_promos = forward_moves & (BB_TOP_ROW | BB_BOTTOM_ROW);
     forward_moves ^= forward_promos;
 
     /* Turn the masks into moves. */
@@ -246,7 +246,7 @@ void append_castle_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t
 
     if (qsc_legal(board, state)) {
         to = board->turn == CB_WHITE ? M_WHITE_QUEEN_SIDE_CASTLE_TARGET :
-            M_WHITE_QUEEN_SIDE_CASTLE_TARGET;
+            M_BLACK_QUEEN_SIDE_CASTLE_TARGET;
         cb_mvlst_push(mvlst, cb_mv_from_data(from, to, CB_MV_QUEEN_SIDE_CASTLE));
     }
 }
@@ -338,7 +338,7 @@ static inline uint64_t pin_adjust(cb_board_t *board, cb_state_tables_t *state, u
     uint64_t mask;
     uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
     uint8_t dir = cb_get_ray_direction(king_sq, sq);
-    return state->pins[dir] == 0 ? moves : moves & state->pins[dir];
+    return (state->pins[dir] & (UINT64_C(1) << sq)) == 0 ? moves : (moves & state->pins[dir]);
 }
 
 uint64_t cb_gen_legal_mv_mask(cb_board_t *board, cb_state_tables_t *state, uint8_t sq)

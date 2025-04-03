@@ -1,11 +1,11 @@
 
 #include "cbconst.h"
 
-const uint16_t HIST_INIT_BOARD_STATE = 0b0;
-const uint16_t HIST_ENP_COL          = 0b11100000;
-const uint16_t HIST_PID_COL          = 0b11100000;
-const uint16_t HIST_ENP_AVAILABLE    = 0b10000;
-const uint16_t HIST_ENP_ALL          = 0b11110000;
+const uint16_t HIST_INIT_BOARD_STATE =              0b0;
+const uint16_t HIST_ENP_COL          =       0b11100000;
+const uint16_t HIST_PID_COL          =       0b11100000;
+const uint16_t HIST_ENP_AVAILABLE    =          0b10000;
+const uint16_t HIST_ENP_ALL          =       0b11110000;
 const uint16_t HIST_HALFMOVE_CLOCK   = 0b11111100000000;
 const uint16_t HIST_HALFMOVE_FIFTY   = 50 << 8;
 

@@ -15,6 +15,11 @@
 #define CB_STACK_INIT_SIZE 1024
 
 /**
+ * Format:
+ * HLFMV_NUMBER : ENP_COL / CAP_PIECE : ENP_AVAIL : KQkq
+ */
+
+/**
  * Sets the size of *hist to hist->count + CB_STACK_INIT_SIZE elements.
  */
 static inline int cb_hist_stack_reserve(cb_hist_stack_t *hist, uint32_t added_depth)
@@ -72,7 +77,7 @@ static inline cb_hist_ele_t cb_hist_stack_pop(cb_hist_stack_t *hist)
  */
 static inline bool cb_hist_has_ksc(cb_history_t hist, cb_color_t color)
 {
-    return (hist & 0b1000 >> color * 2) != 0;
+    return (hist & 0b10 << color * 2) != 0;
 }
 
 /**
@@ -80,7 +85,7 @@ static inline bool cb_hist_has_ksc(cb_history_t hist, cb_color_t color)
  */
 static inline bool cb_hist_has_qsc(cb_history_t hist, cb_color_t color)
 {
-    return (hist & 0b100 >> color * 2) != 0;
+    return (hist & 0b1 << color * 2) != 0;
 }
 
 
@@ -89,7 +94,7 @@ static inline bool cb_hist_has_qsc(cb_history_t hist, cb_color_t color)
  */
 static inline void cb_hist_remove_ksc(cb_history_t *hist, cb_color_t color)
 {
-    *hist &= ~0b1000 >> (color * 2);
+    *hist &= ~(0b10 << color * 2);
 }
 
 /**
@@ -97,7 +102,7 @@ static inline void cb_hist_remove_ksc(cb_history_t *hist, cb_color_t color)
  */
 static inline void cb_hist_remove_qsc(cb_history_t *hist, cb_color_t color)
 {
-    *hist &= ~0b100 >> (color * 2);
+    *hist &= ~(0b1 << color * 2);
 }
 
 /**
@@ -105,7 +110,7 @@ static inline void cb_hist_remove_qsc(cb_history_t *hist, cb_color_t color)
  */
 static inline void cb_hist_remove_castle(cb_history_t *hist, cb_color_t color)
 {
-    *hist &= ~0b1100 >> (color * 2);
+    *hist &= ~(0b11 << color * 2);
 }
 
 
@@ -114,7 +119,7 @@ static inline void cb_hist_remove_castle(cb_history_t *hist, cb_color_t color)
  */
 static inline void cb_hist_add_ksc(cb_history_t *hist, cb_color_t color)
 {
-    *hist |= 0b1000 >> (color * 2);
+    *hist |= 0b10 << color * 2;
 }
 
 /**
@@ -122,7 +127,7 @@ static inline void cb_hist_add_ksc(cb_history_t *hist, cb_color_t color)
  */
 static inline void cb_hist_add_qsc(cb_history_t *hist, cb_color_t color)
 {
-    *hist |= 0b100 >> (color * 2);
+    *hist |= 0b1 << color * 2;
 }
 
 /**
@@ -130,7 +135,7 @@ static inline void cb_hist_add_qsc(cb_history_t *hist, cb_color_t color)
  */
 static inline void cb_hist_add_castle(cb_history_t *hist, cb_color_t color)
 {
-    *hist |= 0b1100 >> (color * 2);
+    *hist |= 0b11 << color * 2;
 }
 
 
@@ -216,27 +221,18 @@ static inline void cb_hist_decay_castle_rights(cb_history_t *hist, uint8_t color
         uint8_t to, uint8_t from)
 {
     /* Remove castling rights for moving a king or rook. */
-    *hist &= (from == M_WHITE_KING_START) || (from == M_BLACK_KING_START) ?
-        ~(0b1100 >> (color * 2)) :
-        0xFFFF;
-    *hist &= (from == M_WHITE_KING_SIDE_ROOK_START)
-        || (from == M_BLACK_KING_SIDE_ROOK_START) ?
-        ~(0b1000 >> (color * 2)) :
-        0xFFFF;
-    *hist &= (from == M_WHITE_QUEEN_SIDE_ROOK_START)
-        || (from == M_BLACK_QUEEN_SIDE_ROOK_START) ?
-        ~(0b100 >> (color * 2)) :
-        0xFFFF;
+    *hist &= from == M_WHITE_KING_START ? ~UINT16_C(0b1100) : 0xFFFF;
+    *hist &= from == M_BLACK_KING_START ? ~UINT16_C(  0b11) : 0xFFFF;
+    *hist &= from == M_WHITE_KING_SIDE_ROOK_START ? ~UINT16_C(0b1000) : 0xFFFF;
+    *hist &= from == M_BLACK_KING_SIDE_ROOK_START ? ~UINT16_C(  0b10) : 0xFFFF;
+    *hist &= from == M_WHITE_QUEEN_SIDE_ROOK_START ? ~UINT16_C(0b100) : 0xFFFF;
+    *hist &= from == M_BLACK_QUEEN_SIDE_ROOK_START ? ~UINT16_C(  0b1) : 0xFFFF;
 
     /* Remove castling rights for taking a rook. */
-    *hist &= (to == M_WHITE_KING_SIDE_ROOK_START)
-        || (to == M_BLACK_KING_SIDE_ROOK_START) ?
-        ~(0b1000 >> (ENEMY_COLOR(color) * 2)) :
-        0xFFFF;
-    *hist &= (to == M_WHITE_QUEEN_SIDE_ROOK_START)
-        || (to == M_BLACK_QUEEN_SIDE_ROOK_START) ?
-        ~(0b100 >> (ENEMY_COLOR(color) * 2)) :
-        0xFFFF;
+    *hist &= to == M_WHITE_KING_SIDE_ROOK_START ? ~UINT16_C(0b1000) : 0xFFFF;
+    *hist &= to == M_BLACK_KING_SIDE_ROOK_START ? ~UINT16_C(  0b10) : 0xFFFF;
+    *hist &= to == M_WHITE_QUEEN_SIDE_ROOK_START ? ~UINT16_C(0b100) : 0xFFFF;
+    *hist &= to == M_BLACK_QUEEN_SIDE_ROOK_START ? ~UINT16_C(  0b1) : 0xFFFF;
 }
 
 #endif /* CB_HISTORY_H */

@@ -197,4 +197,4 @@ static inline uint8_t popcnt(uint64_t bb)
 
 cb_errno_t cb_mkerr(cb_error_t *err, cb_errno_t cb_errno, char *format, ...);
 
-#endif /* CB_CONST */
+# endif /* CB_CONST */

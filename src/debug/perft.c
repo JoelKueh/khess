@@ -5,7 +5,7 @@
 #include "crosstime.h"
 #include <inttypes.h>
 
-int perfting(cb_board_t *board, cb_state_tables_t *state, int depth)
+uint64_t perfting(cb_board_t *board, cb_state_tables_t *state, int depth)
 {
     uint64_t cnt = 0;
     int i;
@@ -37,7 +37,7 @@ int perfting(cb_board_t *board, cb_state_tables_t *state, int depth)
     return cnt;
 }
 
-int perft_cheating(cb_board_t *board, cb_state_tables_t *state, int depth)
+uint64_t perft_cheating(cb_board_t *board, cb_state_tables_t *state, int depth)
 {
     uint64_t cnt = 0;
     int i;

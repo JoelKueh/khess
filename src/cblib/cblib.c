@@ -67,7 +67,6 @@ cb_errno_t cb_reserve_for_make(cb_error_t *err, cb_board_t *board, uint32_t adde
 
 void cb_make(cb_board_t *board, const cb_move_t mv)
 {
-    cb_errno_t result;
     cb_history_t old_state = board->hist.data[board->hist.count - 1].hist;
     cb_hist_ele_t new_ele;
     cb_mv_flag_t flag = cb_mv_get_flags(mv);
@@ -111,12 +110,14 @@ void cb_make(cb_board_t *board, const cb_move_t mv)
         case CB_MV_KING_SIDE_CASTLE:
             rook_from = board->turn ? M_WHITE_KING_SIDE_ROOK_START :
                 M_BLACK_KING_SIDE_ROOK_START;
-            rook_to = board->turn ? M_WHITE_KING_SIDE_ROOK_START :
-                M_BLACK_KING_SIDE_ROOK_START;
+            rook_to = board->turn ? M_WHITE_KING_SIDE_ROOK_TARGET :
+                M_BLACK_KING_SIDE_ROOK_TARGET;
             cb_hist_set_captured_piece(&new_state, CB_PTYPE_EMPTY);
             cb_hist_remove_castle(&new_state, board->turn);
-            cb_replace_piece(board, to, ptype, board->turn, cap_ptype, !board->turn);
-            cb_delete_piece(board, from, ptype, board->turn);
+            cb_delete_piece(board, from, CB_PTYPE_KING, board->turn);
+            cb_write_piece(board, to, CB_PTYPE_KING, board->turn);
+            cb_delete_piece(board, rook_from, CB_PTYPE_ROOK, board->turn);
+            cb_write_piece(board, rook_to, CB_PTYPE_ROOK, board->turn);
             break;
         case CB_MV_QUEEN_SIDE_CASTLE:
             rook_from = board->turn ? M_WHITE_QUEEN_SIDE_ROOK_START :
@@ -125,8 +126,10 @@ void cb_make(cb_board_t *board, const cb_move_t mv)
                 M_BLACK_QUEEN_SIDE_ROOK_TARGET;
             cb_hist_set_captured_piece(&new_state, CB_PTYPE_EMPTY);
             cb_hist_remove_castle(&new_state, board->turn);
-            cb_replace_piece(board, to, ptype, board->turn, cap_ptype, !board->turn);
-            cb_delete_piece(board, from, ptype, board->turn);
+            cb_delete_piece(board, from, CB_PTYPE_KING, board->turn);
+            cb_write_piece(board, to, CB_PTYPE_KING, board->turn);
+            cb_delete_piece(board, rook_from, CB_PTYPE_ROOK, board->turn);
+            cb_write_piece(board, rook_to, CB_PTYPE_ROOK, board->turn);
             break;
         case CB_MV_ENPASSANT:
             direction = board->turn == CB_WHITE ? 8 : -8;
@@ -157,27 +160,31 @@ void cb_make(cb_board_t *board, const cb_move_t mv)
             break;
         case CB_MV_KNIGHT_PROMO_CAPTURE:
             cap_ptype = cb_ptype_at_sq(board, to);
-            cb_hist_set_captured_piece(&new_state, CB_PTYPE_PAWN);
+            cb_hist_set_captured_piece(&new_state, cap_ptype);
+            cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_KNIGHT, board->turn, cap_ptype, !board->turn);
-            cb_delete_piece(board, from, cap_ptype, board->turn);
+            cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
         case CB_MV_BISHOP_PROMO_CAPTURE:
             cap_ptype = cb_ptype_at_sq(board, to);
-            cb_hist_set_captured_piece(&new_state, CB_PTYPE_PAWN);
+            cb_hist_set_captured_piece(&new_state, cap_ptype);
+            cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_BISHOP, board->turn, cap_ptype, !board->turn);
-            cb_delete_piece(board, from, cap_ptype, board->turn);
+            cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
         case CB_MV_ROOK_PROMO_CAPTURE:
             cap_ptype = cb_ptype_at_sq(board, to);
-            cb_hist_set_captured_piece(&new_state, CB_PTYPE_PAWN);
+            cb_hist_set_captured_piece(&new_state, cap_ptype);
+            cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_ROOK, board->turn, cap_ptype, !board->turn);
-            cb_delete_piece(board, from, cap_ptype, board->turn);
+            cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
         case CB_MV_QUEEN_PROMO_CAPTURE:
             cap_ptype = cb_ptype_at_sq(board, to);
-            cb_hist_set_captured_piece(&new_state, CB_PTYPE_PAWN);
+            cb_hist_set_captured_piece(&new_state, cap_ptype);
+            cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_QUEEN, board->turn, cap_ptype, !board->turn);
-            cb_delete_piece(board, from, cap_ptype, board->turn);
+            cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
     }
 
@@ -224,8 +231,8 @@ void cb_unmake(cb_board_t *board)
         case CB_MV_KING_SIDE_CASTLE:
             rook_from = board->turn ? M_WHITE_KING_SIDE_ROOK_START :
                 M_BLACK_KING_SIDE_ROOK_START;
-            rook_to = board->turn ? M_WHITE_KING_SIDE_ROOK_START :
-                M_BLACK_KING_SIDE_ROOK_START;
+            rook_to = board->turn ? M_WHITE_KING_SIDE_ROOK_TARGET :
+                M_BLACK_KING_SIDE_ROOK_TARGET;
             cb_write_piece(board, from, CB_PTYPE_KING, board->turn);
             cb_delete_piece(board, to, CB_PTYPE_KING, board->turn);
             cb_write_piece(board, rook_from, CB_PTYPE_ROOK, board->turn);
@@ -266,22 +273,22 @@ void cb_unmake(cb_board_t *board)
         case CB_MV_KNIGHT_PROMO_CAPTURE:
             cap_ptype = cb_hist_get_captured_piece(&old_ele.hist);
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
-            cb_replace_piece(board, to, CB_PTYPE_KNIGHT, board->turn, cap_ptype, !board->turn);
+            cb_replace_piece(board, to, cap_ptype, !board->turn, CB_PTYPE_KNIGHT, board->turn);
             break;
         case CB_MV_BISHOP_PROMO_CAPTURE:
             cap_ptype = cb_hist_get_captured_piece(&old_ele.hist);
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
-            cb_replace_piece(board, to, CB_PTYPE_BISHOP, board->turn, cap_ptype, !board->turn);
+            cb_replace_piece(board, to, cap_ptype, !board->turn, CB_PTYPE_BISHOP, board->turn);
             break;
         case CB_MV_ROOK_PROMO_CAPTURE:
             cap_ptype = cb_hist_get_captured_piece(&old_ele.hist);
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
-            cb_replace_piece(board, to, CB_PTYPE_ROOK, board->turn, cap_ptype, !board->turn);
+            cb_replace_piece(board, to, cap_ptype, !board->turn, CB_PTYPE_ROOK, board->turn);
             break;
         case CB_MV_QUEEN_PROMO_CAPTURE:
             cap_ptype = cb_hist_get_captured_piece(&old_ele.hist);
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
-            cb_replace_piece(board, to, CB_PTYPE_QUEEN, board->turn, cap_ptype, !board->turn);
+            cb_replace_piece(board, to, cap_ptype, !board->turn, CB_PTYPE_QUEEN, board->turn);
             break;
     }
 }
@@ -338,22 +345,22 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
     /* Adjust the move for information about promotions. */
     flag = cb_mv_get_flags(*mv);
     if (flag & (1 << 15)) { /* Check if this is a promotion. */
-        flag &= 0b1100 << 12; /* Remove the lower two bits from the flag. */
+        flag &= ~(0b11 << 12); /* Remove the lower two bits from the flag. */
 
         /* Check what the piece type is for a promotion and add the offset to turn
          * the piece type for the capture into what we want. */
         switch (algbr[4]) {
             case 'n':
-                flag += 0;
+                flag += 0 << 12;
                 break;
             case 'b':
-                flag += 1;
+                flag += 1 << 12;
                 break;
             case 'r':
-                flag += 2;
+                flag += 2 << 12;
                 break;
             case 'q':
-                flag += 3;
+                flag += 3 << 12;
                 break;
             default:
                 return cb_mkerr(err, CB_EINVAL, "invlaid character in move");
