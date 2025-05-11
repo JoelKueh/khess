@@ -48,6 +48,7 @@ add_executable(cibyl
 target_include_directories(cibyl
 	PRIVATE
 		${PROJECT_SOURCE_DIR}/include/cibyl
+		${PROJECT_SOURCE_DIR}/include/cblib
 )
 
 # Create the server executable.
