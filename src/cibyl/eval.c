@@ -13,7 +13,6 @@ float piece_differential(const cb_board_t *board)
     if (board->bb.piece[board->turn][CB_PTYPE_KING] == 0)
         return board->turn ? FLT_MIN : FLT_MAX;
 
-
 }
 
 float eval(const cb_board_t *board)

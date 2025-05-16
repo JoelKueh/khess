@@ -1,9 +1,14 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <threads.h>
 
 #include "cblib.h"
 #include "tables.h"
+
+/* Once lock for board table initialization. */
+once_flag magic_once = ONCE_FLAG_INIT;
+once_flag normal_once = ONCE_FLAG_INIT;
 
 void cb_mv_to_uci_algbr(char *buf, cb_move_t move)
 {
