@@ -213,7 +213,8 @@ int main()
     printf("kchess debug version 0.0.1 by Joel Kuehne\n");
 
     /* Set up board tables. */
-    cb_tables_init_once(&err);
+    err.num = 0;
+    cb_tables_init(&err);
     if (err.num != 0) {
         fprintf(stderr, "cb_table_init_once: %s\n", err.desc);
         result = 1;

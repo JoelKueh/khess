@@ -22,7 +22,7 @@ cb_errno_t cb_board_init(cb_error_t *err, cb_board_t *board);
  * @param err A pointer that will be populated with any errors.
  * @return True if this thread initialized the table, false otherwise.
  */
-bool cb_tables_init_once(cb_error_t *err);
+cb_errno_t cb_tables_init(cb_error_t *err);
 
 /**
  * @breif Frees a board. Note that this does not clean up move generation tables.
