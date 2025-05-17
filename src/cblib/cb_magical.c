@@ -596,9 +596,3 @@ out_cleanup_bishop:
 out_no_cleanup:
     return result;
 }
-
-void cb_free_magic_tables()
-{
-    cleanup_bishop_tables();
-    cleanup_rook_tables();
-}
