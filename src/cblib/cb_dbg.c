@@ -1,6 +1,9 @@
 
-#include "cbdbg.h"
-#include "cblib.h"
+#include "cb_dbg.h"
+#include "cb_types.h"
+#include "cb_lib.h"
+#include "cb_board.h"
+#include "cb_move.h"
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"

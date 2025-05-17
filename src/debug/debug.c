@@ -1,7 +1,12 @@
 
 #include <string.h>
 #include <stdio.h>
-#include "cblib.h"
+#include <errno.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include "cb_lib.h"
+#include "cb_dbg.h"
 #include "perft.h"
 
 #define MAX_COMMAND_LEN 512

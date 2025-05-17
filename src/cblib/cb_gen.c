@@ -1,10 +1,13 @@
 
 #include <string.h>
 
-#include "gen.h"
-#include "board.h"
-#include "tables.h"
-#include "cbdbg.h"
+#include "cb_lib.h"
+#include "cb_board.h"
+#include "cb_tables.h"
+#include "cb_const.h"
+#include "cb_move.h"
+#include "cb_bitutil.h"
+#include "cb_history.h"
 
 static inline uint64_t pawn_smear(uint64_t pawns, cb_color_t color)
 {
@@ -187,6 +190,52 @@ void append_pawn_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *
     append_right_promos(mvlst, board, right_promos);
 }
 
+uint64_t gen_pseudo_mv_mask(cb_ptype_t ptype, cb_color_t pcolor, uint8_t sq, uint64_t occ)
+{
+    switch (ptype) {
+        case CB_PTYPE_PAWN:
+            return cb_read_pawn_atk_msk(sq, pcolor);
+        case CB_PTYPE_KNIGHT:
+            return cb_read_knight_atk_msk(sq);
+        case CB_PTYPE_BISHOP:
+            return cb_read_bishop_atk_msk(sq, occ);
+        case CB_PTYPE_ROOK:
+            return cb_read_rook_atk_msk(sq, occ);
+        case CB_PTYPE_QUEEN:
+            return cb_read_bishop_atk_msk(sq, occ)
+                | cb_read_rook_atk_msk(sq, occ);
+        case CB_PTYPE_KING:
+            return cb_read_king_atk_msk(sq);
+        case CB_PTYPE_EMPTY:
+            assert(false && "invalid piece type for pseudo legal move generation");
+            return 0;
+    }
+}
+
+static inline uint64_t pin_adjust(cb_board_t *board, cb_state_tables_t *state, uint8_t sq,
+                                  uint64_t moves)
+{
+    uint64_t mask;
+    uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
+    uint8_t dir = cb_get_ray_direction(king_sq, sq);
+    return (state->pins[dir] & (UINT64_C(1) << sq)) == 0 ? moves : (moves & state->pins[dir]);
+}
+
+uint64_t cb_gen_legal_mv_mask(cb_board_t *board, cb_state_tables_t *state, uint8_t sq)
+{
+    /* Generate the pseudo moves. */
+    cb_ptype_t ptype = cb_ptype_at_sq(board, sq);
+    cb_color_t pcolor = cb_color_at_sq(board, sq);
+    uint64_t moves = gen_pseudo_mv_mask(ptype, pcolor, sq, board->bb.occ);
+    moves &= ~board->bb.color[board->turn];
+
+    /* Adjust moves for pins and checks. */
+    moves &= ptype == CB_PTYPE_KING ? ~state->threats : state->check_blocks;
+    moves = pin_adjust(board, state, sq, moves);
+
+    return moves;
+}
+
 void append_simple_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *state)
 {
     uint8_t sq, target;
@@ -308,52 +357,6 @@ void cb_gen_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *state
     append_simple_moves(mvlst, board, state);
     append_castle_moves(mvlst, board, state);
     append_enp_moves(mvlst, board, state);
-}
-
-uint64_t gen_pseudo_mv_mask(cb_ptype_t ptype, cb_color_t pcolor, uint8_t sq, uint64_t occ)
-{
-    switch (ptype) {
-        case CB_PTYPE_PAWN:
-            return cb_read_pawn_atk_msk(sq, pcolor);
-        case CB_PTYPE_KNIGHT:
-            return cb_read_knight_atk_msk(sq);
-        case CB_PTYPE_BISHOP:
-            return cb_read_bishop_atk_msk(sq, occ);
-        case CB_PTYPE_ROOK:
-            return cb_read_rook_atk_msk(sq, occ);
-        case CB_PTYPE_QUEEN:
-            return cb_read_bishop_atk_msk(sq, occ)
-                | cb_read_rook_atk_msk(sq, occ);
-        case CB_PTYPE_KING:
-            return cb_read_king_atk_msk(sq);
-        case CB_PTYPE_EMPTY:
-            assert(false && "invalid piece type for pseudo legal move generation");
-            return 0;
-    }
-}
-
-static inline uint64_t pin_adjust(cb_board_t *board, cb_state_tables_t *state, uint8_t sq,
-                                  uint64_t moves)
-{
-    uint64_t mask;
-    uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
-    uint8_t dir = cb_get_ray_direction(king_sq, sq);
-    return (state->pins[dir] & (UINT64_C(1) << sq)) == 0 ? moves : (moves & state->pins[dir]);
-}
-
-uint64_t cb_gen_legal_mv_mask(cb_board_t *board, cb_state_tables_t *state, uint8_t sq)
-{
-    /* Generate the pseudo moves. */
-    cb_ptype_t ptype = cb_ptype_at_sq(board, sq);
-    cb_color_t pcolor = cb_color_at_sq(board, sq);
-    uint64_t moves = gen_pseudo_mv_mask(ptype, pcolor, sq, board->bb.occ);
-    moves &= ~board->bb.color[board->turn];
-
-    /* Adjust moves for pins and checks. */
-    moves &= ptype == CB_PTYPE_KING ? ~state->threats : state->check_blocks;
-    moves = pin_adjust(board, state, sq, moves);
-
-    return moves;
 }
 
 static inline uint64_t gen_threats(cb_board_t *board)

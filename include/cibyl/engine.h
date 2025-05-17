@@ -3,7 +3,9 @@
 #define CYBIL_ENGINE_H
 
 #include <threads.h>
+#include <stdbool.h>
 
+#include "cb_move.h"
 #include "cibyl.h"
 
 /* Transposition table that contains precalculated positions. */

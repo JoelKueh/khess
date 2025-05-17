@@ -1,10 +1,15 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <errno.h>
 #include <threads.h>
 
-#include "cblib.h"
-#include "tables.h"
+#include "cb_lib.h"
+#include "cb_tables.h"
+#include "cb_const.h"
+#include "cb_move.h"
+#include "cb_board.h"
+#include "cb_history.h"
 
 /* Once lock for board table initialization. */
 once_flag magic_once = ONCE_FLAG_INIT;
@@ -582,15 +587,5 @@ cb_errno_t cb_board_from_pgn(cb_error_t *err, cb_board_t *board, char *fen)
 {
     assert(false && "not yet implemented");
     return 0;
-}
-
-cb_errno_t cb_mkerr(cb_error_t *err, cb_errno_t cb_errno, char *format, ...)
-{
-    va_list args;
-    err->num = cb_errno;
-    va_start(args, format);
-    vsnprintf(err->desc, CB_ERROR_STRLEN, format, args);
-    va_end(args);
-    return cb_errno;
 }
 

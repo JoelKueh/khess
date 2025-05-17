@@ -3,8 +3,8 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "tables.h"
-#include "cbconst.h"
+#include "cb_tables.h"
+#include "cb_bitutil.h"
 
 const int8_t dir_offset_mapping[8] = { 1, -7, -8, -9, -1, 7, 8, 9 };
 

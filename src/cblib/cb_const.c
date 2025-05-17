@@ -1,5 +1,5 @@
 
-#include "cbconst.h"
+#include "cb_const.h"
 
 const uint16_t HIST_INIT_BOARD_STATE =              0b0;
 const uint16_t HIST_ENP_COL          =       0b11100000;

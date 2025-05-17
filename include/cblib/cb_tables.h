@@ -4,8 +4,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-#include "cbconst.h"
+#include "cb_types.h"
 
 /* Enum that contains different direcitons for rays on the board. */
 typedef enum {

@@ -3,6 +3,8 @@
 
 #include "perft.h"
 #include "crosstime.h"
+#include "cb_lib.h"
+#include "cb_move.h"
 #include <inttypes.h>
 
 uint64_t perfting(cb_board_t *board, cb_state_tables_t *state, int depth)

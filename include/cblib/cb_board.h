@@ -5,12 +5,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>
-#include <errno.h>
 #include <string.h>
 
-#include "cbconst.h"
-#include "history.h"
-#include "move.h"
+#include "cb_types.h"
 
 static inline char ptype_to_ascii(cb_ptype_t piece, cb_color_t color)
 {

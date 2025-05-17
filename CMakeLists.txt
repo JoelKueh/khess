@@ -13,12 +13,12 @@ add_compile_options(-mavx2)
 
 # Add the chessboard library.
 add_library(cblib
-	src/cblib/magical.c
-	src/cblib/normal.c
-	src/cblib/gen.c
-	src/cblib/cblib.c
-	src/cblib/cbconst.c
-        src/cblib/cbdbg.c
+	src/cblib/cb_magical.c
+	src/cblib/cb_normal.c
+	src/cblib/cb_gen.c
+	src/cblib/cb_lib.c
+	src/cblib/cb_const.c
+        src/cblib/cb_dbg.c
 )
 target_include_directories(cblib
 	PRIVATE
