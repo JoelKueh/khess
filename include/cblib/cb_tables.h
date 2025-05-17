@@ -27,7 +27,6 @@ uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2);
 /* Functions to initialize tables that will be used by the move generator. */
 int cb_init_magic_tables();
 void cb_init_normal_tables();
-void cb_free_magic_tables();
 
 /* Functions to perform reads on the magical tables. */
 uint64_t cb_read_bishop_atk_msk(uint8_t sq, uint64_t occ);

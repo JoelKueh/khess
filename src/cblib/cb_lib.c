@@ -12,7 +12,8 @@
 #include "cb_history.h"
 
 /* Once lock for board table initialization. */
-once_flag tables_once = ONCE_FLAG_INIT;
+once_flag tables_init_once = ONCE_FLAG_INIT;
+once_flag tables_cleanup_once = ONCE_FLAG_INIT;
 thrd_t tables_init_thread;
 cb_error_t tables_init_err;
 
@@ -78,6 +79,11 @@ bool cb_table_init_once(cb_error_t *err)
     }
 
     return thrd_equal(tables_init_thread, thrd_current());
+}
+
+void cb_table_free_once()
+{
+    
 }
 
 void cb_board_free(cb_board_t *board)

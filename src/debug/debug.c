@@ -212,12 +212,21 @@ int main()
     /* Print version information. */
     printf("kchess debug version 0.0.1 by Joel Kuehne\n");
 
+    /* Set up board tables. */
+    cb_table_init_once(&err);
+    if (err.num != 0) {
+        fprintf(stderr, "cb_table_init_once: %s\n", err.desc);
+        result = 1;
+        goto out;
+    }
+
     /* Set up the initial board state. */
     if (cb_board_init(&err, &board)) {
         fprintf(stderr, "cb_board_init: %s\n", err.desc);
         result = 1;
-        goto out;
+        goto ;
     }
+
     if (cb_board_from_fen(&err, &board, default_fen)) {
         fprintf(stderr, "cb_board_from_fen: %s\n", err.desc);
         result = 1;
@@ -238,6 +247,7 @@ out_free_command:
     free(command);
 out_free_board:
     cb_board_free(&board);
+out_free_tables:
 out:
     return result;
 }
