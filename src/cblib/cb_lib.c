@@ -12,8 +12,9 @@
 #include "cb_history.h"
 
 /* Once lock for board table initialization. */
-once_flag magic_once = ONCE_FLAG_INIT;
-once_flag normal_once = ONCE_FLAG_INIT;
+once_flag tables_once = ONCE_FLAG_INIT;
+thrd_t tables_init_thread;
+cb_error_t tables_init_err;
 
 void cb_mv_to_uci_algbr(char *buf, cb_move_t move)
 {
@@ -54,11 +55,29 @@ cb_errno_t cb_board_init(cb_error_t *err, cb_board_t *board)
     cb_errno_t result;
     if ((result = cb_hist_stack_init(&board->hist)) != 0)
         return cb_mkerr(err, result, "malloc: %s\n", strerror(errno));
-    if (cb_init_magic_tables())
-        return cb_mkerr(err, result, "malloc: %s\n", strerror(errno));
-    cb_init_normal_tables();
 
     return 0;
+}
+
+void table_init()
+{
+    cb_errno_t result;
+    tables_init_err.num = CB_EOK;
+    if ((result = cb_init_magic_tables()) != 0)
+        cb_mkerr(&tables_init_err, result, "malloc: %s\n", strerror(errno));
+    cb_init_normal_tables();
+    tables_init_thread = thrd_current();
+}
+
+bool cb_table_init_once(cb_error_t *err)
+{
+    call_once(&tables_once, table_init);
+
+    if (tables_init_err.num != 0) {
+        cb_mkerr(err, tables_init_err.num, tables_init_err.desc);
+    }
+
+    return thrd_equal(tables_init_thread, thrd_current());
 }
 
 void cb_board_free(cb_board_t *board)
