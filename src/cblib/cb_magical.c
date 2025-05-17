@@ -566,20 +566,6 @@ out_success:
     return result;
 }
 
-void cleanup_bishop_tables()
-{
-    int sq;
-    for (sq = 0; sq < 64; sq++)
-        free(bishop_atks[sq]);
-}
-
-void cleanup_rook_tables()
-{
-    int sq;
-    for (sq = 0; sq < 64; sq++)
-        free(rook_atks[sq]);
-}
-
 int cb_init_magic_tables()
 {
     int result;
