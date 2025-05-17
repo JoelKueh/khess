@@ -129,7 +129,7 @@ def perform_test(fen, depth, result):
     #    print(f"{fen} | {depth} | {result}")
     #    perform_test(fen, depth, result)
 
-for fen, depth, result in zip(POSITIONS, FULL_RESULTS, FULL_RESULTS):
+for fen, depth, result in zip(POSITIONS, SHORT_RESULTS, SHORT_RESULTS):
     print()
     print(f"{fen} | {depth} | {result}")
     perform_test(fen, depth, result)

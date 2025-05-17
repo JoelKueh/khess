@@ -69,9 +69,9 @@ void table_init()
     tables_init_thread = thrd_current();
 }
 
-bool cb_table_init_once(cb_error_t *err)
+bool cb_tables_init_once(cb_error_t *err)
 {
-    call_once(&tables_once, table_init);
+    call_once(&tables_init_once, table_init);
 
     if (tables_init_err.num != 0) {
         cb_mkerr(err, tables_init_err.num, tables_init_err.desc);
@@ -80,9 +80,9 @@ bool cb_table_init_once(cb_error_t *err)
     return thrd_equal(tables_init_thread, thrd_current());
 }
 
-void cb_table_free_once()
+void cb_tables_free()
 {
-    
+    cb_free_magic_tables();
 }
 
 void cb_board_free(cb_board_t *board)
