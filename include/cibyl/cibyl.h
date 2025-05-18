@@ -4,13 +4,27 @@
 
 #include "cb_lib.h"
 
-typedef enum {
-    /* Non-recoverable errors. Almost all errors are treated this way. */
-    CIBYL_ENOMEM = -2,
-    CIBYL_EABORT = -1,
+/**
+ * @breif Function to write to the log file.
+ * @param format A printf compliant format string.
+ * @param args A va_list vector of arguments.
+ */
+void cibyl_vwrite_log(char *format, va_list args);
 
-    /* This is okay, default return value for any function that can err. */
-    CIBYL_EOK = 0,
+/**
+ * @breif Function to write to the log file.
+ * @param format A printf compliant format string.
+ * @param ... All remaining arguments passed into the format string.
+ */
+void cibyl_write_log(char *format, ...);
+ 
+/**
+ * @breif Error codes for different operations.
+ */
+typedef enum {
+    CIBYL_ENOMEM = -2,      /**< Non-recoverable error for malloc failures. */
+    CIBYL_EABORT = -1,      /**< Generic non-recoverable error. */
+    CIBYL_EOK = 0           /**< Default return value. */
 } cibyl_errno_t;
 
 #endif /* CIBYL_H */

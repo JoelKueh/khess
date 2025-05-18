@@ -1,6 +1,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "cibyl.h"
 #include "uci.h"
@@ -43,12 +44,12 @@ cibyl_errno_t parse_i64(char *token, int64_t *out)
     char *endp;
 
     if (token == NULL && *token == '\0') {
-        printf("info string ERROR: missing argument for wtime. Terminating...");
+        cibyl_write_log("parse_i64: valid string expected\n");
         return CIBYL_EABORT;
     }
     *out = strtoll(token, &endp, 10);
     if (*endp != '\0') {
-        printf("info string ERROR: invalid argument for wtime. Terminating...");
+        cibyl_write_log("parse_i64: token is not an integer\n");
         return CIBYL_EABORT;
     }
     
@@ -88,15 +89,14 @@ cibyl_errno_t handle_go(char *opts)
     go_param_t go_params;
     char *token;
     char *endp;
-
-    /* Hanlde null input. */
-    if (opts == NULL) {
-        printf("info string ERROR: null input to go command. Terminating...");
-        return CIBYL_EABORT;
-    }
     
     /* Clear go params. */
     clear_go_params(&go_params);
+
+    /* Handle null input. */
+    if (opts == NULL) {
+        return CIBYL_EABORT;
+    }
 
     /* Loop through all of the arguments to the go command. */
     token = strtok(opts, " ");
@@ -152,7 +152,7 @@ cibyl_errno_t handle_go(char *opts)
     }
 
     /* Start thinking. */
-    eng_go(&engine.eng, &go_params);
+    eng_notify_go(&engine.eng, &go_params);
 
     return CIBYL_EOK;
 }
@@ -181,12 +181,12 @@ cibyl_errno_t handle_cmd(char *cmd)
             printf("uciok\n");
 
             /* Begin asynchronous initialization. */
-            eng_async_init(&engine.eng);
+            eng_begin_init(&engine.eng);
         } else if (strcmp(cmd, STR_DEBUG) == 0) {
             engine.debug = true;
         } else if (strcmp(cmd, STR_ISREADY) == 0) {
             /* Wait for initialization to be complete. */
-            eng_await_init(&engine.eng);
+            eng_await_isready(&engine.eng);
             printf("readyok\n");
         } else if (strcmp(cmd, STR_SETOPTION) == 0) {
             /* TODO: Implement me. */
@@ -231,7 +231,6 @@ cibyl_errno_t handle_cmd(char *cmd)
 cibyl_errno_t uci_init(uci_engine_t *engine)
 {
     /* TODO: Implement me. */
-
 }
 
 cibyl_errno_t uci_process(uci_engine_t *engine)
