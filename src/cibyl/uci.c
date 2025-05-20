@@ -28,35 +28,35 @@ const char ENGINE_AUTHOR[] = "Joel Kuehne";
 
 uci_engine_t engine;
 
-cibyl_errno_t handle_position(char *opts)
+kh_errno_t handle_position(char *opts)
 {
     return eng_set_ucifen(&engine.eng, opts);
 }
 
-cibyl_errno_t handle_searchmoves(char *moves)
+kh_errno_t handle_searchmoves(char *moves)
 {
     /* TODO: Implement me. */
-    return CIBYL_EABORT;
+    return KH_EABORT;
 }
 
-cibyl_errno_t parse_i64(char *token, int64_t *out)
+kh_errno_t parse_i64(char *token, int64_t *out)
 {
     char *endp;
 
     if (token == NULL && *token == '\0') {
-        cibyl_write_log("parse_i64: valid string expected\n");
-        return CIBYL_EABORT;
+        kh_write_log("parse_i64: valid string expected\n");
+        return KH_EABORT;
     }
     *out = strtoll(token, &endp, 10);
     if (*endp != '\0') {
-        cibyl_write_log("parse_i64: token is not an integer\n");
-        return CIBYL_EABORT;
+        kh_write_log("parse_i64: token is not an integer\n");
+        return KH_EABORT;
     }
     
-    return CIBYL_EOK;
+    return KH_EOK;
 }
 
-cibyl_errno_t handle_go(char *opts)
+kh_errno_t handle_go(char *opts)
 {
     typedef enum {
         GO_SEARCHMOVES,
@@ -95,7 +95,7 @@ cibyl_errno_t handle_go(char *opts)
 
     /* Handle null input. */
     if (opts == NULL) {
-        return CIBYL_EABORT;
+        return KH_EABORT;
     }
 
     /* Loop through all of the arguments to the go command. */
@@ -117,34 +117,34 @@ cibyl_errno_t handle_go(char *opts)
         /* Handle time information. */
         else if (strcmp(token, STR_GO_WTIME) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.wtime) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         } else if (strcmp(token, STR_GO_BTIME) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.btime) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         } else if (strcmp(token, STR_GO_WINC) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.winc) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         } else if (strcmp(token, STR_GO_BINC) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.binc) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         }
 
         /* Handle move stopping. */
         else if (strcmp(token, STR_GO_MOVESTOGO) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.movestogo) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         } else if (strcmp(token, STR_GO_DEPTH) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.depth) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         } else if (strcmp(token, STR_GO_NODES) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.nodes) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         } else if (strcmp(token, STR_GO_MATE) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.mate) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         } else if (strcmp(token, STR_GO_MOVETIME) == 0) {
             if (parse_i64(strtok(opts, " "), &go_params.movetime) < 0)
-                return CIBYL_EABORT;
+                return KH_EABORT;
         }
 
         /* Grab the next token. */
@@ -154,7 +154,7 @@ cibyl_errno_t handle_go(char *opts)
     /* Start thinking. */
     eng_notify_go(&engine.eng, &go_params);
 
-    return CIBYL_EOK;
+    return KH_EOK;
 }
 
 void hanlde_display()
@@ -162,9 +162,9 @@ void hanlde_display()
 
 }
 
-cibyl_errno_t handle_cmd(char *cmd)
+kh_errno_t handle_cmd(char *cmd)
 {
-    cibyl_errno_t result = CIBYL_EOK;
+    kh_errno_t result = KH_EOK;
 
     char *token = strtok(cmd, " \n");
     char *opts;
@@ -228,13 +228,19 @@ cibyl_errno_t handle_cmd(char *cmd)
     return result;
 }
 
-cibyl_errno_t uci_init(uci_engine_t *engine)
+#if _WIN32
+
+kh_errno_t uci_init(uci_engine_t *engine)
 {
     /* TODO: Implement me. */
 }
 
-cibyl_errno_t uci_process(uci_engine_t *engine)
+kh_errno_t uci_process(uci_engine_t *engine)
 {
     /* TODO: Implement me. */
 }
+
+#else
+
+#endif
 

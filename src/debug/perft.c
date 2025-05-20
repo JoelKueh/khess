@@ -73,8 +73,8 @@ uint64_t perft_cheating(cb_board_t *board, cb_state_tables_t *state, int depth)
 
 int perft(cb_board_t *board, int depth)
 {
-    cb_errno_t result;
-    cb_error_t err;
+    kh_errno_t result;
+    kh_error_t err;
     cb_mvlst_t mvlst;
     cb_move_t mv;
     uint64_t perft_results[CB_MAX_NUM_MOVES];
@@ -124,8 +124,8 @@ int perft(cb_board_t *board, int depth)
 
 int perft_cheat(cb_board_t *board, int depth)
 {
-    cb_errno_t result;
-    cb_error_t err;
+    kh_errno_t result;
+    kh_error_t err;
     cb_mvlst_t mvlst;
     cb_move_t mv;
     uint64_t perft_results[CB_MAX_NUM_MOVES];

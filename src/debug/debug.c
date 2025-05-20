@@ -18,8 +18,8 @@ int handle_position(cb_board_t *board)
     /* Slice the next word off the command. */
     char *token = strtok(NULL, " \n");
     char *game_str = strtok(NULL, "\n");
-    cb_error_t err;
-    cb_errno_t result;
+    kh_error_t err;
+    kh_errno_t result;
 
     /* Error handling. */
     if (token == NULL) {
@@ -51,12 +51,12 @@ int handle_position(cb_board_t *board)
     }
 
     /* Display information about what happened in the command. */
-    if (result == CB_EABORT) {
+    if (result == KH_EABORT) {
         return -1;
-    } else if (result == CB_EINVAL) {
+    } else if (result == KH_EINVAL) {
         printf("Invalid game string\n");
         return 1;
-    } else if (result == CB_EILLEGAL) {
+    } else if (result == KH_EILLEGAL) {
         printf("Illegal move in game string\n");
         return 1;
     }
@@ -68,8 +68,8 @@ int handle_move(cb_board_t *board)
 {
     /* Slice off the algebraic part of the move. */
     char *token = strtok(NULL, " \n");
-    cb_errno_t result;
-    cb_error_t err;
+    kh_errno_t result;
+    kh_error_t err;
     cb_move_t mv;
 
     /* Error handling. */
@@ -206,7 +206,7 @@ int main()
     ssize_t nread;
     int result = 0;
     bool run_program = true;
-    cb_error_t err;
+    kh_error_t err;
     char default_fen[] = DEFAULT_FEN;
 
     /* Print version information. */

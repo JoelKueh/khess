@@ -2,7 +2,7 @@
 #ifndef CYBIL_ENGINE_H
 #define CYBIL_ENGINE_H
 
-#include <threads.h>
+#include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
 
@@ -36,7 +36,6 @@ typedef struct {
     int64_t movetime;       /**< The amount of time that the bot should think for. */
     bool ponder;            /**< Flag that states if this is a ponder search. */
     bool infinite;          /**< Flag that states if this search should be infinite. */
-    bool ready;             /**< Flag that states if the search is ready. */
 } go_param_t;
 
 /**
@@ -44,29 +43,30 @@ typedef struct {
 typedef struct {
     cb_board_t *root;       /**< The root position to think on. */
     ttable_t *ttable;       /**< The transposition table to add thoughts to. */
-    thrd_t thread;          /**< The thread itself. */
+    pthread_t thread;          /**< The thread itself. */
 } thinker_t;
 
 /**
  * @breif Defines a pool of threads that funcitons as an engine.
  */
 typedef struct {
-    cb_board_t board;       /**< The current position. */
-    ttable_t ttable;        /**< The transposition tables. */
-    thinker_t *thinkers;    /**< The pool of thinkers. */
-    thrd_t mgr;             /**< The manager thread. */
-    go_param_t go_params;   /**< The parameters for any active search. */
+    cb_board_t board;           /**< The current position. */
+    ttable_t ttable;            /**< The transposition tables. */
+    thinker_t *thinkers;        /**< The pool of thinkers. */
+    pthread_t mgr;              /**< The manager thread. */
+    go_param_t go_params;       /**< The parameters for any active search. */
+    bool go_ready;              /**< True if thinkers should begin searching. */
 
-    cnd_t sync_cnd;         /**< A condition variable that handles thinker sync. */
-    mtx_t sync_mtx;         /**< A mutex that handles thinker sync. */
-    int rdy_thrds;          /**< Holds the number of threads that are ready to run. */
-    atomic_bool exit_flag;  /**< Checked by the thinkers to see if they should shut down. */
+    pthread_cond_t sync_cnd;    /**< A condition variable that handles thinker sync. */
+    pthread_mutex_t sync_mtx;   /**< A mutex that handles thinker sync. */
+    int rdy_thrds;              /**< Holds the number of threads that are ready to run. */
+    atomic_bool exit_flag;      /**< Checked by the thinkers to see if they should shut down. */
 
 #ifdef _WIN32
-    PHANDLE h_msg_read;     /**< The read handle for the pipe on windows. */
-    PHANDLE h_msg_write;    /**< THe write handle for the pipe on windows. */
+    PHANDLE h_msg_read;         /**< The read handle for the pipe on windows. */
+    PHANDLE h_msg_write;        /**< THe write handle for the pipe on windows. */
 #else
-    int msg_pipe[2];        /**< A message pipe for result output. */
+    int msg_pipe[2];            /**< A message pipe for result output. */
 #endif
 } engine_t;
 
@@ -94,20 +94,20 @@ static void clear_go_params(go_param_t *params) {
  * @param engine The engine to initialize.
  * @return An error code for any failed threading calls.
  */
-cibyl_errno_t eng_begin_init(engine_t *eng);
+kh_errno_t eng_begin_init(engine_t *eng);
 
 /**
  * @breif Waits for engine initialization to be completed.
  * @param engine The engine that was to be initialized.
  */
-cibyl_errno_t eng_await_isready(engine_t *eng);
+kh_errno_t eng_await_isready(engine_t *eng);
 
 /**
  * @breif Nicely frees all allocated memory and terminates threads.
  * @param engine The engine to cleanup.
  * @return An error code for any failed threading calls.
  */
-cibyl_errno_t eng_cleanup(engine_t *eng);
+kh_errno_t eng_cleanup(engine_t *eng);
 
 /**
  * @breif Tells the engine that it is now playing a new game.
@@ -121,7 +121,7 @@ void eng_newgame(engine_t *eng);
  * @param engine The engine in question.
  * @return An error code for any errors in initialization.
  */
-cibyl_errno_t eng_set_ucifen(engine_t *eng, char *fen);
+kh_errno_t eng_set_ucifen(engine_t *eng, char *fen);
 
 /**
  * @breif Notifies the engine that it should begin a search.

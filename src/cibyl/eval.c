@@ -2,6 +2,9 @@
 #include <float.h>
 
 #include "eval.h"
+#include "kh_logging.h"
+#include "cb_move.h"
+#include "cb_lib.h"
 
 #define ALPHA_BETA_MAX_DEPTH 30
 
@@ -13,6 +16,7 @@ float piece_differential(const cb_board_t *board)
     if (board->bb.piece[board->turn][CB_PTYPE_KING] == 0)
         return board->turn ? FLT_MIN : FLT_MAX;
 
+    return 0.0;
 }
 
 float eval(const cb_board_t *board)
@@ -47,8 +51,8 @@ float searching(cb_board_t *board, cb_state_tables_t *state, int depth)
 
 cb_move_t alphabeta(cb_board_t *board, int base_depth)
 {
-    cb_errno_t result;
-    cb_error_t err;
+    kh_errno_t result;
+    kh_error_t err;
     cb_mvlst_t mvlst;
     cb_move_t mv;
     uint64_t perft_results[CB_MAX_NUM_MOVES];

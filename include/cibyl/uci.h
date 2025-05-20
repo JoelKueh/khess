@@ -54,7 +54,7 @@ typedef struct {
  * @param engine The engine to initialize.
  * @return An error code for any failed system calls.
  */
-cibyl_errno_t uci_init(uci_engine_t *engine);
+kh_errno_t uci_init(uci_engine_t *engine);
 
 /**
  * @brief Main loop for the UCI chess engine.
@@ -64,6 +64,6 @@ cibyl_errno_t uci_init(uci_engine_t *engine);
  * @param engine The engine to process.
  * @return An error code for any failed system calls.
  */
-cibyl_errno_t uci_process(uci_engine_t *engine);
+kh_errno_t uci_process(uci_engine_t *engine);
 
 #endif /* CIBYL_UCI_H */

@@ -4,12 +4,13 @@
 #include <errno.h>
 #include <threads.h>
 
-#include "cb_lib.h"
+#include "kh_logging.h"
 #include "cb_tables.h"
 #include "cb_const.h"
 #include "cb_move.h"
 #include "cb_board.h"
 #include "cb_history.h"
+#include "cb_lib.h"
 
 void cb_mv_to_uci_algbr(char *buf, cb_move_t move)
 {
@@ -45,22 +46,22 @@ void cb_mv_to_uci_algbr(char *buf, cb_move_t move)
     }
 }
 
-cb_errno_t cb_board_init(cb_error_t *err, cb_board_t *board)
+kh_errno_t cb_board_init(kh_error_t *err, cb_board_t *board)
 {
-    cb_errno_t result;
+    kh_errno_t result;
     if ((result = cb_hist_stack_init(&board->hist)) != 0)
-        return cb_mkerr(err, result, "malloc: %s\n", strerror(errno));
+        return kh_strerror(err, result, "malloc: %s\n", errno);
 
     return 0;
 }
 
-cb_errno_t cb_tables_init(cb_error_t *err)
+kh_errno_t cb_tables_init(kh_error_t *err)
 {
-    cb_errno_t result;
+    kh_errno_t result;
     cb_init_normal_tables();
     if ((result = cb_init_magic_tables()) != 0)
-        return cb_mkerr(err, result, "malloc: %s\n", strerror(errno));
-    return CB_EOK;
+        return kh_strerror(err, result, "malloc: %s\n", errno);
+    return KH_EOK;
 }
 
 void cb_tables_free()
@@ -73,11 +74,11 @@ void cb_board_free(cb_board_t *board)
     cb_hist_stack_free(&board->hist);
 }
 
-cb_errno_t cb_reserve_for_make(cb_error_t *err, cb_board_t *board, uint32_t added_depth)
+kh_errno_t cb_reserve_for_make(kh_error_t *err, cb_board_t *board, uint32_t added_depth)
 {
     int result;
     if ((result = cb_hist_stack_reserve(&board->hist, added_depth)) != 0) {
-        return cb_mkerr(err, result, "realloc: %s\n", strerror(errno));
+        return kh_strerror(err, result, "realloc: %s\n", errno);
     }
     return 0;
 }
@@ -310,14 +311,14 @@ void cb_unmake(cb_board_t *board)
     }
 }
 
-cb_errno_t cb_mv_from_short_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *board,
+kh_errno_t cb_mv_from_short_algbr(kh_error_t *err, cb_move_t *mv, cb_board_t *board,
                                   const char *algbr)
 {
     assert(false && "not yet implemented");
     return 0;
 }
 
-cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *board,
+kh_errno_t cb_mv_from_uci_algbr(kh_error_t *err, cb_move_t *mv, cb_board_t *board,
                                 const char *algbr)
 {
     uint8_t to, from;
@@ -329,7 +330,7 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
 
     /* Make sure that the length of the algebraic string is 4 or 5 characters. */
     if (strlen(algbr) != 4 && strlen(algbr) != 5) {
-        return cb_mkerr(err, CB_EINVAL, "invalid move string length");
+        return kh_mkerr(err, KH_EINVAL, "invalid move string length");
     }
 
     /* Get the information about the move itself. */
@@ -340,7 +341,7 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
 
     /* Verify that the characters inputted were valid. */
     if (from < 0 || from >= 64 || to < 0 || to >= 64)
-        return cb_mkerr(err, CB_EINVAL, "invalid character in move");
+        return kh_mkerr(err, KH_EINVAL, "invalid character in move");
 
     /* Find the move in the list of generated moves and return the match. */
     cb_gen_board_tables(&state, board);
@@ -356,7 +357,7 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
 
     /* Check if the move was not valid. */
     if (*mv == CB_INVALID_MOVE) {
-        return cb_mkerr(err, CB_EILLEGAL, "illegal move specified");
+        return kh_mkerr(err, KH_EILLEGAL, "illegal move specified");
     }
 
     /* Adjust the move for information about promotions. */
@@ -380,7 +381,7 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
                 flag += 3 << 12;
                 break;
             default:
-                return cb_mkerr(err, CB_EINVAL, "invlaid character in move");
+                return kh_mkerr(err, KH_EINVAL, "invlaid character in move");
         }
 
         /* Recreate the move. */
@@ -390,7 +391,7 @@ cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *boar
     return 0;
 }
 
-cb_errno_t parse_fen_main(cb_error_t *err, cb_board_t *board, char *fen_main)
+kh_errno_t parse_fen_main(kh_error_t *err, cb_board_t *board, char *fen_main)
 {
     uint8_t sq = 0;
     uint8_t row = 0;
@@ -400,7 +401,7 @@ cb_errno_t parse_fen_main(cb_error_t *err, cb_board_t *board, char *fen_main)
 
     /* Error handling. */
     if (fen_main == NULL)
-        return cb_mkerr(err, CB_EINVAL, "missing fen body");
+        return kh_mkerr(err, KH_EINVAL, "missing fen body");
 
     /* Parse the main portion of the fen string. */
     while ((c = fen_main[i++]) != '\0') {
@@ -408,7 +409,7 @@ cb_errno_t parse_fen_main(cb_error_t *err, cb_board_t *board, char *fen_main)
             sq += c - '0';
             /* Check if we should have had a '/' in our input string by now. */
             if (sq < row * 8 || sq > row * 8 + 8)
-                return cb_mkerr(err, CB_EINVAL, "row overrun without encountering '/'");
+                return kh_mkerr(err, KH_EINVAL, "row overrun without encountering '/'");
         } else if (c == 'p' || c == 'P') {
             cb_write_piece(board, sq, CB_PTYPE_PAWN, c < 'a' ? CB_WHITE : CB_BLACK);
             sq++;
@@ -430,26 +431,26 @@ cb_errno_t parse_fen_main(cb_error_t *err, cb_board_t *board, char *fen_main)
         } else if (c == '/') {
             /* If we are not at the end of the row, we don't want to get a '/'. */
             if (sq % 8 != 0)
-                return cb_mkerr(err, CB_EINVAL, "encountered '/' before the end of a row");
+                return kh_mkerr(err, KH_EINVAL, "encountered '/' before the end of a row");
             row += 1;
         } else {
             /* Any invalid characters return an error. */
-            return cb_mkerr(err, CB_EINVAL, "invalid character in fen body");
+            return kh_mkerr(err, KH_EINVAL, "invalid character in fen body");
         }
     }
 
     /* Throw errors for the write head not being at the end of the board. */
     if (sq != 64)
-        return cb_mkerr(err, CB_EINVAL, "unexpected end to fen body");
+        return kh_mkerr(err, KH_EINVAL, "unexpected end to fen body");
 
     return 0;
 }
 
-cb_errno_t parse_fen_turn(cb_error_t *err, cb_board_t *board, char *fen_turn)
+kh_errno_t parse_fen_turn(kh_error_t *err, cb_board_t *board, char *fen_turn)
 {
     /* Error handling. */
     if (fen_turn == NULL)
-        return cb_mkerr(err, CB_EINVAL, "missing fen turn");
+        return kh_mkerr(err, KH_EINVAL, "missing fen turn");
 
     /* Set the turn in the board. */
     if (*fen_turn == 'w') {
@@ -457,20 +458,20 @@ cb_errno_t parse_fen_turn(cb_error_t *err, cb_board_t *board, char *fen_turn)
     } else if (*fen_turn == 'b') {
         board->turn = CB_BLACK;
     } else {
-        return cb_mkerr(err, CB_EINVAL, "unexpected character in fen turn");
+        return kh_mkerr(err, KH_EINVAL, "unexpected character in fen turn");
     }
     
     return 0;
 }
 
-cb_errno_t parse_fen_rights(cb_error_t *err, cb_board_t *board, char *fen_rights)
+kh_errno_t parse_fen_rights(kh_error_t *err, cb_board_t *board, char *fen_rights)
 {
     int i = 0;
     char c;
 
     /* Error handling. */
     if (fen_rights == NULL)
-        return cb_mkerr(err, CB_EINVAL, "missing fen rights");
+        return kh_mkerr(err, KH_EINVAL, "missing fen rights");
 
     /* Set the rights based on the token. */
     while ((c = fen_rights[i++]) != '\0') {
@@ -485,27 +486,27 @@ cb_errno_t parse_fen_rights(cb_error_t *err, cb_board_t *board, char *fen_rights
         } else if (c == '-') {
             return 0;
         } else {
-            return cb_mkerr(err, CB_EINVAL, "unexpected character in fen rights");
+            return kh_mkerr(err, KH_EINVAL, "unexpected character in fen rights");
         }
     }
 
     return 0;
 }
 
-cb_errno_t parse_fen_enp(cb_error_t *err, cb_board_t *board, char *fen_enp)
+kh_errno_t parse_fen_enp(kh_error_t *err, cb_board_t *board, char *fen_enp)
 {
     /* Error handling. */
     if (fen_enp == NULL)
-        return cb_mkerr(err, CB_EINVAL, "missing fen rights");
+        return kh_mkerr(err, KH_EINVAL, "missing fen rights");
     if (strlen(fen_enp) == 1) {
         if (fen_enp[0] != '-')
-            return cb_mkerr(err, CB_EINVAL, "invalid character in fen enp");
+            return kh_mkerr(err, KH_EINVAL, "invalid character in fen enp");
         return 0;
     }
     if (strlen(fen_enp) != 2)
-        return cb_mkerr(err, CB_EINVAL, "invalid fen enpassant length");
+        return kh_mkerr(err, KH_EINVAL, "invalid fen enpassant length");
     if (fen_enp[0] < 'a' || fen_enp[0] > 'h')
-        return cb_mkerr(err, CB_EINVAL, "invalid character in fen enp");
+        return kh_mkerr(err, KH_EINVAL, "invalid character in fen enp");
 
     /* Set the square based on the token. */
     cb_hist_set_enp(&board->hist.data[board->hist.count - 1].hist, fen_enp[0] - 'a');
@@ -513,7 +514,7 @@ cb_errno_t parse_fen_enp(cb_error_t *err, cb_board_t *board, char *fen_enp)
     return 0;
 }
 
-cb_errno_t parse_fen_hlfmv(cb_error_t *err, cb_board_t *board, char *fen_hlfmv)
+kh_errno_t parse_fen_hlfmv(kh_error_t *err, cb_board_t *board, char *fen_hlfmv)
 {
     int hlfmv;
     char *endptr;
@@ -522,16 +523,16 @@ cb_errno_t parse_fen_hlfmv(cb_error_t *err, cb_board_t *board, char *fen_hlfmv)
         errno = 0;
         hlfmv = strtol(fen_hlfmv, &endptr, 10);
         if (errno || *endptr != '\0')
-            return cb_mkerr(err, CB_EINVAL, "invalid halfmove number");
+            return kh_mkerr(err, KH_EINVAL, "invalid halfmove number");
         cb_hist_set_halfmove_clk(&board->hist.data[board->hist.count - 1].move, hlfmv);
     }
 
     return 0;
 }
 
-cb_errno_t cb_board_from_fen(cb_error_t *err, cb_board_t *board, char *fen)
+kh_errno_t cb_board_from_fen(kh_error_t *err, cb_board_t *board, char *fen)
 {
-    cb_errno_t result;
+    kh_errno_t result;
 
     char *fen_main = strtok(fen, " \n");
     char *fen_turn = strtok(NULL, " \n");
@@ -541,7 +542,7 @@ cb_errno_t cb_board_from_fen(cb_error_t *err, cb_board_t *board, char *fen)
 
     cb_wipe_board(board);
     if ((result = cb_reserve_for_make(err, board, 1)) != 0)
-        return cb_mkerr(err, CB_EABORT, "realloc: %s", strerror(errno));
+        return kh_strerror(err, KH_EABORT, "realloc: %s", errno);
     cb_hist_stack_push(&board->hist, CB_INIT_STATE);
     if ((result = parse_fen_main(err, board, fen_main)) != 0)
         return result;
@@ -557,9 +558,9 @@ cb_errno_t cb_board_from_fen(cb_error_t *err, cb_board_t *board, char *fen)
     return 0;
 }
 
-cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *uci)
+kh_errno_t cb_board_from_uci(kh_error_t *err, cb_board_t *board, char *uci)
 {
-    cb_errno_t result;
+    kh_errno_t result;
     char *moves;
     char *algbr = NULL;
     cb_move_t mv;
@@ -590,7 +591,7 @@ cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *uci)
     return 0;
 }
 
-cb_errno_t cb_board_from_pgn(cb_error_t *err, cb_board_t *board, char *fen)
+kh_errno_t cb_board_from_pgn(kh_error_t *err, cb_board_t *board, char *fen)
 {
     assert(false && "not yet implemented");
     return 0;

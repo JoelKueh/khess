@@ -2,6 +2,7 @@
 #ifdef _WIN32
 #define WIN_PIPE_SIZE 4096
 #include <io.h>
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif
@@ -10,6 +11,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include "engine.h"
+#include "kh_logging.h"
 
 #define THINKER_POOL_COUNT 10
 
@@ -21,18 +23,18 @@
  * requirement that it must release the mutex before exiting.
  *
  * @param eng A printf compliant format string.
- * @param format A printf compliant format string.
+ * @param fmt A printf compliant format string.
  * @param ... All remaining arguments passed into the format string.
  */
-int thinker_unlock_handle_err(engine_t *eng, char *format, ...)
+void thinker_unlock_write_err(engine_t *eng, char *fmt, ...)
 {
     va_list args;
     atomic_store(&eng->exit_flag, true);
-    mtx_unlock(&eng->sync_mtx);
-    va_start(args, format);
-    cibyl_vwrite_log(format, args);
+    pthread_mutex_unlock(&eng->sync_mtx);
+    va_start(args, fmt);
+    kh_vwrite_log(fmt, args);
     va_end(args);
-    thrd_exit(1);
+    pthread_exit(NULL);
 }
 
 /**
@@ -42,17 +44,52 @@ int thinker_unlock_handle_err(engine_t *eng, char *format, ...)
  * log the information to the console, and exit.
  *
  * @param eng The engine that the thinker belongs to.
- * @param format A printf compliant format string.
+ * @param fmt A printf compliant format string.
  * @param ... All remaining arguments passed into the format string.
  */
-int thinker_handle_err(engine_t *eng, char *format, ...)
+void thinker_write_err(engine_t *eng, char *fmt, ...)
 {
     va_list args;
     atomic_store(&eng->exit_flag, true);
-    va_start(args, format);
-    cibyl_vwrite_log(format, args);
+    va_start(args, fmt);
+    kh_vwrite_log(fmt, args);
     va_end(args);
-    thrd_exit(1);
+    pthread_exit(NULL);
+}
+
+/**
+ * @breif Handles errors in a thinker thread.
+ *
+ * If a thinker encounters an error, it must set the atomic termination flag,
+ * log the information to the console, and exit.
+ *
+ * @param eng The engine that the thinker belongs to.
+ * @param prefix The prefix string (followed by ": ")
+ * @param err_code The error code.
+ */
+void thinker_unlock_perror(engine_t *eng, char *prefix, int err_code)
+{
+    atomic_store(&eng->exit_flag, true);
+    pthread_mutex_unlock(&eng->sync_mtx);
+    kh_perror(prefix, err_code);
+    pthread_exit(NULL);
+}
+
+/**
+ * @breif Handles errors in a thinker thread.
+ *
+ * If a thinker encounters an error, it must set the atomic termination flag,
+ * log the information to the console, and exit.
+ *
+ * @param eng The engine that the thinker belongs to.
+ * @param prefix The prefix string (followed by ": ")
+ * @param err_code The error code.
+ */
+void thinker_perror(engine_t *eng, char *prefix, int err_code)
+{
+    atomic_store(&eng->exit_flag, true);
+    kh_perror(prefix, err_code);
+    pthread_exit(NULL);
 }
 
 int thinker_entry(void *eng_addr)
@@ -61,11 +98,17 @@ int thinker_entry(void *eng_addr)
     engine_t *eng = (engine_t *)eng_addr;
 
     while (true) {
-        if ((result = mtx_lock(&eng->sync_mtx)))
-            thinker_handle_err(eng, "thinker: mtx_lock: %s\n");
+        if ((result = pthread_mutex_lock(&eng->sync_mtx)) != 0)
+            thinker_perror(eng, "thinker: pthread_mutex_lock", result);
+
+        /* Synchonize on the condition and wait for a message from the main thread. */
+        while (eng->go_ready) {
+            if ((result = pthread_cond_wait(&eng->sync_cnd, &eng->sync_mtx)) != 0)
+                thinker_perror(eng, "thinker: pthread_cond_wait", result);
+        }
     }
 
-    return CIBYL_EOK;
+    return KH_EOK;
 }
 
 /**
@@ -90,48 +133,66 @@ err_close_thrds:
     for (; i > 0; i--) {
     }
 
-    return CIBYL_EOK;
+    return KH_EOK;
 }
 
-cibyl_errno_t eng_begin_init(engine_t *eng)
+#ifdef _WIN32
+
+kh_errno_t eng_begin_init(engine_t *eng)
 {
-    cibyl_errno_t result = CIBYL_EOK;
+    kh_errno_t result = KH_EOK;
 
     /* Create the message pipe. */
-#ifdef _WIN32
     if (CreatePipe(&eng->h_msg_read, &hWritePipe->h_msg_write, NULL, WIN_PIPE_SIZE) {
-        cibyl_write_log("CreatePipe: %s\n", _strerror(NULL));
-        result = CIBYL_EABORT;
+        kh_write_log("CreatePipe: %s\n", _strerror(NULL));
+        result = KH_EABORT;
         goto out;
     }
-#else
-    if (pipe(eng->msg_pipe) == -1) {
-        cibyl_write_log("pipe: %s\n", strerror(errno));
-        result = CIBYL_EABORT;
-        goto out;
-    }
-#endif
 
     /* Spawn the manager thread and have it complete engine initialization. */
     if (thrd_create(&eng->mgr, mgr_entry, (void *)eng)) {
-        cibyl_write_log("thrd_create: %s\n", strerror(errno));
-        result = CIBYL_EABORT;
+        kh_perror("thrd_create: %s\n", errno);
+        result = KH_EABORT;
         goto err_free_pipe;
     }
     goto out;
 
 err_free_pipe:
-    
     /* Close the handles to the pipe on error. */
-#ifdef _WIN32
     CloseHandle(eng->h_msg_read)):
     CloseHandle(eng->h_msg_write));
-#else
-    close(eng->msg_pipe[0]);
-    close(eng->msg_pipe[1]);
-#endif
-        
 out:
     return result;
 }
 
+#else
+
+kh_errno_t eng_begin_init(engine_t *eng)
+{
+    kh_errno_t result = KH_EOK;
+
+    /* Create the message pipe. */
+    if (pipe(eng->msg_pipe) == -1) {
+        kh_perror("pipe: %s\n", errno);
+        result = KH_EABORT;
+        goto out;
+    }
+
+    /* Spawn the manager thread and have it complete engine initialization. */
+    if (pthrea(&eng->mgr, mgr_entry, (void *)eng)) {
+        kh_perror("thrd_create: %s\n", errno);
+        result = KH_EABORT;
+        goto err_free_pipe;
+    }
+    goto out;
+
+err_free_pipe:
+    /* Close the handles to the pipe on error. */
+    close(eng->msg_pipe[0]);
+    close(eng->msg_pipe[1]);
+out:
+    return result;
+}
+
+
+#endif

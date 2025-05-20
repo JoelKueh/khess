@@ -4,6 +4,7 @@
 
 #include <stdbool.h>
 #include "cb_types.h"
+#include "kh_logging.h"
 
 /**
  * @breif Initializes a board. Note that this does not include move generation initalization.
@@ -11,7 +12,7 @@
  * @param board A pointer to the board to be initialized.
  * @return The error code corresponding to the error in err.
  */
-cb_errno_t cb_board_init(cb_error_t *err, cb_board_t *board);
+kh_errno_t cb_board_init(kh_error_t *err, cb_board_t *board);
 
 /**
  * @breif Initializes the move generation tables for a board.
@@ -22,7 +23,7 @@ cb_errno_t cb_board_init(cb_error_t *err, cb_board_t *board);
  * @param err A pointer that will be populated with any errors.
  * @return True if this thread initialized the table, false otherwise.
  */
-cb_errno_t cb_tables_init(cb_error_t *err);
+kh_errno_t cb_tables_init(kh_error_t *err);
 
 /**
  * @breif Frees a board. Note that this does not clean up move generation tables.
@@ -42,7 +43,7 @@ void cb_tables_free();
  * @param fen The fen string to be parsed. This string will be modified by the function.
  * @return The error code corresponding to the error in err.
  */
-cb_errno_t cb_board_from_fen(cb_error_t *err, cb_board_t *board, char *fen);
+kh_errno_t cb_board_from_fen(kh_error_t *err, cb_board_t *board, char *fen);
 
 /**
  * @breif Populates a board from a fen string representation of a position.
@@ -51,7 +52,7 @@ cb_errno_t cb_board_from_fen(cb_error_t *err, cb_board_t *board, char *fen);
  * @param uci The uci fen string to be parsed. This string will be modified by the function.
  * @return The error code corresponding to the error in err.
  */
-cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *uci);
+kh_errno_t cb_board_from_uci(kh_error_t *err, cb_board_t *board, char *uci);
 
 /**
  * @breif Populates a board from a fen string representation of a position.
@@ -60,7 +61,7 @@ cb_errno_t cb_board_from_uci(cb_error_t *err, cb_board_t *board, char *uci);
  * @param pgn The pgn fen string to be parsed. This string will be modified by the function.
  * @return The error code corresponding to the error in err.
  */
-cb_errno_t cb_board_from_pgn(cb_error_t *err, cb_board_t *board, char *pgn);
+kh_errno_t cb_board_from_pgn(kh_error_t *err, cb_board_t *board, char *pgn);
 
 /**
  * @breif Generates a move from a short algebraic string representation.
@@ -73,7 +74,7 @@ cb_errno_t cb_board_from_pgn(cb_error_t *err, cb_board_t *board, char *pgn);
  * @param algbr The algebraic-notation string representation of the move.
  * @return The error code corresponding to the error in err.
  */
-cb_errno_t cb_mv_from_short_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *board,
+kh_errno_t cb_mv_from_short_algbr(kh_error_t *err, cb_move_t *mv, cb_board_t *board,
                                   const char *algbr);
 
 /**
@@ -87,7 +88,7 @@ cb_errno_t cb_mv_from_short_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *bo
  * @param algbr The algebraic-notation string representation of the move.
  * @return The error code corresponding to the error in err.
  */
-cb_errno_t cb_mv_from_uci_algbr(cb_error_t *err, cb_move_t *mv, cb_board_t *board,
+kh_errno_t cb_mv_from_uci_algbr(kh_error_t *err, cb_move_t *mv, cb_board_t *board,
                                 const char *algbr);
 
 /**
@@ -119,7 +120,7 @@ void cb_gen_moves(cb_mvlst_t *mvlst, cb_board_t *board, cb_state_tables_t *state
  * @param added_depth The number of moves that must be made on top of the current position.
  * @return The error code corresponding to the error in err.
  */
-cb_errno_t cb_reserve_for_make(cb_error_t *err, cb_board_t *board, uint32_t added_depth);
+kh_errno_t cb_reserve_for_make(kh_error_t *err, cb_board_t *board, uint32_t added_depth);
 
 /**
  * @breif Makes a move on a board.
@@ -141,7 +142,6 @@ void cb_make(cb_board_t *board, const cb_move_t mv);
  * needed after a call to unmake.
  *
  * @param board The board to apply the move on.
- * @param mv The move to make.
  */
 void cb_unmake(cb_board_t *board);
 

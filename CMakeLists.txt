@@ -19,11 +19,13 @@ add_library(cblib
 	src/cblib/cb_lib.c
 	src/cblib/cb_const.c
         src/cblib/cb_dbg.c
+	src/common/kh_logging.c
 )
 target_include_directories(cblib
 	PRIVATE
 		${PROJECT_SOURCE_DIR}/include/cblib
 		${PROJECT_SOURCE_DIR}/include/utils
+		${PROJECT_SOURCE_DIR}/include/common
 )
 
 # Add the debug executable.
@@ -36,6 +38,7 @@ target_include_directories(debug
 		${PROJECT_SOURCE_DIR}/include/cblib
 		${PROJECT_SOURCE_DIR}/include/debug
 		${PROJECT_SOURCE_DIR}/include/utils
+		${PROJECT_SOURCE_DIR}/include/common
 )
 target_link_libraries(debug
 	cblib
@@ -49,6 +52,7 @@ target_include_directories(cibyl
 	PRIVATE
 		${PROJECT_SOURCE_DIR}/include/cibyl
 		${PROJECT_SOURCE_DIR}/include/cblib
+		${PROJECT_SOURCE_DIR}/include/common
 )
 
 # Create the server executable.
