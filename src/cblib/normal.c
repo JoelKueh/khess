@@ -1,8 +1,8 @@
 
 #include <string.h>
 
-#include "cb_tables.h"
-#include "cb_const.h"
+#include "tables.h"
+#include "const.h"
 
 uint64_t pawn_atks[2][64];
 uint64_t knight_atks[64];

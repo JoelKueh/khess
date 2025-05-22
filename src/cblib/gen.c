@@ -1,13 +1,13 @@
 
 #include <string.h>
 
-#include "cb_lib.h"
-#include "cb_board.h"
-#include "cb_tables.h"
-#include "cb_const.h"
-#include "cb_move.h"
-#include "cb_bitutil.h"
-#include "cb_history.h"
+#include "cblib.h"
+#include "board.h"
+#include "tables.h"
+#include "const.h"
+#include "move.h"
+#include "bitutil.h"
+#include "history.h"
 
 static inline uint64_t pawn_smear(uint64_t pawns, cb_color_t color)
 {

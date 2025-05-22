@@ -7,11 +7,11 @@
 #include <stdbool.h>
 
 #ifdef _WIN32
-#incllude <namedpipeapi.h>
+#include <namedpipeapi.h>
 #endif
 
-#include "cb_move.h"
-#include "cibyl.h"
+#include "cblib/move.h"
+#include "cblib/cblib.h"
 
 /**
  * @breif Transposition table that contains precalculated positions.
@@ -39,11 +39,12 @@ typedef struct {
 } go_param_t;
 
 /**
- * @breif Defines struct for a thread that thinks. */
+ * @breif Defines struct for a thread that thinks.
+ */
 typedef struct {
-    cb_board_t *root;       /**< The root position to think on. */
+    cb_board_t board;       /**< The board position used when thinking. */
     ttable_t *ttable;       /**< The transposition table to add thoughts to. */
-    pthread_t thread;          /**< The thread itself. */
+    pthread_t thread;       /**< The thread itself. */
 } thinker_t;
 
 /**
@@ -52,16 +53,19 @@ typedef struct {
 typedef struct {
     cb_board_t board;           /**< The current position. */
     ttable_t ttable;            /**< The transposition tables. */
-    thinker_t *thinkers;        /**< The pool of thinkers. */
+    pthread_t *thinkers;        /**< The pool of thinkers. */
     pthread_t mgr;              /**< The manager thread. */
     go_param_t go_params;       /**< The parameters for any active search. */
     bool go_ready;              /**< True if thinkers should begin searching. */
 
-    pthread_cond_t sync_cnd;    /**< A condition variable that handles thinker sync. */
-    pthread_mutex_t sync_mtx;   /**< A mutex that handles thinker sync. */
-    int rdy_thrds;              /**< Holds the number of threads that are ready to run. */
-    atomic_bool exit_flag;      /**< Checked by the thinkers to see if they should shut down. */
+    pthread_cond_t sync_cnd;    /**< Condition variable that handles thinker sync. */
+    pthread_mutex_t sync_mtx;   /**< Mutex that handles thinker sync. */
+    int waiting_threads;        /**< Holds the number of threads that are ready to run. */
 
+    atomic_bool ponder;         /**< Monitored to see if pondering search. */
+    atomic_bool exit_flag;      /**< Monitored to see if shutting down. */
+
+    pthread_mutex_t out_mtx;    /**< Mutex that safeguards thread pool output. */
 #ifdef _WIN32
     PHANDLE h_msg_read;         /**< The read handle for the pipe on windows. */
     PHANDLE h_msg_write;        /**< THe write handle for the pipe on windows. */
@@ -94,20 +98,20 @@ static void clear_go_params(go_param_t *params) {
  * @param engine The engine to initialize.
  * @return An error code for any failed threading calls.
  */
-kh_errno_t eng_begin_init(engine_t *eng);
+int eng_begin_init(engine_t *eng);
 
 /**
  * @breif Waits for engine initialization to be completed.
  * @param engine The engine that was to be initialized.
  */
-kh_errno_t eng_await_isready(engine_t *eng);
+int eng_await_isready(engine_t *eng);
 
 /**
  * @breif Nicely frees all allocated memory and terminates threads.
  * @param engine The engine to cleanup.
  * @return An error code for any failed threading calls.
  */
-kh_errno_t eng_cleanup(engine_t *eng);
+int eng_cleanup(engine_t *eng);
 
 /**
  * @breif Tells the engine that it is now playing a new game.
@@ -121,7 +125,7 @@ void eng_newgame(engine_t *eng);
  * @param engine The engine in question.
  * @return An error code for any errors in initialization.
  */
-kh_errno_t eng_set_ucifen(engine_t *eng, char *fen);
+int eng_set_ucifen(engine_t *eng, char *fen);
 
 /**
  * @breif Notifies the engine that it should begin a search.

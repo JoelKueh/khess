@@ -7,6 +7,26 @@
 #include <stdio.h>
 
 #define CB_MAX_NUM_MOVES 218
+#define CB_ERROR_STRLEN 128
+
+/**
+ * @breif Error codes for various functions from the library.
+ */
+typedef enum {
+    KH_ENOMEM = -2,     /**< Non-recoverable error for malloc failures. */
+    KH_EABORT = -1,     /**< Generic non-recoverable error. */
+    KH_EOK = 0,         /**< Default return value. */
+    KH_EINVAL,          /**< Recoverable invalid formatting error. */
+    KH_EILLEGAL,        /**< Recoverable illegal move specification error. */
+} cb_errno_t;
+
+/**
+ * @breif Defines an error type for errors that will be returned by the library.
+ */
+typedef struct {
+    cb_errno_t num;                 /**< The error code for the error. */
+    char desc[CB_ERROR_STRLEN];     /**< A string description of the error. */
+} cb_error_t;
 
 /**
  * @breif Enumerates board piece and turn colors.

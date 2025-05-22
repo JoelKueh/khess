@@ -7,8 +7,14 @@
 #include <assert.h>
 #include <string.h>
 
-#include "cb_types.h"
+#include "types.h"
 
+/**
+ * @breif Converts a piece type to the ascii character that represents it.
+ * @param piece The piece to convert.
+ * @param color The color of the piece to convert.
+ * @return The ascii character representing the piece.
+ */
 static inline char ptype_to_ascii(cb_ptype_t piece, cb_color_t color)
 {
     switch (piece) {
@@ -29,12 +35,24 @@ static inline char ptype_to_ascii(cb_ptype_t piece, cb_color_t color)
     }
 }
 
-/* Functions for reading the board representation. */
+/**
+ * @breif Returns the piece type at a given square on a board.
+ * @param board The board.
+ * @param sq The square to check.
+ * @return The piece on the square as a cb_ptype_t.
+ */
 static inline cb_ptype_t cb_ptype_at_sq(const cb_board_t *board, uint8_t sq)
 {
     return board->mb.data[sq];
 }
 
+/**
+ * @breif Returns the piece type at a given square on a board specified by row and column.
+ * @param board The board.
+ * @param row The row to check.
+ * @param col The column to check.
+ * @return The piece on the square as a cb_ptype_t.
+ */
 static inline cb_ptype_t cb_ptype_at(const cb_board_t *board, uint8_t row, uint8_t col)
 {
     return cb_ptype_at_sq(board, row * 8 + col);

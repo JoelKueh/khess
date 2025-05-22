@@ -1,5 +1,5 @@
 
-#include "kh_logging.h"
+#include "logging.h"
 #include "cibyl.h"
 #include "eval.h"
 #include "uci.h"

@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "cb_lib.h"
-#include "cb_dbg.h"
+#include "cblib/cblib.h"
+#include "cblib/dbg.h"
 #include "perft.h"
 
 #define MAX_COMMAND_LEN 512
@@ -16,10 +16,10 @@
 int handle_position(cb_board_t *board)
 {
     /* Slice the next word off the command. */
-    char *token = strtok(NULL, " \n");
+    char *token = strtok(NULL, " \t\n");
     char *game_str = strtok(NULL, "\n");
-    kh_error_t err;
-    kh_errno_t result;
+    cb_error_t err;
+    cb_errno_t result;
 
     /* Error handling. */
     if (token == NULL) {
@@ -67,9 +67,9 @@ int handle_position(cb_board_t *board)
 int handle_move(cb_board_t *board)
 {
     /* Slice off the algebraic part of the move. */
-    char *token = strtok(NULL, " \n");
-    kh_errno_t result;
-    kh_error_t err;
+    char *token = strtok(NULL, " \t\n");
+    cb_errno_t result;
+    cb_error_t err;
     cb_move_t mv;
 
     /* Error handling. */
@@ -104,7 +104,7 @@ int handle_undo(cb_board_t *board)
 int handle_debug(cb_board_t *board)
 {
     /* Slice one token off of the command. */
-    char *token = strtok(NULL, " \n");
+    char *token = strtok(NULL, " \t\n");
     cb_state_tables_t state;
     cb_mvlst_t mvlst;
 
@@ -139,7 +139,7 @@ int handle_board(cb_board_t *board)
 int handle_perft(cb_board_t *board)
 {
     /* Slice off the algebraic part of the move. */
-    char *token = strtok(NULL, " \n");
+    char *token = strtok(NULL, " \t\n");
     char *endptr;
     int depth;
 
@@ -162,7 +162,7 @@ int handle_perft(cb_board_t *board)
 int handle_go(cb_board_t *board)
 {
     /* Slice off the algebraic part of the move. */
-    char *token = strtok(NULL, " \n");
+    char *token = strtok(NULL, " \t\n");
 
     if (strcmp(token, "perft") == 0)
         return handle_perft(board);
@@ -174,7 +174,7 @@ int handle_go(cb_board_t *board)
 int parse_input(char *command, cb_board_t *board)
 {
     /* Slice one token off of the command. */
-    char *token = strtok(command, " \n");
+    char *token = strtok(command, " \t\n");
 
     /* Parse the first token in the command. */
     if (strcmp(token, "position") == 0)
@@ -206,7 +206,7 @@ int main()
     ssize_t nread;
     int result = 0;
     bool run_program = true;
-    kh_error_t err;
+    cb_error_t err;
     char default_fen[] = DEFAULT_FEN;
 
     /* Print version information. */

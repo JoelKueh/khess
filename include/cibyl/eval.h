@@ -2,7 +2,7 @@
 #ifndef CYBIL_EVAL_H
 #define CYBIL_EVAL_H
 
-#include "cb_types.h"
+#include "cblib/types.h"
 
 /**
  * Evaluates the position specified by board.

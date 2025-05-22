@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "event2/event.h"
 #include "cibyl.h"
 #include "uci.h"
 
@@ -99,11 +100,11 @@ kh_errno_t handle_go(char *opts)
     }
 
     /* Loop through all of the arguments to the go command. */
-    token = strtok(opts, " ");
+    token = strtok(opts, " \t\n");
     while (token != NULL) {
         /* Handle searchmoves, this will consume all remaining arguments. */
         if (strcmp(token, STR_GO_SEARCHMOVES) == 0) {
-            handle_searchmoves(strtok(opts, " "));
+            handle_searchmoves(strtok(opts, " \t\n"));
             break;
         }
 
@@ -116,39 +117,39 @@ kh_errno_t handle_go(char *opts)
 
         /* Handle time information. */
         else if (strcmp(token, STR_GO_WTIME) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.wtime) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.wtime) < 0)
                 return KH_EABORT;
         } else if (strcmp(token, STR_GO_BTIME) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.btime) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.btime) < 0)
                 return KH_EABORT;
         } else if (strcmp(token, STR_GO_WINC) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.winc) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.winc) < 0)
                 return KH_EABORT;
         } else if (strcmp(token, STR_GO_BINC) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.binc) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.binc) < 0)
                 return KH_EABORT;
         }
 
         /* Handle move stopping. */
         else if (strcmp(token, STR_GO_MOVESTOGO) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.movestogo) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.movestogo) < 0)
                 return KH_EABORT;
         } else if (strcmp(token, STR_GO_DEPTH) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.depth) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.depth) < 0)
                 return KH_EABORT;
         } else if (strcmp(token, STR_GO_NODES) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.nodes) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.nodes) < 0)
                 return KH_EABORT;
         } else if (strcmp(token, STR_GO_MATE) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.mate) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.mate) < 0)
                 return KH_EABORT;
         } else if (strcmp(token, STR_GO_MOVETIME) == 0) {
-            if (parse_i64(strtok(opts, " "), &go_params.movetime) < 0)
+            if (parse_i64(strtok(opts, " \t\n"), &go_params.movetime) < 0)
                 return KH_EABORT;
         }
 
         /* Grab the next token. */
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " \t\n");
     }
 
     /* Start thinking. */
@@ -166,7 +167,7 @@ kh_errno_t handle_cmd(char *cmd)
 {
     kh_errno_t result = KH_EOK;
 
-    char *token = strtok(cmd, " \n");
+    char *token = strtok(cmd, " \t\n");
     char *opts;
     bool token_accepted = false;
 
@@ -199,12 +200,12 @@ kh_errno_t handle_cmd(char *cmd)
             /* TODO: Implement me. */
             eng_set_ucifen(&engine.eng, "startpos");
         } else if (strcmp(cmd, STR_POSITION) == 0) {
-            eng_set_ucifen(&engine.eng, strtok(cmd, "\n"));
+            eng_set_ucifen(&engine.eng, strtok(NULL, "\n"));
         }
 
         /* Functions for controlling thinking. */
         else if (strcmp(cmd, STR_GO) == 0) {
-            result = handle_go(strtok(NULL, ""));   /* Slice off the rest of the cmd. */
+            result = handle_go(strtok(NULL, "\n"));
         } else if (strcmp(cmd, STR_STOP) == 0) {
             eng_notify_stop(&engine.eng);
         } else if (strcmp(cmd, STR_PONDERHIT) == 0) {
@@ -220,15 +221,13 @@ kh_errno_t handle_cmd(char *cmd)
 
         /* If the first word is invalid, then parse starting with the next as per the spec. */
         else {
-            token = strtok(NULL, " ");
+            token = strtok(NULL, " \t\n");
             token_accepted = false;
         }
     }
 
     return result;
 }
-
-#if _WIN32
 
 kh_errno_t uci_init(uci_engine_t *engine)
 {
@@ -239,8 +238,4 @@ kh_errno_t uci_process(uci_engine_t *engine)
 {
     /* TODO: Implement me. */
 }
-
-#else
-
-#endif
 

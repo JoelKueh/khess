@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 /**
- * @breif Error codes for the.
+ * @breif Error codes for various functions from the library.
  */
 typedef enum {
     KH_ENOMEM = -2,     /**< Non-recoverable error for malloc failures. */

@@ -4,8 +4,7 @@
 
 #include <stdint.h>
 
-#include "cbconst.h"
-#include "board.h"
+#include "types.h"
 
 static inline cb_ptype_t cb_m_at_sq(cb_mailbox_t *mailbox, uint8_t sq)
 {
