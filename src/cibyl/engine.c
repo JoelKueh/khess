@@ -101,10 +101,7 @@ void *thinker_entry(void *eng_addr)
     engine_t *eng = (engine_t *)eng_addr;
     ttable_t *ttable = &eng->ttable;
     cb_board_t board;
-
-    /* Each thinker can attempt to initialize the tables. */
-    if (cb_tables_init())
-
+    cb_error_t err;
 
     while (true) {
         if ((result = pthread_mutex_lock(&eng->sync_mtx)) != 0)
@@ -136,28 +133,39 @@ void *thinker_entry(void *eng_addr)
     return (void *)KH_EOK;
 }
 
-/**
- * @breif The entrypoint for any engine manager.
- *
- * This is where the majority of initialization work for initilization is done.
- *
- * @param eng_addr A void pointer to the engine struct.
- */
-void *mgr_entry(void *eng_addr)
+void eng_done_cb(evutil_socket_t sock, short flags, void *eng)
+{
+
+}
+
+void eng_timeout_cb(evutil_socket_t sock, short flags, void *eng)
+{
+
+}
+
+int eng_begin_init(struct event_base *base, engine_t *eng)
 {
     int64_t result;
     int64_t retval = 0;
-    engine_t *eng = (engine_t *)eng_addr;
     int i;
+    cb_error_t err;
+
+    /* Initialize the board tables. */
+    if ((result = cb_tables_init(&err)) != 0)
+        cibyl_write_log("%s\n", err.desc);
 
     /* Spawn all of the thinkers. */
     for (i = 0; i < THINKER_POOL_COUNT; i++) {
-        if ((result = pthread_create(&eng->mgr, NULL, thinker_entry, eng_addr)) != 0) {
+        if ((result = pthread_create(&eng->mgr, NULL, thinker_entry, (void *)eng)) != 0) {
             retval = result;
             cibyl_perror("manager: pthread_join", result);
             goto err_close_thrds;
         }
     }
+
+    /* Create the different events used by the engine. */
+    eng->ev_done = event_new(base, -1, 0, eng_done_cb, eng);
+    eng->ev_timeout = event_new(base, -1, EV_TIMEOUT, eng_timeout_cb, eng);
     goto out;
 
 err_close_thrds:
@@ -171,67 +179,14 @@ err_close_thrds:
             cibyl_perror("manager: pthread_join", result);
         }
     }
-out:
-    return (void *)retval;
-}
 
-#ifdef _WIN32
-
-cibyl_errno_t eng_begin_init(engine_t *eng)
-{
-    cibyl_errno_t result = KH_EOK;
-
-    /* Create the message pipe. */
-    if (CreatePipe(&eng->h_msg_read, &hWritePipe->h_msg_write, NULL, WIN_PIPE_SIZE) {
-        cibyl_write_log("CreatePipe: %s\n", _strerror(NULL));
-        result = KH_EABORT;
-        goto out;
-    }
-
-    /* Spawn the manager thread and have it complete engine initialization. */
-    if (thrd_create(&eng->mgr, mgr_entry, (void *)eng)) {
-        cibyl_perror("thrd_create: %s\n", errno);
-        result = KH_EABORT;
-        goto err_free_pipe;
-    }
-    goto out;
-
-err_free_pipe:
-    /* Close the handles to the pipe on error. */
-    CloseHandle(eng->h_msg_read)):
-    CloseHandle(eng->h_msg_write));
+    /* Cleanup tables on error. */
+    cb_tables_free();
 out:
     return result;
 }
 
-#else
-
-int eng_begin_init(engine_t *eng)
+int eng_cleanup(engine_t *eng)
 {
-    int result = 0;
 
-    /* Create the message pipe. */
-    if (pipe(eng->msg_pipe) == -1) {
-        cibyl_perror("pipe: %s\n", errno);
-        result = KH_EABORT;
-        goto out;
-    }
-
-    /* Spawn the manager thread and have it complete engine initialization. */
-    if (pthrea(&eng->mgr, mgr_entry, (void *)eng)) {
-        cibyl_perror("thrd_create: %s\n", errno);
-        result = KH_EABORT;
-        goto err_free_pipe;
-    }
-    goto out;
-
-err_free_pipe:
-    /* Close the handles to the pipe on error. */
-    close(eng->msg_pipe[0]);
-    close(eng->msg_pipe[1]);
-out:
-    return result;
 }
-
-
-#endif

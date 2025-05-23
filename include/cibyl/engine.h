@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
+#include <event2/event.h>
 
 #ifdef _WIN32
 #include <namedpipeapi.h>
@@ -70,6 +71,7 @@ typedef struct {
     atomic_uint_fast16_t depth; /**< Searched depth. */
 
     struct event *ev_done;      /**< Raised by a thinker when the search is done. */
+    struct event *ev_timeout;   /**< Automatically triggers when thinking time is out. */
 } engine_t;
 
 /**
@@ -96,7 +98,7 @@ static void clear_go_params(go_param_t *params) {
  * @param engine The engine to initialize.
  * @return An error code for any failed threading calls.
  */
-int eng_begin_init(engine_t *eng);
+int eng_begin_init(struct event_base *base, engine_t *eng);
 
 /**
  * @breif Waits for engine initialization to be completed.
