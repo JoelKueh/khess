@@ -29,10 +29,10 @@ static void libevent_log_cb(int severity, const char *msg)
         default:               s = "?";     break; /* never reached */
     }
 
-    kh_write_log("[%s] %s\n", s, msg);
+    cibyl_write_log("[%s] %s\n", s, msg);
 }
 
-void kh_init_log(FILE *f)
+void cibyl_init_log(FILE *f)
 {
     log_file = f;
     if (f != NULL) {
@@ -42,7 +42,7 @@ void kh_init_log(FILE *f)
     }
 }
 
-void kh_vwrite_log(char *fmt, va_list args)
+void cibyl_vwrite_log(char *fmt, va_list args)
 {
     time_t t;
     struct tm tm;
@@ -69,18 +69,18 @@ void kh_vwrite_log(char *fmt, va_list args)
     pthread_mutex_unlock(&log_mtx);
 }
 
-void kh_write_log(char *fmt, ...)
+void cibyl_write_log(char *fmt, ...)
 {
     va_list args;
     time_t t;
     struct tm tm;
 
     va_start(args, fmt);
-    kh_vwrite_log(fmt, args);
+    cibyl_vwrite_log(fmt, args);
     va_end(args);
 }
 
-void kh_perror(char *prefix, int err_code)
+void cibyl_perror(char *prefix, int err_code)
 {
     time_t t;
     struct tm tm;

@@ -52,9 +52,9 @@ typedef struct {
 /**
  * @breif Initializes a UCI chess engine. Performs absolute minimum work.
  * @param engine The engine to initialize.
- * @return An error code for any failed system calls.
+ * @return 0 on success and -1 on error.
  */
-kh_errno_t uci_init(uci_engine_t *engine);
+int uci_init(uci_engine_t *engine);
 
 /**
  * @brief Main loop for the UCI chess engine.
@@ -62,8 +62,8 @@ kh_errno_t uci_init(uci_engine_t *engine);
  * Handles commands from STDIN and messages from the engine itself.
  *
  * @param engine The engine to process.
- * @return An error code for any failed system calls.
+ * @return 0 on success and -1 on error.
  */
-kh_errno_t uci_process(uci_engine_t *engine);
+int uci_process(uci_engine_t *engine);
 
 #endif /* CIBYL_UCI_H */

@@ -10,27 +10,27 @@
  * @param fname The nabe of the file.
  * @return An error code describing any errors encountered.
  */
-void kh_init_log(FILE *f);
+void cibyl_init_log(FILE *f);
 
 /**
  * @breif Writes a message to a log file.
  * @param fmt A printf compatible format string.
  * @param ... Args for the format string.
  */
-void kh_write_log(char *fmt, ...);
+void cibyl_write_log(char *fmt, ...);
 
 /**
  * @breif Writes a message to a log file.
  * @param fmt A printf compatible format string.
  * @param args Args for the format string.
  */
-void kh_vwrite_log(char *fmt, va_list args);
+void cibyl_vwrite_log(char *fmt, va_list args);
 
 /**
  * @breif Writes an error to a log file.
  * @param prefix The prefix (will be followed by ": ").
  * @param err_code The error code (passed to the OS equivalent of strerror).
  */
-void kh_perror(char *prefix, int err_code);
+void cibyl_perror(char *prefix, int err_code);
 
 #endif /* CIBYL_LOGGING_H */

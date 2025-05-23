@@ -14,25 +14,9 @@
 
 #include "engine.h"
 #include "eval.h"
+#include "logging.h"
 
 #define THINKER_POOL_COUNT 10
-
-/**
- * @breif Writes a message to the engines output pipe.
- * 
- * Called by a thinker thread to send a message to some manager thread.
- *
- * @param eng The engine.
- * @param msg The message to send.
- */
-void eng_msg_out(engine_t *eng, char *msg)
-{
-#ifdef _WIN32
-    /* TODO: Implement me on win32. */
-#else
-    
-#endif
-}
 
 /**
  * @breif Handles errors in a thinker thread.
@@ -51,7 +35,7 @@ void thinker_unlock_write_err(engine_t *eng, char *fmt, ...)
     atomic_store(&eng->exit_flag, true);
     pthread_mutex_unlock(&eng->sync_mtx);
     va_start(args, fmt);
-    kh_vwrite_log(fmt, args);
+    cibyl_vwrite_log(fmt, args);
     va_end(args);
     pthread_exit((void *)1);
 }
@@ -71,7 +55,7 @@ void thinker_write_err(engine_t *eng, char *fmt, ...)
     va_list args;
     atomic_store(&eng->exit_flag, true);
     va_start(args, fmt);
-    kh_vwrite_log(fmt, args);
+    cibyl_vwrite_log(fmt, args);
     va_end(args);
     pthread_exit((void *)1);
 }
@@ -90,7 +74,7 @@ void thinker_unlock_perror(engine_t *eng, char *prefix, int err_code)
 {
     atomic_store(&eng->exit_flag, true);
     pthread_mutex_unlock(&eng->sync_mtx);
-    kh_perror(prefix, err_code);
+    cibyl_perror(prefix, err_code);
     pthread_exit((void *)1);
 }
 
@@ -107,7 +91,7 @@ void thinker_unlock_perror(engine_t *eng, char *prefix, int err_code)
 void thinker_perror(engine_t *eng, char *prefix, int err_code)
 {
     atomic_store(&eng->exit_flag, true);
-    kh_perror(prefix, err_code);
+    cibyl_perror(prefix, err_code);
     pthread_exit((void *)1);
 }
 
@@ -170,7 +154,7 @@ void *mgr_entry(void *eng_addr)
     for (i = 0; i < THINKER_POOL_COUNT; i++) {
         if ((result = pthread_create(&eng->mgr, NULL, thinker_entry, eng_addr)) != 0) {
             retval = result;
-            kh_perror("manager: pthread_join", result);
+            cibyl_perror("manager: pthread_join", result);
             goto err_close_thrds;
         }
     }
@@ -184,7 +168,7 @@ err_close_thrds:
         /* Only log the first error we encounter. */
         if (result & !retval) {
             retval = result;
-            kh_perror("manager: pthread_join", result);
+            cibyl_perror("manager: pthread_join", result);
         }
     }
 out:
@@ -193,20 +177,20 @@ out:
 
 #ifdef _WIN32
 
-kh_errno_t eng_begin_init(engine_t *eng)
+cibyl_errno_t eng_begin_init(engine_t *eng)
 {
-    kh_errno_t result = KH_EOK;
+    cibyl_errno_t result = KH_EOK;
 
     /* Create the message pipe. */
     if (CreatePipe(&eng->h_msg_read, &hWritePipe->h_msg_write, NULL, WIN_PIPE_SIZE) {
-        kh_write_log("CreatePipe: %s\n", _strerror(NULL));
+        cibyl_write_log("CreatePipe: %s\n", _strerror(NULL));
         result = KH_EABORT;
         goto out;
     }
 
     /* Spawn the manager thread and have it complete engine initialization. */
     if (thrd_create(&eng->mgr, mgr_entry, (void *)eng)) {
-        kh_perror("thrd_create: %s\n", errno);
+        cibyl_perror("thrd_create: %s\n", errno);
         result = KH_EABORT;
         goto err_free_pipe;
     }
@@ -222,20 +206,20 @@ out:
 
 #else
 
-cb_errno_t eng_begin_init(engine_t *eng)
+int eng_begin_init(engine_t *eng)
 {
-    kh_errno_t result = KH_EOK;
+    int result = 0;
 
     /* Create the message pipe. */
     if (pipe(eng->msg_pipe) == -1) {
-        kh_perror("pipe: %s\n", errno);
+        cibyl_perror("pipe: %s\n", errno);
         result = KH_EABORT;
         goto out;
     }
 
     /* Spawn the manager thread and have it complete engine initialization. */
     if (pthrea(&eng->mgr, mgr_entry, (void *)eng)) {
-        kh_perror("thrd_create: %s\n", errno);
+        cibyl_perror("thrd_create: %s\n", errno);
         result = KH_EABORT;
         goto err_free_pipe;
     }

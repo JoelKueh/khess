@@ -25,11 +25,11 @@ typedef struct {
  */
 typedef struct {
     cb_mvlst_t searchmoves; /**< A list of moves to search from the root position. */
-    int64_t wtime;          /**< The amount of time that white has left. */
-    int64_t btime;          /**< The amount of time that black has left. */
-    int64_t winc;           /**< The time increment for white. */
-    int64_t binc;           /**< The time increment for black. */
-    int64_t movestogo;      /**< The number of moves to search. */
+    int64_t wtime;          /**< The amount of time that white has left (msec). */
+    int64_t btime;          /**< The amount of time that black has left (msec). */
+    int64_t winc;           /**< The time increment for white (msec). */
+    int64_t binc;           /**< The time increment for black (msec). */
+    int64_t movestogo;      /**< The number of moves until the next time control. */
     int64_t depth;          /**< The depth of the search. */
     int64_t nodes;          /**< The number of nodes to search. */
     int64_t mate;           /**< Signifies this should be a mate search in mate moves. */
@@ -65,13 +65,11 @@ typedef struct {
     atomic_bool ponder;         /**< Monitored to see if pondering search. */
     atomic_bool exit_flag;      /**< Monitored to see if shutting down. */
 
-    pthread_mutex_t out_mtx;    /**< Mutex that safeguards thread pool output. */
-#ifdef _WIN32
-    PHANDLE h_msg_read;         /**< The read handle for the pipe on windows. */
-    PHANDLE h_msg_write;        /**< THe write handle for the pipe on windows. */
-#else
-    int msg_pipe[2];            /**< A message pipe for result output. */
-#endif
+    atomic_bool search_cncld;   /**< Bool for if search is canceled. */
+    atomic_uint_fast64_t nodes; /**< Number of searched nodes. */
+    atomic_uint_fast16_t depth; /**< Searched depth. */
+
+    struct event *ev_done;      /**< Raised by a thinker when the search is done. */
 } engine_t;
 
 /**
