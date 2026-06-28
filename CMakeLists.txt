@@ -40,3 +40,23 @@ target_include_directories(cibyl
 		${PROJECT_SOURCE_DIR}/inc
 )
 target_compile_definitions(cibyl PRIVATE _POSIX_C_SOURCE=202405L)
+
+# Create the cibyl test executable.
+add_executable(cibyl_test
+	${BOARD_SOURCES}
+	src/uci.c
+	src/engine.c
+	src/search.c
+	src/perft.c
+	src/cb/test.c
+	src/test.c
+)
+target_include_directories(cibyl_test
+	PRIVATE
+		${PROJECT_SOURCE_DIR}/inc
+)
+target_compile_definitions(cibyl_test
+    PRIVATE
+        _POSIX_C_SOURCE=202405L
+        _DOCTEST_CPLUSPLUS=202302L
+)
