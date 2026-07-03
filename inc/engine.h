@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
+#include <time.h>
 
 #ifdef _WIN32
 #include <namedpipeapi.h>
@@ -33,6 +34,7 @@ typedef struct {
     engine_t *eng;          /**< The engine that the thinker belongs to. */
     pthread_t thread;       /**< The thread that backs this thinker. */
     cb_board_t board;       /**< The board that the engine thinks on. */
+    int64_t nodes;          /**< The number of nodes this thread has searched. */
     int tid;                /**< ID of the thinker thread. */
 } thinker_t;
 
@@ -74,6 +76,9 @@ struct engine {
     atomic_int active_threads; /**< Number of threads currently searching. */
     atomic_bool search_flag;   /**< Checked by thinkers to see if they should search. */
     atomic_bool exit_flag;     /**< Checked by the thinkers to see if they should shut down. */
+
+    /* Variables for tracking stop conditions. */
+    struct timespec start_time; /**< The time that the search started. */
     
     /* Function pointers for data reporting. */
     cb_move_t bestmove; /**< TODO: Remove. */
@@ -92,7 +97,6 @@ struct engine {
  */
 static void clear_search_params(search_params_t *params) {
     cb_mvlst_clear(&params->searchmoves);
-    params->ponder = false;
     params->wtime = -1;
     params->btime = -1;
     params->winc = -1;
@@ -102,7 +106,9 @@ static void clear_search_params(search_params_t *params) {
     params->nodes = -1;
     params->mate = -1;
     params->movetime = -1;
-    params->infinite = true;
+    params->ponder = false;
+    params->infinite = false;
+    params->perft = false;
 }
 
 /**
@@ -154,7 +160,7 @@ void eng_newgame(engine_t *eng);
  * @param engine The engine in question.
  * @return An error code for any errors in initialization.
  */
-cibyl_errno_t eng_set_ucifen(cibyl_error_t *err, engine_t *eng, char *fen);
+cibyl_errno_t eng_set_fen(cibyl_error_t *err, engine_t *eng, char *fen);
 
 /**
  * @breif Notifies the engine that it should begin a search.

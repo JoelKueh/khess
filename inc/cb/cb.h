@@ -50,15 +50,6 @@ cibyl_errno_t cb_board_from_fen(cibyl_error_t *err, cb_board_t *board, char *fen
  * @breif Populates a board from a fen string representation of a position.
  * @param err A pointer that will be populated with any errors.
  * @param board A pointer to the board to be populated.
- * @param uci The uci fen string to be parsed. This string will be modified by the function.
- * @return The error code corresponding to the error in err.
- */
-cibyl_errno_t cb_board_from_uci(cibyl_error_t *err, cb_board_t *board, char *uci);
-
-/**
- * @breif Populates a board from a fen string representation of a position.
- * @param err A pointer that will be populated with any errors.
- * @param board A pointer to the board to be populated.
  * @param pgn The pgn fen string to be parsed. This string will be modified by the function.
  * @return The error code corresponding to the error in err.
  */

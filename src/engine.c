@@ -119,10 +119,9 @@ cibyl_errno_t thinker_report_bestmove(cibyl_error_t *err, engine_t *eng, cb_move
  * @param err An error struct containing any error information.
  * @param eng The engine that this thinker belongs to.
  */
-cibyl_errno_t thinker_report_info(cibyl_error_t *err, engine_t *eng)
+cibyl_errno_t thinker_report_info(cibyl_error_t *err, engine_t *eng, char *msg)
 {
-    /* TODO: Implement me. */
-    printf("info\n");
+    printf("info string %s\n", msg);
     return CIBYL_EOK;
 }
 
@@ -137,7 +136,7 @@ cibyl_errno_t thinker_search(cibyl_error_t *err, thinker_t *tk)
     }
 
     /* Complete the search. */
-    if (iterative_deepening(err, &tk->eng->bestmove, tk->eng, &tk->board) != CIBYL_EOK) {
+    if (iterative_deepening(err, &tk->eng->bestmove, tk, &tk->board) != CIBYL_EOK) {
         result = CIBYL_ERR_ADD_CONTEXT(err);
         goto out;
     }
@@ -208,7 +207,7 @@ void eng_newgame(engine_t *eng)
     // TODO: Reset the ttable and stuff when I actually implement this.
 }
 
-cibyl_errno_t eng_set_ucifen(cibyl_error_t *err, engine_t *eng, char *fen)
+cibyl_errno_t eng_set_fen(cibyl_error_t *err, engine_t *eng, char *fen)
 {
     cibyl_errno_t result = CIBYL_EOK;
 
@@ -219,7 +218,7 @@ cibyl_errno_t eng_set_ucifen(cibyl_error_t *err, engine_t *eng, char *fen)
     }
 
     /* Initialize the board according to the ucifen string. */
-    if (cb_board_from_uci(err, eng->board, fen) != CIBYL_EOK) {
+    if (cb_board_from_fen(err, eng->board, fen) != CIBYL_EOK) {
         CIBYL_ERR_ADD_CONTEXT(err);
         result = CIBYL_EABORT;
         goto out;

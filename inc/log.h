@@ -98,6 +98,7 @@ typedef struct {
 #endif
 } cibyl_error_t;
 
+
 /**
  * @breif Function to write to the log file.
  * @param format A printf compliant format string.

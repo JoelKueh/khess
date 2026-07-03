@@ -29,6 +29,7 @@ const char STR_PONDERHIT[] = "ponderhit";
 const char STR_QUIT[] = "quit";
 const char STR_UCI_DELIMS[] = " \t\n";
 const char STR_FEN[] = "fen";
+const char STR_STARTPOS[] = "startpos";
 
 /* Supported option strings. */
 const char STR_OPT_HASH[] = "Hash";
@@ -50,6 +51,9 @@ const char STR_MOVE[] = "m";
 const char STR_UNDO[] = "u";
 const char STR_DEBUG_PRINT[] = "dbg";
 const char STR_EVAL[] = "eval";
+
+/* Other useful strings. */
+const char FEN_START_POS[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 /* Engine and author information. */
 const char ENGINE_NAME[] = "Cibyl";
@@ -77,21 +81,74 @@ cibyl_errno_t uci_report_info(engine_t *eng, void *udata)
     return CIBYL_EOK;
 }
 
+cibyl_errno_t handle_ucinewgame(cibyl_error_t *err, uci_engine_t *eng)
+{
+    cibyl_errno_t result = CIBYL_EOK;
+    char fen_start_pos_buf[sizeof(FEN_START_POS)];
+    char *token;
+
+    strcpy(fen_start_pos_buf, FEN_START_POS);
+    if (eng_set_fen(err, &eng->eng, fen_start_pos_buf)) {
+        result = CIBYL_ERR_ADD_CONTEXT(err);
+        goto out;
+    }
+
+out:
+    return result;
+
+}
+
 cibyl_errno_t handle_position(cibyl_error_t *err, uci_engine_t *eng, char *opts)
 {
     cibyl_errno_t result = CIBYL_EOK;
+    char fen_start_pos_buf[sizeof(FEN_START_POS)];
     char *saveptr;
     char *token;
+    char *fen;
+    char *moves;
+    char *algbr = NULL;
+    cb_move_t mv;
 
+    /* Split the input string into the fen and moves parts. */
     token = strtok_r(opts, STR_UCI_DELIMS, &saveptr);
+    fen = strtok_r(NULL, "\n", &saveptr);
+    if ((moves = strstr(fen, "moves ")) != NULL) {
+        *(moves - 1) = '\0';
+        moves += 6;
+    }
+
+    /* Set the position to the provided board string representation. */
     if (strcmp(token, STR_FEN) == 0) {
-        if (eng_set_ucifen(err, &eng->eng, strtok_r(NULL, "\n", &saveptr))) {
+        if (eng_set_fen(err, &eng->eng, fen)) {
+            result = CIBYL_ERR_ADD_CONTEXT(err);
+            goto out;
+        }
+    } else if (strcmp(token, STR_STARTPOS) == 0) {
+        strcpy(fen_start_pos_buf, FEN_START_POS);
+        if (eng_set_fen(err, &eng->eng, fen_start_pos_buf)) {
             result = CIBYL_ERR_ADD_CONTEXT(err);
             goto out;
         }
     } else {
         result = CIBYL_MKERR(err, CIBYL_EINVAL, "invalid position format specifier: %s", token);
         goto out;
+    }
+
+    /* If there is no moves string, then move on with your life. */
+    if (moves == NULL) {
+        result = CIBYL_EOK;
+        goto out;
+    }
+
+    /* Play the list of moves on the board. */
+    algbr = strtok_r(moves, " \n", &saveptr);
+    while (algbr != NULL) {
+        if (cb_mv_from_uci_algbr(err, &mv, eng->eng.board, algbr) != 0) {
+            result = CIBYL_EOK;
+            goto out;
+        }
+        cb_make(eng->eng.board, mv);
+        algbr = strtok_r(NULL, " \n", &saveptr);
     }
 
 out:
@@ -379,7 +436,8 @@ cibyl_errno_t handle_cmd(cibyl_error_t *err, uci_engine_t *eng, char *cmd)
 
         /* Board setup commands. */
         else if (strcmp(token, STR_UCINEWGAME) == 0) {
-            if (eng_set_ucifen(err, &eng->eng, "startpos") != CIBYL_EOK) {
+            /* FIXME: I shoudl really move the hanlde_position fen copying into eng_set_ucifen. */
+            if (handle_ucinewgame(err, eng) != CIBYL_EOK) {
                 CIBYL_ERR_ADD_CONTEXT(err);
                 result = CIBYL_EABORT;
                 goto err;

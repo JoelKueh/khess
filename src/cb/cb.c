@@ -629,47 +629,6 @@ out:
     return result;
 }
 
-cibyl_errno_t cb_board_from_uci(cibyl_error_t *err, cb_board_t *board, char *uci)
-{
-    cibyl_errno_t result = CIBYL_EOK;
-    char *saveptr;
-    char *moves;
-    char *algbr = NULL;
-    cb_move_t mv;
-
-    /* Locate the beginning of the string of moves. */
-    if ((moves = strstr(uci, "moves ")) != NULL) {
-        *(moves - 1) = '\0';
-        moves += 6;
-    }
-
-    /* Parse the fen main section. */
-    if (cb_board_from_fen(err, board, uci) != CIBYL_EOK) {
-        result = CIBYL_ERR_ADD_CONTEXT(err);
-        goto out;
-    }
-
-    /* If there is no moves string, then move on with your life. */
-    if (moves == NULL) {
-        result = CIBYL_EOK;
-        goto out;
-    }
-
-    /* Parse the list of moves. */
-    algbr = strtok_r(moves, " \n", &saveptr);
-    while (algbr != NULL) {
-        if (cb_mv_from_uci_algbr(err, &mv, board, algbr) != 0) {
-            result = CIBYL_EOK;
-            goto out;
-        }
-        cb_make(board, mv);
-        algbr = strtok_r(NULL, " \n", &saveptr);
-    }
-
-out:
-    return result;
-}
-
 cibyl_errno_t cb_board_from_pgn(cibyl_error_t *err, cb_board_t *board, char *fen)
 {
     assert(false && "not yet implemented");

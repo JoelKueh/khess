@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
     uci_engine_t eng;
     args_t args = make_default_args();
 
+    /* FIXME: You shouldn't do this Joel. */
+    setvbuf(stdout, NULL, _IOLBF, 0);
+
     /* Set the log file to stderr. */
     log_file = stderr;
     pthread_mutex_init(&log_lock, NULL);
