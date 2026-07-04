@@ -8,6 +8,6 @@
 /**
  * Evaluates the position specified by board.
  */
-float eval(const cb_board_t *board);
+int eval(const cb_board_t *board);
 
 #endif /* CIBYL_EVAL_H */

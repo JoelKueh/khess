@@ -457,7 +457,7 @@ static inline void gen_pins(uint64_t pins[10], cb_board_t *board)
     }
 }
 
-void gen_board_tables(cb_board_t *board)
+void cb_gen_state_tables(cb_board_t *board)
 {
     board->threats = gen_threats(board);
     board->checks = gen_checks(board, board->threats);
@@ -467,7 +467,7 @@ void gen_board_tables(cb_board_t *board)
 
 void cb_gen_moves(cb_mvlst_t *mvlst, cb_board_t *board)
 {
-    gen_board_tables(board);
+    cb_gen_state_tables(board);
     cb_mvlst_clear(mvlst);
     append_pawn_moves(mvlst, board);
     append_simple_moves(mvlst, board);

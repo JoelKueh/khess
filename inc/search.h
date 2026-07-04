@@ -9,7 +9,6 @@
 /**
  * Performs an iterative deepneing bestmove search.
  */
-cibyl_errno_t iterative_deepening(cibyl_error_t *err, cb_move_t *bestmove,
-                                  thinker_t *eng, cb_board_t *baord);
+cibyl_errno_t iterative_deepening(cibyl_error_t *err, line_t *pv, thinker_t *tk, cb_board_t *baord);
 
 #endif /* CIBYL_SEARCH_H */

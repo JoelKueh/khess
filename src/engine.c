@@ -102,10 +102,10 @@ cibyl_errno_t thinker_report_error(cibyl_error_t *err, engine_t *eng)
  * @param err An error struct containing any error information.
  * @param eng The engine that this thinker belongs to.
  */
-cibyl_errno_t thinker_report_bestmove(cibyl_error_t *err, engine_t *eng, cb_move_t best)
+cibyl_errno_t thinker_report_bestmove(cibyl_error_t *err, engine_t *eng)
 {
     char buf[6];
-    cb_mv_to_uci_algbr(buf, eng->bestmove);
+    cb_mv_to_uci_algbr(buf, eng->pv.moves[0]);
     printf("bestmove %s\n", buf);
     return CIBYL_EOK;
 }
@@ -136,7 +136,7 @@ cibyl_errno_t thinker_search(cibyl_error_t *err, thinker_t *tk)
     }
 
     /* Complete the search. */
-    if (iterative_deepening(err, &tk->eng->bestmove, tk, &tk->board) != CIBYL_EOK) {
+    if (iterative_deepening(err, &tk->eng->pv, tk, &tk->board) != CIBYL_EOK) {
         result = CIBYL_ERR_ADD_CONTEXT(err);
         goto out;
     }
@@ -182,7 +182,7 @@ void *thinker_entry(void *thinker_args)
 
         /* The last thread should send results back to the caller. */
         if (atomic_fetch_add(&tk->eng->active_threads, -1) == 1) {
-            if (thinker_report_bestmove(&err, tk->eng, tk->eng->bestmove)) {
+            if (thinker_report_bestmove(&err, tk->eng)) {
                 result = CIBYL_WRITE_ERR(&err);
                 goto out;
             }

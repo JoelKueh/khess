@@ -103,9 +103,14 @@ void cb_mv_to_uci_algbr(char buf[6], cb_move_t mv);
  * @breif Generates moves.
  * @param mvlst The movelist structure to populate.
  * @param board The board to generate moves on.
- * @param state The state table to reference for move generation.
  */
 void cb_gen_moves(cb_mvlst_t *mvlst, cb_board_t *board);
+
+/**
+ * @brief Generates evaluation helpers.
+ * @param board The board to generate on.
+ */
+void cb_gen_state_tables(cb_board_t *board);
 
 /**
  * @breif Reserves space on the history stack to make at least added_depth moves.

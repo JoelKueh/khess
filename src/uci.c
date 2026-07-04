@@ -59,28 +59,6 @@ const char FEN_START_POS[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq
 const char ENGINE_NAME[] = "Cibyl";
 const char ENGINE_AUTHOR[] = "Joel Kuehne";
 
-cibyl_errno_t uci_report_error(engine_t *eng, void *udata)
-{
-    /* TODO: Implement me. */
-    printf("Error!\n");
-    return CIBYL_EOK;
-}
-
-cibyl_errno_t uci_report_bestmove(engine_t *eng, void *udata)
-{
-    char buf[6];
-    cb_mv_to_uci_algbr(buf, eng->bestmove);
-    printf("bestmove %s\n", buf);
-    return CIBYL_EOK;
-}
-
-cibyl_errno_t uci_report_info(engine_t *eng, void *udata)
-{
-    /* TODO: Implement me. */
-    printf("Info!\n");
-    return CIBYL_EOK;
-}
-
 cibyl_errno_t handle_ucinewgame(cibyl_error_t *err, uci_engine_t *eng)
 {
     cibyl_errno_t result = CIBYL_EOK;
@@ -95,7 +73,6 @@ cibyl_errno_t handle_ucinewgame(cibyl_error_t *err, uci_engine_t *eng)
 
 out:
     return result;
-
 }
 
 cibyl_errno_t handle_position(cibyl_error_t *err, uci_engine_t *eng, char *opts)
