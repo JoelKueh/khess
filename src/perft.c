@@ -6,9 +6,9 @@
 #include "cb/types.h"
 #include <inttypes.h>
 
-uint64_t perfting(cb_board_t *board, int depth)
+bitboard_t perfting(cb_board_t *board, int depth)
 {
-    uint64_t cnt = 0;
+    bitboard_t cnt = 0;
     int i;
     cb_move_t mv;
     cb_mvlst_t mvlst;
@@ -37,9 +37,9 @@ uint64_t perfting(cb_board_t *board, int depth)
     return cnt;
 }
 
-uint64_t perft_cheating(cb_board_t *board, int depth)
+bitboard_t perft_cheating(cb_board_t *board, int depth)
 {
-    uint64_t cnt = 0;
+    bitboard_t cnt = 0;
     int i;
     cb_move_t mv;
     cb_mvlst_t mvlst;
@@ -73,9 +73,9 @@ cibyl_errno_t perft(cibyl_error_t *err, cb_board_t *board, int depth)
     cibyl_errno_t result = CIBYL_EOK;
     cb_mvlst_t mvlst;
     cb_move_t mv;
-    uint64_t perft_results[CB_MAX_NUM_MOVES];
-    uint64_t cnt = 0;
-    uint64_t total = 0;
+    bitboard_t perft_results[CB_MAX_NUM_MOVES];
+    bitboard_t cnt = 0;
+    bitboard_t total = 0;
     char buf[6];
     int i;
 
@@ -123,9 +123,9 @@ cibyl_errno_t perft_cheat(cibyl_error_t *err, cb_board_t *board, int depth)
     cibyl_errno_t result = CIBYL_EOK;
     cb_mvlst_t mvlst;
     cb_move_t mv;
-    uint64_t perft_results[CB_MAX_NUM_MOVES];
-    uint64_t cnt = 0;
-    uint64_t total = 0;
+    bitboard_t perft_results[CB_MAX_NUM_MOVES];
+    bitboard_t cnt = 0;
+    bitboard_t total = 0;
     char buf[6];
     int i;
 

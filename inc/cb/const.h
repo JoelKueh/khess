@@ -35,34 +35,34 @@ extern const square_t M_BLACK_QUEEN_SIDE_ROOK_TARGET;
 extern const square_t M_WHITE_ENP_LINE_START;
 extern const square_t M_BLACK_ENP_LINE_START;
 
-extern const uint64_t BB_RIGHT_COL;
-extern const uint64_t BB_LEFT_COL;
-extern const uint64_t BB_RIGHT_TWO_COLS;
-extern const uint64_t BB_LEFT_TWO_COLS;
-extern const uint64_t BB_TOP_ROW;
-extern const uint64_t BB_BOTTOM_ROW;
-extern const uint64_t BB_FULL;
-extern const uint64_t BB_EMPTY;
-extern const uint64_t BB_BLACK_PAWN_HOME;
-extern const uint64_t BB_WHITE_PAWN_HOME;
-extern const uint64_t BB_BLACK_PAWN_LINE;
-extern const uint64_t BB_WHITE_PAWN_LINE;
+extern const bitboard_t BB_RIGHT_COL;
+extern const bitboard_t BB_LEFT_COL;
+extern const bitboard_t BB_RIGHT_TWO_COLS;
+extern const bitboard_t BB_LEFT_TWO_COLS;
+extern const bitboard_t BB_TOP_ROW;
+extern const bitboard_t BB_BOTTOM_ROW;
+extern const bitboard_t BB_FULL;
+extern const bitboard_t BB_EMPTY;
+extern const bitboard_t BB_BLACK_PAWN_HOME;
+extern const bitboard_t BB_WHITE_PAWN_HOME;
+extern const bitboard_t BB_BLACK_PAWN_LINE;
+extern const bitboard_t BB_WHITE_PAWN_LINE;
 
-extern const uint64_t BB_WHITE_KING_SIDE_CASTLE_TARGET;
-extern const uint64_t BB_WHITE_QUEEN_SIDE_CASTLE_TARGET;
+extern const bitboard_t BB_WHITE_KING_SIDE_CASTLE_TARGET;
+extern const bitboard_t BB_WHITE_QUEEN_SIDE_CASTLE_TARGET;
 
-extern const uint64_t BB_WHITE_KING_SIDE_CASTLE_OCCUPANCY;
-extern const uint64_t BB_WHITE_QUEEN_SIDE_CASTLE_OCCUPANCY;
-extern const uint64_t BB_WHITE_KING_SIDE_CASTLE_CHECK;
-extern const uint64_t BB_WHITE_QUEEN_SIDE_CASTLE_CHECK;
+extern const bitboard_t BB_WHITE_KING_SIDE_CASTLE_OCCUPANCY;
+extern const bitboard_t BB_WHITE_QUEEN_SIDE_CASTLE_OCCUPANCY;
+extern const bitboard_t BB_WHITE_KING_SIDE_CASTLE_CHECK;
+extern const bitboard_t BB_WHITE_QUEEN_SIDE_CASTLE_CHECK;
  
-extern const uint64_t BB_BLACK_KING_SIDE_CASTLE_TARGET;
-extern const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_TARGET;
+extern const bitboard_t BB_BLACK_KING_SIDE_CASTLE_TARGET;
+extern const bitboard_t BB_BLACK_QUEEN_SIDE_CASTLE_TARGET;
  
-extern const uint64_t BB_BLACK_KING_SIDE_CASTLE_OCCUPANCY;
-extern const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_OCCUPANCY;
-extern const uint64_t BB_BLACK_KING_SIDE_CASTLE_CHECK;
-extern const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_CHECK;
+extern const bitboard_t BB_BLACK_KING_SIDE_CASTLE_OCCUPANCY;
+extern const bitboard_t BB_BLACK_QUEEN_SIDE_CASTLE_OCCUPANCY;
+extern const bitboard_t BB_BLACK_KING_SIDE_CASTLE_CHECK;
+extern const bitboard_t BB_BLACK_QUEEN_SIDE_CASTLE_CHECK;
 
 extern const uint16_t CB_MV_TO_MASK;
 extern const uint16_t CB_MV_FROM_MASK;

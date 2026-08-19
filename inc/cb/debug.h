@@ -31,7 +31,7 @@ void cb_print_board_utf8(FILE *f, cb_board_t *board);
  * @param f The file pointer to print to.
  * @param bitboard The bitboard to print.
  */
-void cb_print_bitboard(FILE *f, uint64_t bitboard);
+void cb_print_bitboard(FILE *f, bitboard_t bitboard);
 
 /**
  * @breif Prints the board with fancy chess characters from the UTF8 set.

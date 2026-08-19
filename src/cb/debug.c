@@ -58,7 +58,7 @@ void cb_print_board_utf8(FILE *f, cb_board_t *board)
 
 }
 
-void prep_bb_byte(char *buf, uint64_t bb, uint64_t rank) {
+void prep_bb_byte(char *buf, bitboard_t bb, bitboard_t rank) {
     sprintf(buf, "%s %s %s %s %s %s %s %s" ANSI_COLOR_RESET,
             (bb & (UINT64_C(1) << (rank * 8 + 0))) ? ANSI_COLOR_GREEN "1" : ANSI_COLOR_RED "0",
             (bb & (UINT64_C(1) << (rank * 8 + 1))) ? ANSI_COLOR_GREEN "1" : ANSI_COLOR_RED "0",
@@ -70,7 +70,7 @@ void prep_bb_byte(char *buf, uint64_t bb, uint64_t rank) {
             (bb & (UINT64_C(1) << (rank * 8 + 7))) ? ANSI_COLOR_GREEN "1" : ANSI_COLOR_RED "0");
 }
 
-void cb_print_bitboard(FILE *f, uint64_t bitboard)
+void cb_print_bitboard(FILE *f, bitboard_t bitboard)
 {
     char byte[PRINT_BUF_LEN];
     int i;

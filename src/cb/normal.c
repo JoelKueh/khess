@@ -4,20 +4,20 @@
 #include "cb/tables.h"
 #include "cb/const.h"
 
-uint64_t pawn_atks[2][64];
-uint64_t knight_atks[64];
-uint64_t king_atks[64];
-uint64_t to_from_table[64][64];
+bitboard_t pawn_atks[2][64];
+bitboard_t knight_atks[64];
+bitboard_t king_atks[64];
+bitboard_t to_from_table[64][64];
 
 /**
  * Generates a lookup table from a set of offsets on each square.
  */
-void gen_table_from_offsets(uint64_t table[64], const int8_t offsets[], uint8_t offset_len)
+void gen_table_from_offsets(bitboard_t table[64], const int8_t offsets[], uint8_t offset_len)
 {
     int i, j, sq;
 
     /* Zero the table. */
-    memset(table, 0, 64 * sizeof(uint64_t));
+    memset(table, 0, 64 * sizeof(bitboard_t));
 
     /* Loop through all squares. Build the mask from the set of offsets. */
     for (i = 0; i < 64; i++) {
@@ -84,9 +84,9 @@ cb_dir_t cb_get_ray_direction(square_t sq1, square_t sq2)
 /**
  * Generate the ray that connects sq1 and sq2.
  */
-uint64_t get_connecting_ray(square_t sq1, square_t sq2)
+bitboard_t get_connecting_ray(square_t sq1, square_t sq2)
 {
-    uint64_t mask = 0;
+    bitboard_t mask = 0;
     uint8_t direction;
 
     /* Get the ray direction. */
@@ -127,22 +127,22 @@ void cb_init_normal_tables()
     gen_to_from_table();
 }
 
-uint64_t cb_read_pawn_atk_msk(square_t sq, cb_color_t color)
+bitboard_t cb_read_pawn_atk_msk(square_t sq, cb_color_t color)
 {
     return pawn_atks[color][sq.idx];
 }
 
-uint64_t cb_read_knight_atk_msk(square_t sq)
+bitboard_t cb_read_knight_atk_msk(square_t sq)
 {
     return knight_atks[sq.idx];
 }
 
-uint64_t cb_read_king_atk_msk(square_t sq)
+bitboard_t cb_read_king_atk_msk(square_t sq)
 {
     return king_atks[sq.idx];
 }
 
-uint64_t cb_read_tf_table(square_t sq1, square_t sq2)
+bitboard_t cb_read_tf_table(square_t sq1, square_t sq2)
 {
     return to_from_table[sq1.idx][sq2.idx];
 }

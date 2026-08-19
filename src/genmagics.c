@@ -6,7 +6,7 @@ pthread_mutex_t log_lock;
 int main()
 {
     cibyl_error_t err;
-    uint64_t magics[64];
+    bitboard_t magics[64];
     int result = 0;
 
     log_file = stderr;

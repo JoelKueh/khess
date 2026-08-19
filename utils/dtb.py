@@ -9,11 +9,10 @@ RESET = "\033[0m"
 
 num = int(sys.argv[1])
 
-for i in range(0, 8):
+for i in reversed(range(0, 8)):
     for j in range(0, 8):
-        if num & 1:
+        if num & (1 << (i * 8 + j)):
             print(BOLD + GREEN + "1" + RESET, end=" ")
         else:
             print(BOLD + RED + "0" + RESET, end=" ")
-        num >>= 1
     print()

@@ -71,7 +71,7 @@ void cb_free_magic_tables();
  * @param occ The relevant occupancy mask.
  * @return A bitmask representing the attacked squares.
  */
-uint64_t cb_read_bishop_atk_msk(square_t sq, uint64_t occ);
+bitboard_t cb_read_bishop_atk_msk(square_t sq, bitboard_t occ);
 
 /**
  * @breif Reads the rook attack masks
@@ -79,7 +79,7 @@ uint64_t cb_read_bishop_atk_msk(square_t sq, uint64_t occ);
  * @param occ The relevant occupancy mask.
  * @return A bitmask representing the attacked squares.
  */
-uint64_t cb_read_rook_atk_msk(square_t sq, uint64_t occ);
+bitboard_t cb_read_rook_atk_msk(square_t sq, bitboard_t occ);
 
 /**
  * @breif Reads the pawn attack masks
@@ -87,21 +87,21 @@ uint64_t cb_read_rook_atk_msk(square_t sq, uint64_t occ);
  * @param color The color of the attacking pawn.
  * @return A bitmask representing the attacked squares.
  */
-uint64_t cb_read_pawn_atk_msk(square_t sq, cb_color_t color);
+bitboard_t cb_read_pawn_atk_msk(square_t sq, cb_color_t color);
 
 /**
  * @breif Reads the knight attack masks
  * @param sq The square.
  * @return A bitmask representing the attacked squares.
  */
-uint64_t cb_read_knight_atk_msk(square_t sq);
+bitboard_t cb_read_knight_atk_msk(square_t sq);
 
 /**
  * @breif Reads the king attack masks
  * @param sq The square.
  * @return A bitmask representing the attacked squares.
  */
-uint64_t cb_read_king_atk_msk(square_t sq);
+bitboard_t cb_read_king_atk_msk(square_t sq);
 
 /**
  * @breif Handles lookups for the ray that connects two squares
@@ -113,24 +113,24 @@ uint64_t cb_read_king_atk_msk(square_t sq);
  * @param sq2 The ending square.
  * @return Either the ray connecting the squares or zero.
  */
-uint64_t cb_read_tf_table(square_t sq1, square_t sq2);
+bitboard_t cb_read_tf_table(square_t sq1, square_t sq2);
 
 /**
  * Generate the array of rook magics.
  * This is run once by a helper program and the resulting magics are inserted into magical.c.
  */
-cibyl_errno_t cb_gen_rook_magics(cibyl_error_t *err, uint64_t magics[64]);
+cibyl_errno_t cb_gen_rook_magics(cibyl_error_t *err, bitboard_t magics[64]);
 
 /**
  * @brief Generate the array of bishop magics.
  * This is run once by a helper program and the resulting magics are inserted into magical.c.
  */
-cibyl_errno_t cb_gen_bishop_magics(cibyl_error_t *err, uint64_t magics[64]);
+cibyl_errno_t cb_gen_bishop_magics(cibyl_error_t *err, bitboard_t magics[64]);
 
 /**
  * @breif Print an array of magics as hex literals.
  * This is run once by the helper program and magics are inserted into magical.c.
  */
-void cb_print_magics(const uint64_t magics[64]);
+void cb_print_magics(const bitboard_t magics[64]);
 
 #endif /* CB_TABLES_H */

@@ -169,13 +169,13 @@ const uint64_t BISHOP_MAGICS[64] = {
 const uint8_t MAX_BITS_IN_TABLE = 12;
 const uint32_t MAX_TABLE_SIZE = 1 << MAX_BITS_IN_TABLE;
 
-uint64_t bishop_occ_mask[64];
-uint64_t rook_occ_mask[64];
+bitboard_t bishop_occ_mask[64];
+bitboard_t rook_occ_mask[64];
 
-uint64_t *bishop_atks[64];
-uint64_t *rook_atks[64];
+bitboard_t *bishop_atks[64];
+bitboard_t *rook_atks[64];
 
-static inline uint16_t get_bishop_key(const uint64_t magics[64], square_t sq, uint64_t occ)
+static inline uint16_t get_bishop_key(const uint64_t magics[64], square_t sq, bitboard_t occ)
 {
     /* Hash the occupancy mask and compute the key. */
     occ &= bishop_occ_mask[sq.idx];
@@ -183,7 +183,7 @@ static inline uint16_t get_bishop_key(const uint64_t magics[64], square_t sq, ui
     return occ >> (64 - NUM_BISHOP_BITS[sq.idx]);
 }
 
-static inline uint16_t get_rook_key(const uint64_t magics[64], square_t sq, uint64_t occ)
+static inline uint16_t get_rook_key(const uint64_t magics[64], square_t sq, bitboard_t occ)
 {
     /* Hash the occupancy mask and compute the key. */
     occ &= rook_occ_mask[sq.idx];
@@ -194,7 +194,7 @@ static inline uint16_t get_rook_key(const uint64_t magics[64], square_t sq, uint
 /**
  * Returns the bishop attack mask given an occupancy set and a square.
  */
-uint64_t cb_read_bishop_atk_msk(square_t sq, uint64_t occ)
+bitboard_t cb_read_bishop_atk_msk(square_t sq, bitboard_t occ)
 {
     uint16_t key = get_bishop_key(BISHOP_MAGICS, sq, occ);
     return bishop_atks[sq.idx][key];
@@ -203,7 +203,7 @@ uint64_t cb_read_bishop_atk_msk(square_t sq, uint64_t occ)
 /**
  * Returns the rook attack mask given an occupancy set and a square.
  */
-uint64_t cb_read_rook_atk_msk(square_t sq, uint64_t occ)
+bitboard_t cb_read_rook_atk_msk(square_t sq, bitboard_t occ)
 {
     uint16_t key = get_rook_key(ROOK_MAGICS, sq, occ);
     return rook_atks[sq.idx][key];
@@ -221,33 +221,38 @@ uint64_t cb_read_rook_atk_msk(square_t sq, uint64_t occ)
  *      . . x . . . . .
  *      . . . . . . . .
  */
-uint64_t get_rook_occ_mask(square_t sq)
+bitboard_t get_rook_occ_mask(square_t sq)
 {
-    uint64_t result = 0;
-    square_t source = sq;
+    bitboard_t result = 0;
+    int8_t file;
+    int8_t rank;
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_U];
-    while (sq.rank <= 6) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_U];
+    rank = sq.rank + 1;
+    file = sq.file;
+    while (rank <= 6) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        rank += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_D];
-    while (sq.rank >= 1) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_D];
+    rank = sq.rank - 1;
+    file = sq.file;
+    while (rank >= 1) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        rank -= 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_R];
-    while (sq.file <= 6) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_R];
+    rank = sq.rank;
+    file = sq.file + 1;
+    while (file <= 6) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        file += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_L];
-    while (sq.file >= 1) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_L];
+    rank = sq.rank;
+    file = sq.file - 1;
+    while (file >= 1) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        file -= 1;
     }
 
     return result;
@@ -265,33 +270,42 @@ uint64_t get_rook_occ_mask(square_t sq)
  *      . . . . . x . .
  *      . . . . . . . .
  */
-uint64_t get_bishop_occ_mask(square_t sq)
+bitboard_t get_bishop_occ_mask(square_t sq)
 {
-    uint64_t result = 0;
-    square_t source = sq;
+    bitboard_t result = 0;
+    int8_t file;
+    int8_t rank;
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_UR];
-    while (sq.rank <= 6 && sq.file <= 6) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_UR];
+    rank = sq.rank + 1;
+    file = sq.file + 1;
+    while (rank <= 6 && file <= 6) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        rank += 1;
+        file += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_UL];
-    while (sq.rank <= 6 && sq.file >= 1) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_UL];
+    rank = sq.rank + 1;
+    file = sq.file - 1;
+    while (rank <= 6 && file >= 1) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        rank += 1;
+        file -= 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_DR];
-    while (sq.rank >= 1 && sq.file <= 6) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_DR];
+    rank = sq.rank - 1;
+    file = sq.file + 1;
+    while (rank >= 1 && file <= 6) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        rank -= 1;
+        file += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_DL];
-    while (sq.rank >= 1 && sq.file >= 1) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_DL];
+    rank = sq.rank - 1;
+    file = sq.file - 1;
+    while (rank >= 1 && file >= 1) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        rank -= 1;
+        file -= 1;
     }
 
     return result;
@@ -302,33 +316,46 @@ uint64_t get_bishop_occ_mask(square_t sq)
  * This mask is much the same as the occupancy mask but you break out of the loop upon hitting
  * a piece in the occupancy mask.
  */
-uint64_t get_rook_atk_mask(square_t sq, uint64_t occ)
+bitboard_t get_rook_atk_mask(square_t sq, bitboard_t occ)
 {
-    uint64_t result = 0;
-    square_t source = sq;
+    bitboard_t result = 0;
+    int8_t file;
+    int8_t rank;
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_U];
-    while (sq.rank <= 7) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_U];
+    rank = sq.rank + 1;
+    file = sq.file;
+    while (rank <= 7) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        rank += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_D];
-    while (sq.rank >= 0) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_D];
+    rank = sq.rank - 1;
+    file = sq.file;
+    while (rank >= 0) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        rank -= 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_R];
-    while (sq.file <= 7) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_R];
+    rank = sq.rank;
+    file = sq.file + 1;
+    while (file <= 7) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        file += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_L];
-    while (sq.file >= 0) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_L];
+    rank = sq.rank;
+    file = sq.file - 1;
+    while (file >= 0) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        file -= 1;
     }
 
     return result;
@@ -339,33 +366,50 @@ uint64_t get_rook_atk_mask(square_t sq, uint64_t occ)
  * This mask is much the same as the occupancy mask but you break out of the loop upon hitting
  * a piece in the occupancy mask.
  */
-uint64_t get_bishop_atk_mask(square_t sq, uint64_t occ)
+bitboard_t get_bishop_atk_mask(square_t sq, bitboard_t occ)
 {
-    uint64_t result = 0;
-    square_t source = sq;
+    bitboard_t result = 0;
+    int8_t file;
+    int8_t rank;
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_UR];
-    while (sq.rank <= 7 && sq.file <= 7) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_UR];
+    rank = sq.rank + 1;
+    file = sq.file + 1;
+    while (rank <= 7 && file <= 7) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        rank += 1;
+        file += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_UL];
-    while (sq.rank <= 7 && sq.file >= 0) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_UL];
+    rank = sq.rank + 1;
+    file = sq.file - 1;
+    while (rank <= 7 && file >= 0) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        rank += 1;
+        file -= 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_DR];
-    while (sq.rank >= 0 && sq.file <= 7) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_DR];
+    rank = sq.rank - 1;
+    file = sq.file + 1;
+    while (rank >= 0 && file <= 7) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        rank -= 1;
+        file += 1;
     }
 
-    sq.idx = source.idx + dir_offset_mapping[CB_DIR_DL];
-    while (sq.rank >= 0 && sq.file >= 0) {
-        result |= UINT64_C(1) << sq.idx;
-        sq.idx += dir_offset_mapping[CB_DIR_DL];
+    rank = sq.rank - 1;
+    file = sq.file - 1;
+    while (rank >= 0 && file >= 0) {
+        result |= UINT64_C(1) << (rank * 8 + file);
+        if (occ & (UINT64_C(1) << (rank * 8 + file)))
+            break;
+        rank -= 1;
+        file -= 1;
     }
 
     return result;
@@ -374,13 +418,13 @@ uint64_t get_bishop_atk_mask(square_t sq, uint64_t occ)
 /**
  * Allocates a magic table.
  */
-cibyl_errno_t alloc_magic_table(cibyl_error_t *err, uint64_t *table[64], const uint8_t bits[64])
+cibyl_errno_t alloc_magic_table(cibyl_error_t *err, bitboard_t *table[64], const uint8_t bits[64])
 {
     cibyl_errno_t result = CIBYL_EOK;
     square_t sq;
 
     for (sq.idx = 0; sq.idx < 64; sq.idx++) {
-        if ((table[sq.idx] = calloc(1 << NUM_BISHOP_BITS[sq.idx], sizeof(uint64_t))) == 0) {
+        if ((table[sq.idx] = calloc(1 << NUM_BISHOP_BITS[sq.idx], sizeof(bitboard_t))) == 0) {
             result = CIBYL_MKERR(err, CIBYL_ENOMEM, "calloc: %s", strerror(errno));
             goto out_free_tables;
         };
@@ -399,7 +443,7 @@ out_success:
 /**
  * Free a magic table.
  */
-void free_magic_table(uint64_t *table[64])
+void free_magic_table(bitboard_t *table[64])
 {
     square_t sq;
     for (sq.idx = 0; sq.idx < 64; sq.idx++)
@@ -410,9 +454,9 @@ void free_magic_table(uint64_t *table[64])
  * Maps an index to the bits of an occupancy mask.
  * Effectively allows you to map an n-bit number to an n-bit mask.
  */
-uint64_t map_index_to_occ_mask(uint16_t idx, uint8_t num_bits, uint64_t occ_mask)
+bitboard_t map_index_to_occ_mask(uint16_t idx, uint8_t num_bits, bitboard_t occ_mask)
 {
-    uint64_t result = 0;
+    bitboard_t result = 0;
     uint8_t pos;
     uint8_t i;
 
@@ -432,13 +476,13 @@ uint64_t map_index_to_occ_mask(uint16_t idx, uint8_t num_bits, uint64_t occ_mask
 /**
  * Generates a single bishop lookup table.
  */
-cibyl_errno_t gen_bishop_map_for_sq(cibyl_error_t *err, uint64_t *table[64],
+cibyl_errno_t gen_bishop_map_for_sq(cibyl_error_t *err, bitboard_t *table[64],
         const uint64_t magics[64], square_t sq)
 {
     cibyl_errno_t result;
-    uint64_t occupied_squares;
-    uint64_t legal_moves;
-    uint64_t occ;
+    bitboard_t occupied_squares;
+    bitboard_t legal_moves;
+    bitboard_t occ;
     uint16_t key;
     int idx;
 
@@ -490,13 +534,13 @@ out_err:
 /**
  * Generates a single rook lookup table.
  */
-cibyl_errno_t gen_rook_map_for_sq(cibyl_error_t *err, uint64_t *table[64],
+cibyl_errno_t gen_rook_map_for_sq(cibyl_error_t *err, bitboard_t *table[64],
         const uint64_t magics[64], square_t sq)
 {
-    cibyl_errno_t result;
-    uint64_t occupied_squares;
-    uint64_t legal_moves;
-    uint64_t occ;
+    cibyl_errno_t result = CIBYL_EOK;
+    bitboard_t occupied_squares;
+    bitboard_t legal_moves;
+    bitboard_t occ;
     uint16_t key;
     int idx;
 
@@ -604,7 +648,7 @@ uint64_t rand_u64_few_bits()
 cibyl_errno_t cb_gen_rook_magics(cibyl_error_t *err, uint64_t magics[64])
 {
     cibyl_errno_t result = CIBYL_EINVAL;
-    uint64_t *atks[64];
+    bitboard_t *atks[64];
     square_t sq;
     int i = 0;
 
@@ -618,17 +662,20 @@ cibyl_errno_t cb_gen_rook_magics(cibyl_error_t *err, uint64_t magics[64])
     for (sq.idx = 0; sq.idx < 64; sq.idx++) {
         do {
             magics[sq.idx] = rand_u64_few_bits();
-            if ((result = gen_rook_map_for_sq(err, atks, magics, sq)) != CIBYL_EOK)
-                goto out_err;
+            if ((result = gen_rook_map_for_sq(err, atks, magics, sq)) == CIBYL_EOK)
+                break;
             i++;
         } while (i < 10000000);
+
+        if (result != CIBYL_EOK)
+            goto out_err;
     }
     
     /* Check the result. */
 out_err:
     if (result != CIBYL_EOK) {
         result = CIBYL_MKERR(err, CIBYL_EABORT,
-                "failed to generate rook magics: %s", err->desc);
+                "failed to generate rook magics for sq %d", sq.idx);
         goto out_free;
     }
 
@@ -645,25 +692,34 @@ out:
 cibyl_errno_t cb_gen_bishop_magics(cibyl_error_t *err, uint64_t magics[64])
 {
     cibyl_errno_t result = CIBYL_EINVAL;
-    uint64_t *atks[64];
+    bitboard_t *atks[64];
     square_t sq;
     int i = 0;
 
     /* Allocate space for the attack table. */
-    if (alloc_magic_table(err, atks, NUM_BISHOP_BITS)) {
+    if (alloc_magic_table(err, atks, NUM_ROOK_BITS)) {
         result = CIBYL_ERR_ADD_CONTEXT(err);
         goto out;
     }
 
     /* Generate random magics until one works. */
     for (sq.idx = 0; sq.idx < 64; sq.idx++) {
-        while (gen_bishop_map_for_sq(err, atks, magics, sq) == CIBYL_EINVAL && i++ < 10000000);
+        do {
+            magics[sq.idx] = rand_u64_few_bits();
+            if ((result = gen_bishop_map_for_sq(err, atks, magics, sq)) == CIBYL_EOK)
+                break;
+            i++;
+        } while (i < 10000000);
+
+        if (result != CIBYL_EOK)
+            goto out_err;
     }
     
     /* Check the result. */
+out_err:
     if (result != CIBYL_EOK) {
         result = CIBYL_MKERR(err, CIBYL_EABORT,
-                "failed to generate bishop magics: %s", err->desc);
+                "failed to generate bishop magics for sq %d", sq.idx);
         goto out_free;
     }
 

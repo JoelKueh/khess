@@ -100,8 +100,8 @@ static inline void cb_wipe_board(cb_board_t *board)
 {
     int i;
     memset(&board->mb.data, CB_PTYPE_EMPTY, 64 * sizeof(uint8_t));
-    memset(&board->bb.piece, 0, 12 * sizeof(uint64_t));
-    memset(&board->bb.color, 0, 2 * sizeof(uint64_t));
+    memset(&board->bb.piece, 0, 12 * sizeof(bitboard_t));
+    memset(&board->bb.color, 0, 2 * sizeof(bitboard_t));
     board->bb.occ = 0;
     board->hist.count = 0;
 }

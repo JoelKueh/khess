@@ -8,6 +8,9 @@
 #define CB_MAX_NUM_MOVES 218
 #define CB_MAX_LINE_LEN 64
 
+/* Type for a bitboard. */
+typedef uint64_t bitboard_t;
+
 /**
  * @breif Enumerates board piece and turn colors.
  */
@@ -129,10 +132,10 @@ typedef struct {
  *      piece[CB_BLACK][CB_PTYPE_ROOK] & (UINT64_T(1) << 16) == 1
  */
 typedef struct {
-    uint64_t color[2];      /**< A set of bitmasks for colored pieces. */
-    uint64_t piece[2][6];   /**< A set of bitmasks for piece types and colors. */
-    uint64_t occ;           /**< The union of the above bitmasks. For occupied squares. */
-} cb_bitboard_t;
+    bitboard_t color[2];      /**< A set of bitmasks for colored pieces. */
+    bitboard_t piece[2][6];   /**< A set of bitmasks for piece types and colors. */
+    bitboard_t occ;           /**< The union of the above bitmasks. For occupied squares. */
+} cb_bitboard_set_t;
 
 /**
  * @breif Mailbox data structure that duplicates data of bitboard.
@@ -154,13 +157,13 @@ typedef struct {
  */
 typedef struct {
     cb_hist_stack_t hist;   /**< The history stack. */
-    cb_bitboard_t bb;       /**< The bitboard. */
+    cb_bitboard_set_t bb;   /**< The bitboard. */
     cb_mailbox_t mb;        /**< The mailbox. */
 
-    uint64_t threats;       /**< A bitmask for all pieces that threaten the king. */
-    uint64_t checks;        /**< A bitmask for all pieces that check the king. */
-    uint64_t check_blocks;  /**< A bitmask for all squares that can break a check. */
-    uint64_t pins[10];      /**< A set of bitmasks for all active pin rays. */
+    bitboard_t threats;           /**< A bitmask for all pieces that threaten the king. */
+    bitboard_t checks;            /**< A bitmask for all pieces that check the king. */
+    bitboard_t check_blocks;      /**< A bitmask for all squares that can break a check. */
+    bitboard_t pins[10];          /**< A set of bitmasks for all active pin rays. */
 
     uint8_t turn;           /**< The current turn. */
     uint32_t fullmove_num;  /**< The fullmove number. */
