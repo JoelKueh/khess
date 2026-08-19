@@ -7,9 +7,13 @@
 #include "cb/move.h"
 #include "cb/eval.h"
 
-#define EVAL_LOSE (INT_MIN + ALPHA_BETA_MAX_DEPTH)
+#define EVAL_LOSE (INT_MIN + CB_MAX_LINE_LEN)
 #define EVAL_DRAW 0
 
+/**
+ * @breif Checks the stop conditions for the search.
+ * @param tk The active thinker.
+ */
 bool check_stop_conditions(thinker_t *tk)
 {
     struct timespec now;
@@ -61,11 +65,20 @@ out:
     return result;
 }
 
-int negamax(thinker_t *tk, line_t *pv, int alpha, int beta, int depth)
+/**
+ * Negamax search framework for the engine.
+ * @param tk The thinker to run the search on.
+ * @param pv Output pointer containing the principle variation.
+ * @param alpha The lower bound for the alpha beta search.
+ * @param beta The upper bound for the alpha beta search.
+ * @param depth_remaining The remaining
+ */
+int negamax(thinker_t *tk, cb_line_t *pv, int alpha, int beta, int depth_remaining,
+            const cb_line_t *prev_pv, bool *ispv, int depth)
 {
     cb_mvlst_t mvlst;
     cb_move_t mv;
-    line_t line;
+    cb_line_t line;
 
     int value;
     int i;
@@ -75,20 +88,28 @@ int negamax(thinker_t *tk, line_t *pv, int alpha, int beta, int depth)
     tk->nodes += 1;
 
     /* If this is a leaf node, then return the static evaluation of the position. */
-    if (depth == 0) {
+    if (depth_remaining == 0) {
         value = eval(&tk->board);
         goto out;
     }
 
-    /* Recursively call negamax for all child nodes. */
+    /* Generate moves and check for checkmate. */
     cb_gen_moves(&mvlst, &tk->board);
     if (cb_mvlst_size(&mvlst) == 0) {
-        if (tk->board.threats != 0) {
+        if (tk->board.checks != 0) {
             /* Faster checkmates are higher value. */
-            value = EVAL_LOSE - depth;
+            value = EVAL_LOSE - depth_remaining;
         } else {
             value = EVAL_DRAW;
         }
+    }
+
+    /* Reorder moves, initially using the previous pv line. */
+    if (*ispv) {
+        reorder_mvlst(&mvlst, &tk->board, pv->moves[depth]);
+        *ispv = depth == cb_mvlst_size(&mvlst);
+    } else {
+        reorder_mvlst(&mvlst, &tk->board, CB_INVALID_MOVE);
     }
 
     /* Call negamax recursively. */
@@ -103,7 +124,7 @@ int negamax(thinker_t *tk, line_t *pv, int alpha, int beta, int depth)
         cb_make(&tk->board, mv);
 
         /* Call negamax with an inverted evaluation function. */
-        value = -negamax(tk, &line, -beta, -alpha, depth -1);
+        value = -negamax(tk, &line, -beta, -alpha, depth_remaining - 1, prev_pv, ispv, depth + 1);
         
         /* Collect the results and unmake the move. */
         cb_unmake(&tk->board);
@@ -126,56 +147,60 @@ out:
     return value;
 }
 
-cibyl_errno_t alphabeta(cibyl_error_t *err, line_t *pv,
-                        thinker_t *tk, cb_board_t *board, int base_depth)
+cibyl_errno_t alphabeta(cibyl_error_t *err, cb_line_t *pv,
+                        thinker_t *tk, cb_board_t *board, int base_depth,
+                        const cb_line_t *prev_pv)
 {
     cibyl_errno_t result = CIBYL_EOK;
     cb_mvlst_t mvlst;
     cb_move_t mv;
-    line_t line;
+    cb_line_t line;
 
+    bool ispv = true;
     int bestvalue;
     int value;
     int i;
 
     /* Exit early if depth is less than 1. */
-    if (base_depth < 1 || base_depth >= ALPHA_BETA_MAX_DEPTH) {
+    if (base_depth < 1 || base_depth >= CB_MAX_LINE_LEN) {
         result = CIBYL_MKERR(err, CIBYL_EINVAL, "invalid alphabeta search depth\n");
         goto out;
     }
 
-    /* Reserve the board history up to ALPHA_BETA_MAX_DEPTH. */
-    if (cb_reserve_for_make(NULL, board, ALPHA_BETA_MAX_DEPTH) != 0) {
+    /* Reserve the board history up to CB_MAX_LINE_LEN. */
+    if (cb_reserve_for_make(NULL, board, CB_MAX_LINE_LEN) != 0) {
         result = CIBYL_ERR_ADD_CONTEXT(err);
         goto out;
     }
 
     /* Start the alpha-beta search. */
-    (void)negamax(tk, pv, INT_MIN, INT_MAX, base_depth);
+    (void)negamax(tk, pv, INT_MIN, INT_MAX, base_depth, prev_pv, &ispv, 0);
 
 out:
     return result;
 }
 
-cibyl_errno_t iterative_deepening(cibyl_error_t *err, line_t *pv, thinker_t *tk, cb_board_t *board)
+cibyl_errno_t iterative_deepening(cibyl_error_t *err, cb_line_t *pv,
+                                  thinker_t *tk, cb_board_t *board)
 {
     cibyl_errno_t result = CIBYL_EOK;
     cb_move_t current_bestmove = CB_INVALID_MOVE;
     cb_move_t mv;
-    line_t line;
+    cb_line_t line;
     int i;
 
-    /* Set initial values for stop condition checks. */
+    /* Set up initial search values. */
     tk->nodes = 0;
+    pv->move_count = 0;
     if (tk->tid == 0) {
         timespec_get(&tk->eng->start_time, TIME_UTC);
     }
     
     /* Perform the search with iterative deepening. */
-    for (i = 1; i < ALPHA_BETA_MAX_DEPTH; i++) {
+    for (i = 1; i < CB_MAX_LINE_LEN; i++) {
         /* TODO: Reuse the previous move ordering for this search. */
         /* TODO: Use good move ordering. :P */
-        if (alphabeta(err, &line, tk, board, i) != CIBYL_EOK) {
+        if (alphabeta(err, &line, tk, board, i, pv) != CIBYL_EOK) {
             result = CIBYL_ERR_ADD_CONTEXT(err);
             goto out;
         }

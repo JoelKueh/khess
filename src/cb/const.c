@@ -1,4 +1,5 @@
 
+#include "cb/types.h"
 #include "cb/const.h"
 
 const uint16_t HIST_INIT_BOARD_STATE =              0b0;
@@ -9,24 +10,24 @@ const uint16_t HIST_ENP_ALL          =       0b11110000;
 const uint16_t HIST_HALFMOVE_CLOCK   = 0b11111100000000;
 const uint16_t HIST_HALFMOVE_FIFTY   = 50 << 8;
 
-const uint8_t M_WHITE_KING_START               = 4;
-const uint8_t M_WHITE_KING_SIDE_ROOK_START     = 7;
-const uint8_t M_WHITE_QUEEN_SIDE_ROOK_START    = 0;
-const uint8_t M_WHITE_KING_SIDE_CASTLE_TARGET  = 6;
-const uint8_t M_WHITE_KING_SIDE_ROOK_TARGET    = 5;
-const uint8_t M_WHITE_QUEEN_SIDE_CASTLE_TARGET = 2;
-const uint8_t M_WHITE_QUEEN_SIDE_ROOK_TARGET   = 3;
+const square_t M_WHITE_KING_START               = {.idx = 4};
+const square_t M_WHITE_KING_SIDE_ROOK_START     = {.idx = 7};
+const square_t M_WHITE_QUEEN_SIDE_ROOK_START    = {.idx = 0};
+const square_t M_WHITE_KING_SIDE_CASTLE_TARGET  = {.idx = 6};
+const square_t M_WHITE_KING_SIDE_ROOK_TARGET    = {.idx = 5};
+const square_t M_WHITE_QUEEN_SIDE_CASTLE_TARGET = {.idx = 2};
+const square_t M_WHITE_QUEEN_SIDE_ROOK_TARGET   = {.idx = 3};
 
-const uint8_t M_BLACK_KING_START               = 60;
-const uint8_t M_BLACK_KING_SIDE_ROOK_START     = 63;
-const uint8_t M_BLACK_QUEEN_SIDE_ROOK_START    = 56;
-const uint8_t M_BLACK_KING_SIDE_CASTLE_TARGET  = 62;
-const uint8_t M_BLACK_KING_SIDE_ROOK_TARGET    = 61;
-const uint8_t M_BLACK_QUEEN_SIDE_CASTLE_TARGET = 58;
-const uint8_t M_BLACK_QUEEN_SIDE_ROOK_TARGET   = 59;
+const square_t M_BLACK_KING_START               = {.idx = 60};
+const square_t M_BLACK_KING_SIDE_ROOK_START     = {.idx = 63};
+const square_t M_BLACK_QUEEN_SIDE_ROOK_START    = {.idx = 56};
+const square_t M_BLACK_KING_SIDE_CASTLE_TARGET  = {.idx = 62};
+const square_t M_BLACK_KING_SIDE_ROOK_TARGET    = {.idx = 61};
+const square_t M_BLACK_QUEEN_SIDE_CASTLE_TARGET = {.idx = 58};
+const square_t M_BLACK_QUEEN_SIDE_ROOK_TARGET   = {.idx = 59};
 
-const uint8_t M_WHITE_ENP_LINE_START = 16;
-const uint8_t M_BLACK_ENP_LINE_START = 40;
+const square_t M_WHITE_ENP_LINE_START = {.idx = 16};
+const square_t M_BLACK_ENP_LINE_START = {.idx = 40};
 
 const uint64_t BB_RIGHT_COL        = 0x8080808080808080;
 const uint64_t BB_LEFT_COL         = 0x0101010101010101;
@@ -41,16 +42,16 @@ const uint64_t BB_WHITE_PAWN_HOME  = 0x000000000000FF00; /* Second-to-bottom row
 const uint64_t BB_BLACK_PAWN_LINE  = 0x000000FF00000000; /* Fourth row from top */
 const uint64_t BB_WHITE_PAWN_LINE  = 0x00000000FF000000; /* Fourth row from bottom */
 
-const uint64_t BB_WHITE_KING_SIDE_CASTLE_TARGET  = UINT64_C(1) << M_WHITE_KING_SIDE_CASTLE_TARGET;
-const uint64_t BB_WHITE_QUEEN_SIDE_CASTLE_TARGET = UINT64_C(1) << M_WHITE_QUEEN_SIDE_CASTLE_TARGET;
+const uint64_t BB_WHITE_KING_SIDE_CASTLE_TARGET  = UINT64_C(1) << M_WHITE_KING_SIDE_CASTLE_TARGET.idx;
+const uint64_t BB_WHITE_QUEEN_SIDE_CASTLE_TARGET = UINT64_C(1) << M_WHITE_QUEEN_SIDE_CASTLE_TARGET.idx;
 
 const uint64_t BB_WHITE_KING_SIDE_CASTLE_OCCUPANCY  = 0x0000000000000060;
 const uint64_t BB_WHITE_QUEEN_SIDE_CASTLE_OCCUPANCY = 0x000000000000000E;
 const uint64_t BB_WHITE_KING_SIDE_CASTLE_CHECK      = 0x0000000000000070;
 const uint64_t BB_WHITE_QUEEN_SIDE_CASTLE_CHECK     = 0x000000000000001C;
 
-const uint64_t BB_BLACK_KING_SIDE_CASTLE_TARGET  = UINT64_C(1) << M_BLACK_KING_SIDE_CASTLE_TARGET;
-const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_TARGET = UINT64_C(1) << M_BLACK_QUEEN_SIDE_CASTLE_TARGET;
+const uint64_t BB_BLACK_KING_SIDE_CASTLE_TARGET  = UINT64_C(1) << M_BLACK_KING_SIDE_CASTLE_TARGET.idx;
+const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_TARGET = UINT64_C(1) << M_BLACK_QUEEN_SIDE_CASTLE_TARGET.idx;
 
 const uint64_t BB_BLACK_KING_SIDE_CASTLE_OCCUPANCY  = 0x6000000000000000;
 const uint64_t BB_BLACK_QUEEN_SIDE_CASTLE_OCCUPANCY = 0x0E00000000000000;

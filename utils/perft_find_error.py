@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# This script recursively calls cli_debug and stockfish to compare the results
+# This script recursively calls cibyl and stockfish to compare the results
 # of a perft at a specified position.
 #
 # To run, stockfish must be in the path.

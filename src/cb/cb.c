@@ -20,10 +20,10 @@ int cb_table_refcount = 0;
 
 void cb_mv_to_uci_algbr(char *buf, cb_move_t move)
 {
-    buf[0] = cb_mv_get_from(move) % 8 + 'a';
-    buf[1] = '1' + cb_mv_get_from(move) / 8;
-    buf[2] = cb_mv_get_to(move) % 8 + 'a';
-    buf[3] = '1' + cb_mv_get_to(move) / 8;
+    buf[0] = cb_mv_get_from(move).idx % 8 + 'a';
+    buf[1] = '1' + cb_mv_get_from(move).idx / 8;
+    buf[2] = cb_mv_get_to(move).idx % 8 + 'a';
+    buf[3] = '1' + cb_mv_get_to(move).idx / 8;
 
     switch (cb_mv_get_flags(move)) {
         case CB_MV_KNIGHT_PROMO:
@@ -56,7 +56,7 @@ cibyl_errno_t cb_board_init(cibyl_error_t *err, cb_board_t *board)
 {
     cibyl_errno_t result = CIBYL_EOK;
     if ((result = cb_hist_stack_init(&board->hist)) != CIBYL_EOK)
-        (void)CIBYL_MKERR(err, result, "malloc: %s\n", strerror(errno));
+        result = CIBYL_MKERR(err, result, "malloc: %s\n", strerror(errno));
     return result;
 }
 
@@ -64,8 +64,8 @@ cibyl_errno_t cb_tables_init(cibyl_error_t *err)
 {
     cibyl_errno_t result = CIBYL_EOK;
     cb_init_normal_tables();
-    if ((result = cb_init_magic_tables()) != CIBYL_EOK)
-        (void)CIBYL_MKERR(err, result, "malloc: %s\n", strerror(errno));
+    if ((result = cb_init_magic_tables(err)) != CIBYL_EOK)
+        result = CIBYL_ERR_ADD_CONTEXT(err);
     return result;
 }
 
@@ -92,40 +92,40 @@ void cb_make(cb_board_t *board, const cb_move_t mv)
     cb_history_t old_state = board->hist.data[board->hist.count - 1].hist;
     cb_hist_ele_t new_ele;
     cb_mv_flag_t flag = cb_mv_get_flags(mv);
-    uint8_t to = cb_mv_get_to(mv);
-    uint8_t from = cb_mv_get_from(mv);
+    square_t to = cb_mv_get_to(mv);
+    square_t from = cb_mv_get_from(mv);
 
     cb_ptype_t ptype;
     cb_ptype_t cap_ptype;
     cb_history_t new_state = old_state;
 
     /* Variables for castles. */
-    uint8_t rook_from;
-    uint8_t rook_to;
+    square_t rook_from;
+    square_t rook_to;
 
     /* Variables for enp. */
-    int8_t direction;
+    square_t enp_cap_sq;
 
     /* Make the move. */
     switch (flag)
     {
         case CB_MV_QUIET:
-            ptype = cb_ptype_at_sq(board, from);
+            ptype = cb_ptype_at(board, from);
             cb_hist_set_captured_piece(&new_state, CB_PTYPE_EMPTY);
             cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_write_piece(board, to, ptype, board->turn);
             cb_delete_piece(board, from, ptype, board->turn);
             break;
         case CB_MV_CAPTURE:
-            ptype = cb_ptype_at_sq(board, from);
-            cap_ptype = cb_ptype_at_sq(board, to);
+            ptype = cb_ptype_at(board, from);
+            cap_ptype = cb_ptype_at(board, to);
             cb_hist_set_captured_piece(&new_state, cap_ptype);
             cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, ptype, board->turn, cap_ptype, !board->turn);
             cb_delete_piece(board, from, ptype, board->turn);
             break;
         case CB_MV_DOUBLE_PAWN_PUSH:
-            cb_hist_set_enp(&new_state, to & 0b111);
+            cb_hist_set_enp(&new_state, to.file);
             cb_write_piece(board, to, CB_PTYPE_PAWN, board->turn);
             cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
@@ -154,11 +154,11 @@ void cb_make(cb_board_t *board, const cb_move_t mv)
             cb_write_piece(board, rook_to, CB_PTYPE_ROOK, board->turn);
             break;
         case CB_MV_ENPASSANT:
-            direction = board->turn == CB_WHITE ? -8 : 8;
+            enp_cap_sq.idx = to.idx + (board->turn == CB_WHITE ? -8 : 8);
             cb_hist_set_captured_piece(&new_state, CB_PTYPE_PAWN);
             cb_write_piece(board, to, CB_PTYPE_PAWN, board->turn);
             cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
-            cb_delete_piece(board, to + direction, CB_PTYPE_PAWN, !board->turn);
+            cb_delete_piece(board, enp_cap_sq, CB_PTYPE_PAWN, !board->turn);
             break;
         case CB_MV_KNIGHT_PROMO:
             cb_hist_set_captured_piece(&new_state, CB_PTYPE_EMPTY);
@@ -181,28 +181,28 @@ void cb_make(cb_board_t *board, const cb_move_t mv)
             cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
         case CB_MV_KNIGHT_PROMO_CAPTURE:
-            cap_ptype = cb_ptype_at_sq(board, to);
+            cap_ptype = cb_ptype_at(board, to);
             cb_hist_set_captured_piece(&new_state, cap_ptype);
             cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_KNIGHT, board->turn, cap_ptype, !board->turn);
             cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
         case CB_MV_BISHOP_PROMO_CAPTURE:
-            cap_ptype = cb_ptype_at_sq(board, to);
+            cap_ptype = cb_ptype_at(board, to);
             cb_hist_set_captured_piece(&new_state, cap_ptype);
             cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_BISHOP, board->turn, cap_ptype, !board->turn);
             cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
         case CB_MV_ROOK_PROMO_CAPTURE:
-            cap_ptype = cb_ptype_at_sq(board, to);
+            cap_ptype = cb_ptype_at(board, to);
             cb_hist_set_captured_piece(&new_state, cap_ptype);
             cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_ROOK, board->turn, cap_ptype, !board->turn);
             cb_delete_piece(board, from, CB_PTYPE_PAWN, board->turn);
             break;
         case CB_MV_QUEEN_PROMO_CAPTURE:
-            cap_ptype = cb_ptype_at_sq(board, to);
+            cap_ptype = cb_ptype_at(board, to);
             cb_hist_set_captured_piece(&new_state, cap_ptype);
             cb_hist_decay_castle_rights(&new_state, board->turn, to, from);
             cb_replace_piece(board, to, CB_PTYPE_QUEEN, board->turn, cap_ptype, !board->turn);
@@ -222,30 +222,30 @@ void cb_unmake(cb_board_t *board)
     cb_hist_ele_t old_ele = cb_hist_stack_pop(&board->hist);
     cb_hist_ele_t new_ele;
     cb_mv_flag_t flag = cb_mv_get_flags(old_ele.move);
-    uint8_t to = cb_mv_get_to(old_ele.move);
-    uint8_t from = cb_mv_get_from(old_ele.move);
+    square_t to = cb_mv_get_to(old_ele.move);
+    square_t from = cb_mv_get_from(old_ele.move);
 
     cb_ptype_t ptype;
     cb_ptype_t cap_ptype;
 
     /* Variables for castles. */
-    uint8_t rook_from;
-    uint8_t rook_to;
+    square_t rook_from;
+    square_t rook_to;
 
     /* Variables for enp. */
-    int8_t direction;
+    square_t enp_cap_sq;
 
     /* Unmake the move. */
     board->turn = !board->turn;
     switch (flag) {
         case CB_MV_QUIET:
         case CB_MV_DOUBLE_PAWN_PUSH:
-            ptype = cb_ptype_at_sq(board, to);
+            ptype = cb_ptype_at(board, to);
             cb_write_piece(board, from, ptype, board->turn);
             cb_delete_piece(board, to, ptype, board->turn);
             break;
         case CB_MV_CAPTURE:
-            ptype = cb_ptype_at_sq(board, to);
+            ptype = cb_ptype_at(board, to);
             cap_ptype = cb_hist_get_captured_piece(&old_ele.hist);
             cb_write_piece(board, from, ptype, board->turn);
             cb_replace_piece(board, to, cap_ptype, !board->turn, ptype, board->turn);
@@ -271,10 +271,10 @@ void cb_unmake(cb_board_t *board)
             cb_delete_piece(board, rook_to, CB_PTYPE_ROOK, board->turn);
             break;
         case CB_MV_ENPASSANT:
-            direction = board->turn == CB_WHITE ? -8 : 8;
+            enp_cap_sq.idx = to.idx + (board->turn == CB_WHITE ? -8 : 8);
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
             cb_delete_piece(board, to, CB_PTYPE_PAWN, board->turn);
-            cb_write_piece(board, to + direction, CB_PTYPE_PAWN, !board->turn);
+            cb_write_piece(board, enp_cap_sq, CB_PTYPE_PAWN, !board->turn);
             break;
         case CB_MV_KNIGHT_PROMO:
             cb_write_piece(board, from, CB_PTYPE_PAWN, board->turn);
@@ -326,7 +326,7 @@ cibyl_errno_t cb_mv_from_uci_algbr(cibyl_error_t *err, cb_move_t *mv, cb_board_t
                                 const char *algbr)
 {
     cibyl_errno_t result = CIBYL_EOK;
-    uint8_t to, from;
+    square_t to, from;
     uint16_t flag;
     cb_move_t temp_mv;
     cb_mvlst_t mvlst;
@@ -339,13 +339,13 @@ cibyl_errno_t cb_mv_from_uci_algbr(cibyl_error_t *err, cb_move_t *mv, cb_board_t
     }
 
     /* Get the information about the move itself. */
-    from = algbr[0] - 'a';
-    from += (algbr[1] - '1') * 8;
-    to = algbr[2] - 'a';
-    to += (algbr[3] - '1') * 8;
+    from.file = algbr[0] - 'a';
+    from.rank = (algbr[1] - '1') * 8;
+    to.file = algbr[2] - 'a';
+    to.rank = (algbr[3] - '1') * 8;
 
     /* Verify that the characters inputted were valid. */
-    if (from < 0 || from >= 64 || to < 0 || to >= 64) {
+    if (from.idx < 0 || from.idx >= 64 || to.idx < 0 || to.idx >= 64) {
         result = CIBYL_MKERR(err, CIBYL_EINVAL, "invalid character in move");
         goto out;
     }
@@ -355,7 +355,7 @@ cibyl_errno_t cb_mv_from_uci_algbr(cibyl_error_t *err, cb_move_t *mv, cb_board_t
     *mv = CB_INVALID_MOVE;
     for (i = 0; i < cb_mvlst_size(&mvlst); i++) {
         temp_mv = cb_mvlst_at(&mvlst, i);
-        if (cb_mv_get_from(temp_mv) == from && cb_mv_get_to(temp_mv) == to) {
+        if (cb_mv_get_from(temp_mv).idx == from.idx && cb_mv_get_to(temp_mv).idx == to.idx) {
             *mv = temp_mv;
             break;
         }
@@ -403,8 +403,8 @@ out:
 cibyl_errno_t parse_fen_main(cibyl_error_t *err, cb_board_t *board, char *fen_main)
 {
     cibyl_errno_t result = CIBYL_EOK;
-    uint8_t row = 7;
-    uint8_t sq = row * 8;
+    uint8_t rank;
+    square_t sq;
     char c;
     int i = 0;
     cb_color_t pcolor;
@@ -416,44 +416,45 @@ cibyl_errno_t parse_fen_main(cibyl_error_t *err, cb_board_t *board, char *fen_ma
     }
 
     /* Parse the main portion of the fen string. */
+    rank = 7;
     while ((c = fen_main[i++]) != '\0') {
         if ('1' <= c && c <= '8') {
-            sq += c - '0';
+            sq.idx += c - '0';
             /* Check if we should have had a '/' in our input string by now. */
-            if (sq < row * 8 || sq > row * 8 + 8) {
+            if (sq.idx < rank * 8 || sq.idx > rank * 8 + 8) {
                 result = CIBYL_MKERR(err, CIBYL_EINVAL, "row overrun without encountering '/'");
                 goto out;
             }
         } else if (c == 'p' || c == 'P') {
             cb_write_piece(board, sq, CB_PTYPE_PAWN, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq++;
+            sq.idx++;
         } else if (c == 'n' || c == 'N') {
             cb_write_piece(board, sq, CB_PTYPE_KNIGHT, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq++;
+            sq.idx++;
         } else if (c == 'b' || c == 'B') {
             cb_write_piece(board, sq, CB_PTYPE_BISHOP, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq++;
+            sq.idx++;
         } else if (c == 'r' || c == 'R') {
             cb_write_piece(board, sq, CB_PTYPE_ROOK, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq++;
+            sq.idx++;
         } else if (c == 'q' || c == 'Q') {
             cb_write_piece(board, sq, CB_PTYPE_QUEEN, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq++;
+            sq.idx++;
         } else if (c == 'k' || c == 'K') {
             cb_write_piece(board, sq, CB_PTYPE_KING, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq++;
+            sq.idx++;
         } else if (c == '/') {
             /* If we are not at the end of the row, we don't want to get a '/'. */
-            if (sq % 8 != 0) {
+            if (sq.file != 0) {
                 result = CIBYL_MKERR(err, CIBYL_EINVAL, "encountered '/' before the end of a row");
                 goto out;
             }
-            row -= 1;
-            if (row < 0) {
+            rank -= 1;
+            if (rank < 0) {
                 result = CIBYL_MKERR(err, CIBYL_EINVAL, "too many rows in fen string");
                 goto out;
             }
-            sq = row * 8;
+            sq.idx = rank * 8;
         } else {
             /* Any invalid characters return an error. */
             result = CIBYL_MKERR(err, CIBYL_EINVAL, "invalid character in fen body: %c", c);
@@ -462,7 +463,7 @@ cibyl_errno_t parse_fen_main(cibyl_error_t *err, cb_board_t *board, char *fen_ma
     }
 
     /* Throw errors for the write head not being at the end of the board. */
-    if (row != 0 && sq != 8) {
+    if (rank != 0 && sq.idx != 8) {
         result = CIBYL_MKERR(err, CIBYL_EINVAL, "unexpected end to fen body");
         goto out;
     }

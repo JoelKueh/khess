@@ -15,12 +15,6 @@
 #include "log.h"
 
 #define DEFAULT_POOL_SIZE 1
-#define ALPHA_BETA_MAX_DEPTH 64
-
-typedef struct {
-    int move_count;
-    cb_move_t moves[ALPHA_BETA_MAX_DEPTH];
-} line_t;
 
 /* Forward declaration of the engine struct. */
 typedef struct engine engine_t;
@@ -85,7 +79,7 @@ struct engine {
 
     /* Variables for tracking stop conditions. */
     struct timespec start_time; /**< The time that the search started. */
-    line_t pv;                  /**< The principle variation found by the search. */
+    cb_line_t pv;               /**< The principle variation found by the search. */
 
     /* Error reporting pipe. */
 #ifdef _WIN32

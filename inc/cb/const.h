@@ -16,24 +16,24 @@ extern const uint16_t HIST_ENP_ALL;
 extern const uint16_t HIST_HALFMOVE_CLOCK;
 extern const uint16_t HIST_HALFMOVE_FIFTY;
 
-extern const uint8_t M_WHITE_KING_START;
-extern const uint8_t M_WHITE_KING_SIDE_ROOK_START;
-extern const uint8_t M_WHITE_QUEEN_SIDE_ROOK_START;
-extern const uint8_t M_WHITE_KING_SIDE_CASTLE_TARGET;
-extern const uint8_t M_WHITE_KING_SIDE_ROOK_TARGET;
-extern const uint8_t M_WHITE_QUEEN_SIDE_CASTLE_TARGET;
-extern const uint8_t M_WHITE_QUEEN_SIDE_ROOK_TARGET;
+extern const square_t M_WHITE_KING_START;
+extern const square_t M_WHITE_KING_SIDE_ROOK_START;
+extern const square_t M_WHITE_QUEEN_SIDE_ROOK_START;
+extern const square_t M_WHITE_KING_SIDE_CASTLE_TARGET;
+extern const square_t M_WHITE_KING_SIDE_ROOK_TARGET;
+extern const square_t M_WHITE_QUEEN_SIDE_CASTLE_TARGET;
+extern const square_t M_WHITE_QUEEN_SIDE_ROOK_TARGET;
 
-extern const uint8_t M_BLACK_KING_START;
-extern const uint8_t M_BLACK_KING_SIDE_ROOK_START;
-extern const uint8_t M_BLACK_QUEEN_SIDE_ROOK_START;
-extern const uint8_t M_BLACK_KING_SIDE_CASTLE_TARGET;
-extern const uint8_t M_BLACK_KING_SIDE_ROOK_TARGET;
-extern const uint8_t M_BLACK_QUEEN_SIDE_CASTLE_TARGET;
-extern const uint8_t M_BLACK_QUEEN_SIDE_ROOK_TARGET;
+extern const square_t M_BLACK_KING_START;
+extern const square_t M_BLACK_KING_SIDE_ROOK_START;
+extern const square_t M_BLACK_QUEEN_SIDE_ROOK_START;
+extern const square_t M_BLACK_KING_SIDE_CASTLE_TARGET;
+extern const square_t M_BLACK_KING_SIDE_ROOK_TARGET;
+extern const square_t M_BLACK_QUEEN_SIDE_CASTLE_TARGET;
+extern const square_t M_BLACK_QUEEN_SIDE_ROOK_TARGET;
 
-extern const uint8_t M_WHITE_ENP_LINE_START;
-extern const uint8_t M_BLACK_ENP_LINE_START;
+extern const square_t M_WHITE_ENP_LINE_START;
+extern const square_t M_BLACK_ENP_LINE_START;
 
 extern const uint64_t BB_RIGHT_COL;
 extern const uint64_t BB_LEFT_COL;

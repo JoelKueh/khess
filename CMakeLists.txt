@@ -60,3 +60,18 @@ target_compile_definitions(cibyl_test
         _POSIX_C_SOURCE=202405L
         _DOCTEST_CPLUSPLUS=202302L
 )
+
+# Create the cibyl genmagics executable.
+add_executable(cibyl_genmagics
+    ${BOARD_SOURCES}
+    src/genmagics.c
+)
+target_include_directories(cibyl_genmagics
+	PRIVATE
+		${PROJECT_SOURCE_DIR}/inc
+)
+target_compile_definitions(cibyl_genmagics
+    PRIVATE
+        _POSIX_C_SOURCE=202405L
+        _DOCTEST_CPLUSPLUS=202302L
+)

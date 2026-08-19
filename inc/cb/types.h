@@ -4,14 +4,14 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #define CB_MAX_NUM_MOVES 218
+#define CB_MAX_LINE_LEN 64
 
 /**
  * @breif Enumerates board piece and turn colors.
  */
-typedef enum {
+typedef enum : uint8_t {
     CB_WHITE = 1,
     CB_BLACK = 0
 } cb_color_t;
@@ -22,7 +22,7 @@ typedef enum {
  * A piece ID contains both the piece type and the color.
  * Primarily for used when converting to a string representation.
  */
-typedef enum  {
+typedef enum : uint8_t {
     CB_PID_EMPTY = 0b0000,
 
     CB_PID_WHITE_PAWN   = 0b0001,
@@ -46,7 +46,7 @@ typedef enum  {
  * A piece type contains only information about type, not about color.
  * This type can be used to index the bitboard array and is stored in the mailbox.
  */
-typedef enum {
+typedef enum : uint8_t {
     CB_PTYPE_PAWN   = 0,
     CB_PTYPE_KNIGHT = 1,
     CB_PTYPE_BISHOP = 2,
@@ -56,10 +56,36 @@ typedef enum {
     CB_PTYPE_EMPTY  = 6
 } cb_ptype_t;
 
+/* Converts a piece id to a piece type. */
+#define PID_TO_PTYPE(pid) ((pid - 1) & 0b111)
+
+/**
+ * @brief Simple type for a square.
+ */
+typedef union {
+    struct __attribute__((packed)) {
+        uint8_t file : 3;
+        uint8_t rank : 3;
+        uint8_t unused:  2;
+    };
+    uint8_t idx;
+} square_t;
+
+/* Flips a square on the board. */
+#define FLIP_RANK(sq) (sq.rank ^ 0b111)
+
 /**
  * @breif Simple type for a chess move.
  */
 typedef uint16_t cb_move_t;
+
+/**
+ * @brief Type for storing a principle variation line.
+ */
+typedef struct {
+    int move_count;
+    cb_move_t moves[CB_MAX_LINE_LEN];
+} cb_line_t;
 
 /**
  * @breif Holds a list of moves.

@@ -59,27 +59,23 @@ void gen_king_atk_table()
 /**
  * Get the direction of the ray that extends from sq1 to sq2.
  */
-uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2)
+cb_dir_t cb_get_ray_direction(square_t sq1, square_t sq2)
 {
-    int8_t sq1_rank = sq1 / 8;
-    int8_t sq1_file = sq1 % 8;
-    int8_t sq2_rank = sq2 / 8;
-    int8_t sq2_file = sq2 % 8;
     uint8_t direction;
 
     /* Compute the ray based on the square. */
-    if (sq1_rank == sq2_rank) {
+    if (sq1.rank == sq2.rank) {
         /* Slide left and right if the ranks are equal. */
-        return sq1 < sq2 ? CB_DIR_R : CB_DIR_L;
-    } else if (sq1_file == sq2_file) {
+        return sq1.idx < sq2.idx ? CB_DIR_R : CB_DIR_L;
+    } else if (sq1.file == sq2.file) {
         /* Slide up and down if the files are equal. */
-        return sq1 < sq2 ? CB_DIR_U : CB_DIR_D;
-    } else if (sq1_file + sq1_rank == sq2_file + sq2_rank) {
+        return sq1.idx < sq2.idx ? CB_DIR_U : CB_DIR_D;
+    } else if (sq1.file + sq1.rank == sq2.file + sq2.rank) {
         /* UL and DR diagonals have equal Manhattan distance from square A1. */
-        return sq1 < sq2 ? CB_DIR_UL : CB_DIR_DR;
-    } else if (sq1_file - sq1_rank == sq2_file - sq2_rank) {
+        return sq1.idx < sq2.idx ? CB_DIR_UL : CB_DIR_DR;
+    } else if (sq1.file - sq1.rank == sq2.file - sq2.rank) {
         /* Rank - File is equal for all UR and DL diagonals. */
-        return sq1 < sq2 ? CB_DIR_UR : CB_DIR_DL;
+        return sq1.idx < sq2.idx ? CB_DIR_UR : CB_DIR_DL;
     } else {
         return CB_DIR_INVALID;
     }
@@ -88,7 +84,7 @@ uint8_t cb_get_ray_direction(uint8_t sq1, uint8_t sq2)
 /**
  * Generate the ray that connects sq1 and sq2.
  */
-uint64_t get_connecting_ray(uint64_t sq1, uint64_t sq2)
+uint64_t get_connecting_ray(square_t sq1, square_t sq2)
 {
     uint64_t mask = 0;
     uint8_t direction;
@@ -100,9 +96,9 @@ uint64_t get_connecting_ray(uint64_t sq1, uint64_t sq2)
 
     /* Slide along the ray until we reach the destination. */
     mask = 0;
-    while (sq1 != sq2) {
-        mask |= UINT64_C(1) << sq1;
-        sq1 += dir_offset_mapping[direction];
+    while (sq1.idx != sq2.idx) {
+        mask |= UINT64_C(1) << sq1.idx;
+        sq1.idx += dir_offset_mapping[direction];
     }
 
     return mask;
@@ -113,12 +109,12 @@ uint64_t get_connecting_ray(uint64_t sq1, uint64_t sq2)
  */
 void gen_to_from_table()
 {
-    int i, j;
+    square_t sq1, sq2;
 
     /* Loop over all of the squares on the board and generate the respective rays. */
-    for (i = 0; i < 64; i++) {
-        for (j = 0; j < 64; j++) {
-            to_from_table[i][j] = get_connecting_ray(i, j);
+    for (sq1.idx = 0; sq1.idx < 64; sq1.idx++) {
+        for (sq2.idx = 0; sq2.idx < 64; sq2.idx++) {
+            to_from_table[sq1.idx][sq2.idx] = get_connecting_ray(sq1, sq2);
         }
     }
 }
@@ -131,22 +127,22 @@ void cb_init_normal_tables()
     gen_to_from_table();
 }
 
-uint64_t cb_read_pawn_atk_msk(uint8_t sq, cb_color_t color)
+uint64_t cb_read_pawn_atk_msk(square_t sq, cb_color_t color)
 {
-    return pawn_atks[color][sq];
+    return pawn_atks[color][sq.idx];
 }
 
-uint64_t cb_read_knight_atk_msk(uint8_t sq)
+uint64_t cb_read_knight_atk_msk(square_t sq)
 {
-    return knight_atks[sq];
+    return knight_atks[sq.idx];
 }
 
-uint64_t cb_read_king_atk_msk(uint8_t sq)
+uint64_t cb_read_king_atk_msk(square_t sq)
 {
-    return king_atks[sq];
+    return king_atks[sq.idx];
 }
 
-uint64_t cb_read_tf_table(uint8_t sq1, uint8_t sq2)
+uint64_t cb_read_tf_table(square_t sq1, square_t sq2)
 {
-    return to_from_table[sq1][sq2];
+    return to_from_table[sq1.idx][sq2.idx];
 }
