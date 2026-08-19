@@ -224,10 +224,7 @@ uint64_t cb_read_rook_atk_msk(square_t sq, uint64_t occ)
 uint64_t get_rook_occ_mask(square_t sq)
 {
     uint64_t result = 0;
-    int8_t source_rank = sq / 8;
-    int8_t source_file = sq % 8;
-    int8_t rank;
-    int8_t file;
+    square_t source = sq;
 
     sq.idx = source.idx + dir_offset_mapping[CB_DIR_U];
     while (sq.rank <= 6) {
