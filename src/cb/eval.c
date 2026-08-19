@@ -1,8 +1,13 @@
 
 #include <limits.h>
 
+#include "cb/move.h"
 #include "cb/eval.h"
 #include "cb/bitutil.h"
+
+const int GAMEPHASE_INC[12] = {0,0,1,1,1,1,2,2,4,4,0,0};
+const int MG_VALUE[6] = {82, 337, 365, 477, 1025,  0};
+const int EG_VALUE[6] = {94, 281, 297, 512,  936,  0};
 
 const int MG_PAWN_TABLE[64] = {
       0,   0,   0,   0,   0,   0,  0,   0,
@@ -156,15 +161,22 @@ const int *EG_PESTO_TABLE[6] =
     EG_KING_TABLE
 };
 
-int gamephaseInc[12] = {0,0,1,1,1,1,2,2,4,4,0,0};
 int mg_table[12][64];
 int eg_table[12][64];
 
 void pesto_init()
 {
-    cb_ptype_t ptype = CB_PTYPE_PAWN;
     cb_pid_t pid = CB_PID_WHITE_PAWN;
-    int sq;
+    square_t sq;
+
+    for (pid = CB_PID_WHITE_PAWN; pid++ <= CB_PID_BLACK_KING; pid++) {
+        for (sq.idx = 0; sq.idx < 64; sq.idx++) {
+            mg_table[pid]  [sq.idx] = MG_VALUE[PID_TO_PTYPE(pid)] + MG_PESTO_TABLE[pid][sq.idx];
+            eg_table[pid]  [sq.idx] = EG_VALUE[PID_TO_PTYPE(pid)] + EG_PESTO_TABLE[pid][sq.idx];
+            mg_table[pid+1][sq.idx] = MG_VALUE[PID_TO_PTYPE(pid)] + MG_PESTO_TABLE[pid][FLIP_RANK(sq)];
+            eg_table[pid+1][sq.idx] = EG_VALUE[PID_TO_PTYPE(pid)] + EG_PESTO_TABLE[pid][FLIP_RANK(sq)];
+        }
+    }
 }
 
 int piece_differential(const cb_board_t *board)
@@ -193,3 +205,19 @@ int eval(const cb_board_t *board)
     return piece_differential(board);
 }
 
+void reorder_by_pv(cb_mvlst_t *mvlst, const cb_board_t *board, cb_move_t pvmv)
+{
+}
+
+void reorder_mvlst(cb_mvlst_t *mvlst, const cb_board_t *board, cb_move_t pvmv)
+{
+    cb_move_t tmp;
+    int i = 0;
+
+    /* Reorder moves according to the principle variation. */
+    for (i = 0; i < cb_mvlst_size(mvlst); i++) {
+        tmp = mvlst->moves[i];
+        mvlst->moves[i] = mvlst->moves[0];
+        mvlst->moves[0] = tmp;
+    }
+}

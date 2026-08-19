@@ -5,12 +5,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "cb/types.h"
 #include "cb/const.h"
 
 /**
  * Enum holding the different flags that a move can contain
  */
-typedef enum {
+typedef enum : uint16_t {
     CB_MV_QUIET                =  0 << 12,
     CB_MV_DOUBLE_PAWN_PUSH     =  1 << 12,
     CB_MV_KING_SIDE_CASTLE     =  2 << 12,
@@ -30,23 +31,23 @@ typedef enum {
 /**
  * Returns the "to" square for the move as a 6-bit integer.
  */
-static inline uint8_t cb_mv_get_to(cb_move_t mv)
+static inline square_t cb_mv_get_to(cb_move_t mv)
 {
-    return mv & CB_MV_TO_MASK;
+    return (square_t){ .idx = mv & CB_MV_TO_MASK };
 }
 
 /**
  * Returns the from square for the move as a 6-bit integer.
  */
-static inline uint8_t cb_mv_get_from(cb_move_t mv)
+static inline square_t cb_mv_get_from(cb_move_t mv)
 {
-    return (mv & CB_MV_FROM_MASK) >> 6;
+    return (square_t){ .idx = (mv & CB_MV_FROM_MASK) >> 6 };
 }
 
 /**
  * Returns the flags for the move as a cb_move_flags.
  */
-static inline uint16_t cb_mv_get_flags(cb_move_t mv)
+static inline cb_mv_flag_t cb_mv_get_flags(cb_move_t mv)
 {
     return mv & CB_MV_FLAG_MASK;
 }
@@ -54,9 +55,9 @@ static inline uint16_t cb_mv_get_flags(cb_move_t mv)
 /**
  * Masks together a move from the raw data.
  */
-static inline cb_move_t cb_mv_from_data(uint16_t from, uint16_t to, uint16_t flags)
+static inline cb_move_t cb_mv_from_data(square_t from, square_t to, uint16_t flags)
 {
-    return flags | (from << 6) | to;
+    return (uint16_t)flags | ((uint16_t)from.idx << 6) | (uint16_t)to.idx;
 }
 
 /**

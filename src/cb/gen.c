@@ -39,24 +39,24 @@ static inline uint64_t pawn_smear_right(uint64_t pawns, cb_color_t color)
 
 static inline void append_pushes(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t pushes)
 {
-    uint8_t target;
-    uint8_t sq;
+    square_t target;
+    square_t sq;
 
     while (pushes != 0) {
-        target = pop_rbit(&pushes);
-        sq = target + (board->turn == CB_WHITE ? -8 : 8);
+        target.idx = pop_rbit(&pushes);
+        sq.idx = target.idx + (board->turn == CB_WHITE ? -8 : 8);
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_QUIET));
     }
 }
 
 static inline void append_doubles(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t doubles)
 {
-    uint8_t target;
-    uint8_t sq;
+    square_t target;
+    square_t sq;
 
     while (doubles != 0) {
-        target = pop_rbit(&doubles);
-        sq = target + (board->turn == CB_WHITE ? -16 : 16);
+        target.idx = pop_rbit(&doubles);
+        sq.idx = target.idx + (board->turn == CB_WHITE ? -16 : 16);
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_DOUBLE_PAWN_PUSH));
     }
 }
@@ -64,12 +64,12 @@ static inline void append_doubles(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t
 static inline void append_left_attacks(cb_mvlst_t *mvlst, cb_board_t *board,
                                        uint64_t left_attacks)
 {
-    uint8_t target;
-    uint8_t sq;
+    square_t target;
+    square_t sq;
 
     while (left_attacks != 0) {
-        target = pop_rbit(&left_attacks);
-        sq = target + (board->turn == CB_WHITE ? -7 : 7);
+        target.idx = pop_rbit(&left_attacks);
+        sq.idx = target.idx + (board->turn == CB_WHITE ? -7 : 7);
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_CAPTURE));
     }
 }
@@ -77,24 +77,24 @@ static inline void append_left_attacks(cb_mvlst_t *mvlst, cb_board_t *board,
 static inline void append_right_attacks(cb_mvlst_t *mvlst, cb_board_t *board,
                                         uint64_t right_attacks)
 {
-    uint8_t target;
-    uint8_t sq;
+    square_t target;
+    square_t sq;
 
     while (right_attacks != 0) {
-        target = pop_rbit(&right_attacks);
-        sq = target + (board->turn == CB_WHITE ? -9 : 9);
+        target.idx = pop_rbit(&right_attacks);
+        sq.idx = target.idx + (board->turn == CB_WHITE ? -9 : 9);
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_CAPTURE));
     }
 }
 
 static inline void append_left_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t left_promos)
 {
-    uint8_t target;
-    uint8_t sq;
+    square_t target;
+    square_t sq;
 
     while (left_promos != 0) {
-        target = pop_rbit(&left_promos);
-        sq = target + (board->turn == CB_WHITE ? -7 : 7);
+        target.idx = pop_rbit(&left_promos);
+        sq.idx = target.idx + (board->turn == CB_WHITE ? -7 : 7);
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_KNIGHT_PROMO_CAPTURE));
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_BISHOP_PROMO_CAPTURE));
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_ROOK_PROMO_CAPTURE));
@@ -105,12 +105,12 @@ static inline void append_left_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint
 static inline void append_forward_promos(cb_mvlst_t *mvlst, cb_board_t *board,
                                          uint64_t forward_promos)
 {
-    uint8_t target;
-    uint8_t sq;
+    square_t target;
+    square_t sq;
 
     while (forward_promos != 0) {
-        target = pop_rbit(&forward_promos);
-        sq = target + (board->turn == CB_WHITE ? -8 : 8);
+        target.idx = pop_rbit(&forward_promos);
+        sq.idx = target.idx + (board->turn == CB_WHITE ? -8 : 8);
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_KNIGHT_PROMO));
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_BISHOP_PROMO));
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_ROOK_PROMO));
@@ -120,12 +120,12 @@ static inline void append_forward_promos(cb_mvlst_t *mvlst, cb_board_t *board,
 
 static inline void append_right_promos(cb_mvlst_t *mvlst, cb_board_t *board, uint64_t right_promos)
 {
-    uint8_t target;
-    uint8_t sq;
+    square_t target;
+    square_t sq;
 
     while (right_promos != 0) {
-        target = pop_rbit(&right_promos);
-        sq = target + (board->turn == CB_WHITE ? -9 : 9);
+        target.idx = pop_rbit(&right_promos);
+        sq.idx = target.idx + (board->turn == CB_WHITE ? -9 : 9);
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_KNIGHT_PROMO_CAPTURE));
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_BISHOP_PROMO_CAPTURE));
         cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, CB_MV_ROOK_PROMO_CAPTURE));
@@ -189,7 +189,7 @@ void append_pawn_moves(cb_mvlst_t *mvlst, cb_board_t *board)
     append_right_promos(mvlst, board, right_promos);
 }
 
-uint64_t gen_pseudo_mv_mask(cb_ptype_t ptype, cb_color_t pcolor, uint8_t sq, uint64_t occ)
+uint64_t gen_pseudo_mv_mask(cb_ptype_t ptype, cb_color_t pcolor, square_t sq, uint64_t occ)
 {
     switch (ptype) {
         case CB_PTYPE_PAWN:
@@ -211,19 +211,20 @@ uint64_t gen_pseudo_mv_mask(cb_ptype_t ptype, cb_color_t pcolor, uint8_t sq, uin
     }
 }
 
-static inline uint64_t pin_adjust(cb_board_t *board, uint8_t sq, uint64_t moves)
+static inline uint64_t pin_adjust(cb_board_t *board, square_t sq, uint64_t moves)
 {
     uint64_t mask;
-    uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
-    uint8_t dir = cb_get_ray_direction(king_sq, sq);
-    return (board->pins[dir] & (UINT64_C(1) << sq)) == 0 ? moves : (moves & board->pins[dir]);
+    square_t king_sq;
+    cb_dir_t dir = cb_get_ray_direction(king_sq, sq);
+    king_sq.idx = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
+    return (board->pins[dir] & (UINT64_C(1) << sq.idx)) == 0 ? moves : (moves & board->pins[dir]);
 }
 
-uint64_t cb_gen_legal_mv_mask(cb_board_t *board, uint8_t sq)
+uint64_t cb_gen_legal_mv_mask(cb_board_t *board, square_t sq)
 {
     /* Generate the pseudo moves. */
-    cb_ptype_t ptype = cb_ptype_at_sq(board, sq);
-    cb_color_t pcolor = cb_color_at_sq(board, sq);
+    cb_ptype_t ptype = cb_ptype_at(board, sq);
+    cb_color_t pcolor = cb_color_at(board, sq);
     uint64_t moves = gen_pseudo_mv_mask(ptype, pcolor, sq, board->bb.occ);
     moves &= ~board->bb.color[board->turn];
 
@@ -236,7 +237,7 @@ uint64_t cb_gen_legal_mv_mask(cb_board_t *board, uint8_t sq)
 
 void append_simple_moves(cb_mvlst_t *mvlst, cb_board_t *board)
 {
-    uint8_t sq, target;
+    square_t sq, target;
     cb_mv_flag_t flags;
     uint64_t mvmsk;
     uint64_t pieces = board->bb.color[board->turn];
@@ -244,11 +245,11 @@ void append_simple_moves(cb_mvlst_t *mvlst, cb_board_t *board)
     /* Append all of the moves to the list. */
     pieces ^= board->bb.piece[board->turn][CB_PTYPE_PAWN];
     while (pieces) {
-        sq = pop_rbit(&pieces);
+        sq.idx = pop_rbit(&pieces);
         mvmsk = cb_gen_legal_mv_mask(board, sq);
         while (mvmsk) {
-            target = pop_rbit(&mvmsk);
-            flags = (UINT64_C(1) << target) & board->bb.occ ? CB_MV_CAPTURE : CB_MV_QUIET;
+            target.idx = pop_rbit(&mvmsk);
+            flags = (UINT64_C(1) << target.idx) & board->bb.occ ? CB_MV_CAPTURE : CB_MV_QUIET;
             cb_mvlst_push(mvlst, cb_mv_from_data(sq, target, flags));
         }
     }
@@ -282,8 +283,8 @@ static inline bool qsc_legal(cb_board_t *board)
 
 void append_castle_moves(cb_mvlst_t *mvlst, cb_board_t *board)
 {
-    uint8_t from = board->turn == CB_WHITE ? M_WHITE_KING_START : M_BLACK_KING_START;
-    uint8_t to;
+    square_t from = board->turn == CB_WHITE ? M_WHITE_KING_START : M_BLACK_KING_START;
+    square_t to;
 
     if (ksc_legal(board)) {
         to = board->turn == CB_WHITE ? M_WHITE_KING_SIDE_CASTLE_TARGET :
@@ -305,33 +306,34 @@ void append_enp_moves(cb_mvlst_t *mvlst, cb_board_t *board)
         return;
 
     /* Get the swares relavent to the piece that can enpassant. */
+    square_t enp_row_start, enp_sq, enemy_sq;
     cb_history_t hist = board->hist.data[board->hist.count - 1].hist;
-    uint8_t enp_row_start = board->turn == CB_WHITE ?
+    enp_row_start = board->turn == CB_WHITE ?
         M_BLACK_ENP_LINE_START : M_WHITE_ENP_LINE_START;
-    uint8_t enp_sq = enp_row_start + cb_hist_enp_col(hist);
-    uint8_t enemy_sq = enp_sq + (board->turn == CB_WHITE ? -8 : 8);
+    enp_sq.idx = enp_row_start.idx + cb_hist_enp_col(hist);
+    enemy_sq.idx = enp_sq.idx + (board->turn == CB_WHITE ? -8 : 8);
 
     /* Get all of the pieces that can enpassnt. */
     uint64_t enp_sources = cb_read_pawn_atk_msk(enp_sq, !board->turn)
         & board->bb.piece[board->turn][CB_PTYPE_PAWN];
 
     /* Loop through the pieces that can enpassant and generate the moves. */
-    uint8_t sq, king_sq;
+    square_t sq, king_sq;
     cb_move_t mv;
     uint64_t new_occ, bishop_threats, rook_threats;
     while (enp_sources) {
-        sq = pop_rbit(&enp_sources);
+        sq.idx = pop_rbit(&enp_sources);
         mv = cb_mv_from_data(sq, enp_sq, CB_MV_ENPASSANT);
 
         /* Update the occupancy mask to what it will be after the move takes place. */
         new_occ = board->bb.occ;
-        new_occ &= ~(UINT64_C(1) << sq);
-        new_occ &= ~(UINT64_C(1) << enemy_sq);
-        new_occ |= UINT64_C(1) << enp_sq;
+        new_occ &= ~(UINT64_C(1) << sq.idx);
+        new_occ &= ~(UINT64_C(1) << enemy_sq.idx);
+        new_occ |= UINT64_C(1) << enp_sq.idx;
 
         /* Check if the king is in check after the move is made.
          * This could be the case if some piece was pinned before the enpassant was made. */
-        king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
+        king_sq.idx = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
 
         bishop_threats = cb_read_bishop_atk_msk(king_sq, new_occ)
             & (board->bb.piece[!board->turn][CB_PTYPE_BISHOP]
@@ -351,7 +353,7 @@ void append_enp_moves(cb_mvlst_t *mvlst, cb_board_t *board)
 static inline uint64_t gen_threats(cb_board_t *board)
 {
     uint64_t threats;
-    uint8_t sq;
+    square_t sq;
     uint64_t pawns = board->bb.piece[!board->turn][CB_PTYPE_PAWN];
     uint64_t king = board->bb.piece[board->turn][CB_PTYPE_KING];
 
@@ -364,9 +366,9 @@ static inline uint64_t gen_threats(cb_board_t *board)
     /* Generate all threats. */
     threats = pawn_smear(pawns, !board->turn);
     while (pieces) {
-        sq = pop_rbit(&pieces);
-        ptype = cb_ptype_at_sq(board, sq);
-        pcolor = cb_color_at_sq(board, sq);
+        sq.idx = pop_rbit(&pieces);
+        ptype = cb_ptype_at(board, sq);
+        pcolor = cb_color_at(board, sq);
         threats |= gen_pseudo_mv_mask(ptype, pcolor, sq, occ);
     }
 
@@ -375,6 +377,7 @@ static inline uint64_t gen_threats(cb_board_t *board)
 
 static inline uint64_t gen_checks(cb_board_t *board, uint64_t threats)
 {
+    square_t king_sq;
     uint64_t *pieces = board->bb.piece[!board->turn];
     uint64_t king = board->bb.piece[board->turn][CB_PTYPE_KING];
     uint64_t occ = board->bb.occ;
@@ -384,7 +387,7 @@ static inline uint64_t gen_checks(cb_board_t *board, uint64_t threats)
         return 0;
 
     /* Build the list of pieces that check the king. */
-    uint64_t king_sq = peek_rbit(king);
+    king_sq.idx = peek_rbit(king);
     uint64_t checks = cb_read_pawn_atk_msk(king_sq, board->turn) & pieces[CB_PTYPE_PAWN];
     checks |= cb_read_knight_atk_msk(king_sq) & pieces[CB_PTYPE_KNIGHT];
     checks |= cb_read_bishop_atk_msk(king_sq, occ)
@@ -403,19 +406,20 @@ static inline uint64_t gen_check_blocks(cb_board_t *board, uint64_t checks)
     else if (popcnt(checks) != 1)
         return BB_EMPTY;
 
-    uint8_t king_sq = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
-    uint8_t check_sq = peek_rbit(checks);
-    return cb_read_tf_table(check_sq, king_sq) | (UINT64_C(1) << check_sq);
+    square_t king_sq, check_sq;
+    king_sq.idx = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
+    check_sq.idx = peek_rbit(checks);
+    return cb_read_tf_table(check_sq, king_sq) | (UINT64_C(1) << check_sq.idx);
 }
 
-static inline uint64_t xray_bishop_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)
+static inline uint64_t xray_bishop_attacks(uint64_t occ, uint64_t blockers, square_t sq)
 {
     uint64_t attacks = cb_read_bishop_atk_msk(sq, occ);
     blockers &= attacks;
     return attacks ^ cb_read_bishop_atk_msk(sq, occ ^ blockers);
 }
 
-static inline uint64_t xray_rook_attacks(uint64_t occ, uint64_t blockers, uint64_t sq)
+static inline uint64_t xray_rook_attacks(uint64_t occ, uint64_t blockers, square_t sq)
 {
     uint64_t attacks = cb_read_rook_atk_msk(sq, occ);
     blockers &= attacks;
@@ -425,21 +429,22 @@ static inline uint64_t xray_rook_attacks(uint64_t occ, uint64_t blockers, uint64
 static inline void gen_pins(uint64_t pins[10], cb_board_t *board)
 {
     uint64_t king = board->bb.piece[board->turn][CB_PTYPE_KING];
-    uint64_t king_sq = peek_rbit(king);
     uint64_t occ = board->bb.occ;
     uint64_t blockers = board->bb.color[board->turn];
     uint64_t pinner;
-    uint8_t sq, dir;
+    square_t king_sq, sq;
+    cb_dir_t dir;
 
     /* Set all of the pins to full bitboards. */
     memset(pins, 0, 10 * sizeof(uint64_t));
 
     /* Get all of the first pinners. */
+    king_sq.idx = peek_rbit(king);
     pinner = xray_bishop_attacks(occ, blockers, king_sq)
         & (board->bb.piece[!board->turn][CB_PTYPE_BISHOP]
         | board->bb.piece[!board->turn][CB_PTYPE_QUEEN]);
     while (pinner) {
-        sq = pop_rbit(&pinner);
+        sq.idx = pop_rbit(&pinner);
         dir = cb_get_ray_direction(king_sq, sq);
         pins[dir] = cb_read_tf_table(sq, king_sq);
         pins[8] ^= pins[dir];
@@ -450,7 +455,7 @@ static inline void gen_pins(uint64_t pins[10], cb_board_t *board)
         & (board->bb.piece[!board->turn][CB_PTYPE_ROOK]
         | board->bb.piece[!board->turn][CB_PTYPE_QUEEN]);
     while (pinner) {
-        sq = pop_rbit(&pinner);
+        sq.idx = pop_rbit(&pinner);
         dir = cb_get_ray_direction(king_sq, sq);
         pins[dir] = cb_read_tf_table(sq, king_sq);
         pins[8] ^= pins[dir];
