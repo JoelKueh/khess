@@ -209,7 +209,7 @@ cibyl_errno_t handle_debug_print(cibyl_error_t *err, uci_engine_t *eng, char *to
     if (strcmp(token, "state") == 0)
         cb_print_state(stdout, eng->eng.board);
     else if (strcmp(token, "board") == 0)
-        cb_print_piece_bitboards(stdout, eng->eng.board);
+        cb_print_piece_bitboards(stdout, &eng->eng.board->bb);
     else if (strcmp(token, "moves") == 0)
         cb_print_moves(stdout, &mvlst);
     else 

@@ -8,9 +8,9 @@
 /**
  * @breif Prints the move history stack.
  * @param f The file pointer to print to.
- * @param board The board containing the movelist to print.
+ * @param hist The history stack containing the movelist to print.
  */
-void cb_print_mv_hist(FILE *f, cb_board_t *board);
+void cb_print_mv_hist(FILE *f, cb_hist_stack_t *hist);
 
 /**
  * @breif Prints the board in ascii.
@@ -38,7 +38,7 @@ void cb_print_bitboard(FILE *f, bitboard_t bitboard);
  * @param f The file pointer to print to.
  * @param board The board to print.
  */
-void cb_print_piece_bitboards(FILE *f, cb_board_t *board);
+void cb_print_piece_bitboards(FILE *f, cb_piece_bitboards_t *bb);
 
 /**
  * @breif Prints specified state tables.

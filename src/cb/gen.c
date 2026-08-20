@@ -302,7 +302,7 @@ void append_castle_moves(cb_mvlst_t *mvlst, cb_board_t *board)
 void append_enp_moves(cb_mvlst_t *mvlst, cb_board_t *board)
 {
     /* Exit early if there is not availiable enpassant. */
-    if (!cb_hist_enp_availiable(board->hist.data[board->hist.count - 1].hist))
+    if (!cb_hist_enp_available(board->hist.data[board->hist.count - 1].hist))
         return;
 
     /* Get the swares relavent to the piece that can enpassant. */

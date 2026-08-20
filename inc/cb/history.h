@@ -72,6 +72,14 @@ static inline cb_hist_ele_t cb_hist_stack_pop(cb_hist_stack_t *hist)
 }
 
 /**
+ * Returns true if there are no castling rights left in the game.
+ */
+static inline bool cb_hist_has_no_castling(cb_history_t hist)
+{
+    return hist & 0b1111;
+}
+
+/**
  * Returns true if the player has the right to king side castle, false otherwise.
  */
 static inline bool cb_hist_has_ksc(cb_history_t hist, cb_color_t color)
@@ -139,9 +147,9 @@ static inline void cb_hist_add_castle(cb_history_t *hist, cb_color_t color)
 
 
 /**
- * Returns true if there is an enpassant availiable.
+ * Returns true if there is an enpassant available.
  */
-static inline bool cb_hist_enp_availiable(cb_history_t hist)
+static inline bool cb_hist_enp_available(cb_history_t hist)
 {
     return (hist & HIST_ENP_AVAILABLE) != 0;
 }
@@ -182,7 +190,6 @@ static inline cb_ptype_t cb_hist_get_captured_piece(cb_history_t *hist)
     return (*hist & HIST_ENP_COL) >> 5;
 }
 
-
 /**
  * Returns true if the 50-move rule has been met, else returns false.
  */
@@ -211,6 +218,11 @@ static inline void cb_hist_set_halfmove_clk(cb_history_t *hist, uint16_t val)
 {
     *hist &= ~HIST_HALFMOVE_CLOCK;
     *hist |= val << 8;
+}
+
+static inline uint16_t cb_hist_get_halfmove_clk(cb_history_t hist)
+{
+    return (hist & HIST_HALFMOVE_CLOCK);
 }
 
 /**

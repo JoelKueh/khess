@@ -135,7 +135,7 @@ typedef struct {
     bitboard_t color[2];      /**< A set of bitmasks for colored pieces. */
     bitboard_t piece[2][6];   /**< A set of bitmasks for piece types and colors. */
     bitboard_t occ;           /**< The union of the above bitmasks. For occupied squares. */
-} cb_bitboard_set_t;
+} cb_piece_bitboards_t;
 
 /**
  * @breif Mailbox data structure that duplicates data of bitboard.
@@ -156,17 +156,17 @@ typedef struct {
  * is useful to move generation and the like.
  */
 typedef struct {
-    cb_hist_stack_t hist;   /**< The history stack. */
-    cb_bitboard_set_t bb;   /**< The bitboard. */
-    cb_mailbox_t mb;        /**< The mailbox. */
+    cb_hist_stack_t hist;    /**< The history stack. */
+    cb_piece_bitboards_t bb; /**< The bitboard. */
+    cb_mailbox_t mb;         /**< The mailbox. */
 
-    bitboard_t threats;           /**< A bitmask for all pieces that threaten the king. */
-    bitboard_t checks;            /**< A bitmask for all pieces that check the king. */
-    bitboard_t check_blocks;      /**< A bitmask for all squares that can break a check. */
-    bitboard_t pins[10];          /**< A set of bitmasks for all active pin rays. */
+    bitboard_t threats;      /**< A bitmask for all pieces that threaten the king. */
+    bitboard_t checks;       /**< A bitmask for all pieces that check the king. */
+    bitboard_t check_blocks; /**< A bitmask for all squares that can break a check. */
+    bitboard_t pins[10];     /**< A set of bitmasks for all active pin rays. */
 
-    uint8_t turn;           /**< The current turn. */
-    uint32_t fullmove_num;  /**< The fullmove number. */
+    uint8_t turn;            /**< The current turn. */
+    uint32_t fullmove_num;   /**< The fullmove number. */
 } cb_board_t;
 
 #endif /* CB_TYPES_H */

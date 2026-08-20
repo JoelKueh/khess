@@ -4,6 +4,7 @@
 #include "cb/types.h"
 #include "cb/move.h"
 #include "cb/boardrep.h"
+#include "cb/history.h"
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -15,12 +16,31 @@
 
 #define PRINT_BUF_LEN 1024
 
-void cb_print_mv_hist(FILE *f, cb_board_t *board)
+/* Globals for managing a memstream for GDB debug printers. */
+char *gdb_output_buffer;
+size_t gdb_output_size;
+FILE *gdb_output_stream;
+
+/* GDB debug print helper functions. */
+FILE *gdb_get_output_stream()
+{
+    if (!gdb_output_stream)
+        gdb_output_stream = open_memstream(&gdb_output_buffer, &gdb_output_size);
+    rewind(gdb_output_stream);
+    return gdb_output_stream;
+}
+
+char *gdb_get_output_buffer()
+{
+    fflush(gdb_output_stream);
+    return gdb_output_buffer;
+}
+
+void cb_print_mv_hist(FILE *f, cb_hist_stack_t *hist)
 {
     int i = 0;
     cb_move_t mv;
     char buf[PRINT_BUF_LEN];
-    cb_hist_stack_t *hist = &board->hist;
 
     /* First move isn't valid. */
     for (i = 1; i < (hist->count - 1); i++) {
@@ -82,7 +102,7 @@ void cb_print_bitboard(FILE *f, bitboard_t bitboard)
     fprintf(f, "\n");
 }
 
-void cb_print_piece_bitboards(FILE *f, cb_board_t *board)
+void cb_print_piece_bitboards(FILE *f, cb_piece_bitboards_t *bb)
 {
     const char *wheaders[] = { "WHITE", "PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING", "OCC" };
     const char *bheaders[] = { "BLACK", "PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING" };
@@ -98,13 +118,13 @@ void cb_print_piece_bitboards(FILE *f, cb_board_t *board)
         fprintf(f, "===============  ");
     fprintf(f, "\n");
     for (i = 7; i >= 0; i--) {
-        prep_bb_byte(byte, board->bb.color[1], i);
+        prep_bb_byte(byte, bb->color[1], i);
         fprintf(f, "%s  ", byte);
         for (j = 0; j < 6; j++) {
-            prep_bb_byte(byte, board->bb.piece[1][j], i);
+            prep_bb_byte(byte, bb->piece[1][j], i);
             fprintf(f, "%s  ", byte);
         }
-        prep_bb_byte(byte, board->bb.occ, i);
+        prep_bb_byte(byte, bb->occ, i);
         fprintf(f, "%s  ", byte);
         fprintf(f, "\n");
     }
@@ -118,10 +138,10 @@ void cb_print_piece_bitboards(FILE *f, cb_board_t *board)
         fprintf(f, "===============  ");
     fprintf(f, "\n");
     for (i = 7; i >= 0; i--) {
-        prep_bb_byte(byte, board->bb.color[0], i);
+        prep_bb_byte(byte, bb->color[0], i);
         fprintf(f, "%s  ", byte);
         for (j = 0; j < 6; j++) {
-            prep_bb_byte(byte, board->bb.piece[0][j], i);
+            prep_bb_byte(byte, bb->piece[0][j], i);
             fprintf(f, "%s  ", byte);
         }
         fprintf(f, "\n");
@@ -177,5 +197,45 @@ void cb_print_moves(FILE *f, cb_mvlst_t *mvlst)
         cb_mv_to_uci_algbr(buf, cb_mvlst_at(mvlst, i));
         fprintf(f, "%s ", buf);
     }
+    fprintf(f, "\n");
+}
+
+void cb_print_history(FILE *f, cb_history_t *hist)
+{
+    fprintf(f, "%d : ", cb_hist_get_halfmove_clk(*hist));
+
+    if (cb_hist_enp_available(*hist)) {
+        fprintf(f, "enp_col=%d : ", cb_hist_enp_col(*hist));
+    } else {
+        switch (cb_hist_get_captured_piece(hist)) {
+            case CB_PTYPE_PAWN:
+                fprintf(f, "cap_ptype=PAWN : ");
+                break;
+            case CB_PTYPE_KNIGHT:
+                fprintf(f, "cap_ptype=KNIGHT : ");
+                break;
+            case CB_PTYPE_BISHOP:
+                fprintf(f, "cap_ptype=BISHOP : ");
+                break;
+            case CB_PTYPE_ROOK:
+                fprintf(f, "cap_ptype=ROOK : ");
+                break;
+            case CB_PTYPE_QUEEN:
+                fprintf(f, "cap_ptype=QUEEN : ");
+                break;
+            case CB_PTYPE_KING:
+                fprintf(f, "cap_ptype=KING : ");
+                break;
+            case CB_PTYPE_EMPTY:
+                fprintf(f, "cap_ptype=NONE : ");
+                break;
+        }
+    }
+
+    if (cb_hist_has_ksc(*hist, CB_WHITE)) fprintf(f, "K");
+    if (cb_hist_has_qsc(*hist, CB_WHITE)) fprintf(f, "Q");
+    if (cb_hist_has_ksc(*hist, CB_BLACK)) fprintf(f, "k");
+    if (cb_hist_has_qsc(*hist, CB_BLACK)) fprintf(f, "q");
+    if (cb_hist_has_no_castling(*hist)) fprintf(f, "-");
     fprintf(f, "\n");
 }

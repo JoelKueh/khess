@@ -33,137 +33,137 @@ const uint8_t NUM_ROOK_BITS[64] = {
 };
 
 const uint64_t ROOK_MAGICS[64] = {
-    UINT64_C(0x2880002041000080),
-    UINT64_C(0x280020001001080),
-    UINT64_C(0x900410008040022),
-    UINT64_C(0x280028004000800),
-    UINT64_C(0x2480041000800801),
-    UINT64_C(0x100200010090040),
-    UINT64_C(0x6c00049b0002001),
-    UINT64_C(0xa8002c000108020),
-    UINT64_C(0x1002100004082),
-    UINT64_C(0x2409000100040200),
-    UINT64_C(0xb000401004208),
-    UINT64_C(0x402800800040080),
-    UINT64_C(0x411000d00100020),
-    UINT64_C(0x2290802004801000),
-    UINT64_C(0x4808020004000),
-    UINT64_C(0xa000800080400034),
-    UINT64_C(0x801020000441091),
-    UINT64_C(0x201008080010200),
-    UINT64_C(0x8000808004000200),
-    UINT64_C(0xa08018014000880),
-    UINT64_C(0x500808008001000),
-    UINT64_C(0x801030040200012),
-    UINT64_C(0x1090810021004010),
-    UINT64_C(0x22878001e24000),
-    UINT64_C(0x813241200148449),
-    UINT64_C(0x9020010080800200),
-    UINT64_C(0x100040080020080),
-    UINT64_C(0x12040280080080),
-    UINT64_C(0xd14880480100080),
-    UINT64_C(0x120200402082),
-    UINT64_C(0x1040200040100048),
-    UINT64_C(0x800080204005),
-    UINT64_C(0x204026458e001401),
-    UINT64_C(0x4301083214000150),
-    UINT64_C(0x810800601800400),
-    UINT64_C(0x209009005000802),
-    UINT64_C(0x400402202000812),
-    UINT64_C(0x4820010021001040),
-    UINT64_C(0x100401000402001),
-    UINT64_C(0x491604001800080),
-    UINT64_C(0x430000a044020001),
-    UINT64_C(0x1000100200040208),
-    UINT64_C(0x12000810020004),
-    UINT64_C(0x804040008008080),
-    UINT64_C(0x1003001000090020),
-    UINT64_C(0x8410820820420010),
-    UINT64_C(0x8001008040010020),
-    UINT64_C(0x40204000808000),
-    UINT64_C(0x2000009044210200),
-    UINT64_C(0x8010100228810400),
-    UINT64_C(0x2000810040200),
-    UINT64_C(0x8000400801980),
-    UINT64_C(0x2244100408008080),
-    UINT64_C(0x200100401700),
-    UINT64_C(0xe0100040002240),
-    UINT64_C(0x280009023410300),
-    UINT64_C(0x26002114058042),
-    UINT64_C(0x4000011008020084),
-    UINT64_C(0x1004400080a13),
-    UINT64_C(0x489a000810200402),
-    UINT64_C(0x502001008400422),
-    UINT64_C(0x2005524060000901),
-    UINT64_C(0x40002080411d01),
-    UINT64_C(0x4080008040102101),
+    UINT64_C(0x0a8002c000108020),
+    UINT64_C(0x4440200140003000),
+    UINT64_C(0x8080200010011880),
+    UINT64_C(0x0380180080141000),
+    UINT64_C(0x1a00060008211044),
+    UINT64_C(0x410001000a0c0008),
+    UINT64_C(0x9500060004008100),
+    UINT64_C(0x0100024284a20700),
+    UINT64_C(0x0000802140008000),
+    UINT64_C(0x0080c01002a00840),
+    UINT64_C(0x0402004282011020),
+    UINT64_C(0x9862000820420050),
+    UINT64_C(0x0001001448011100),
+    UINT64_C(0x6432800200800400),
+    UINT64_C(0x040100010002000c),
+    UINT64_C(0x0002800d0010c080),
+    UINT64_C(0x90c0008000803042),
+    UINT64_C(0x4010004000200041),
+    UINT64_C(0x0003010010200040),
+    UINT64_C(0x0a40828028001000),
+    UINT64_C(0x0123010008000430),
+    UINT64_C(0x0024008004020080),
+    UINT64_C(0x0060040001104802),
+    UINT64_C(0x00582200028400d1),
+    UINT64_C(0x4000802080044000),
+    UINT64_C(0x0408208200420308),
+    UINT64_C(0x0610038080102000),
+    UINT64_C(0x3601000900100020),
+    UINT64_C(0x0000080080040180),
+    UINT64_C(0x00c2020080040080),
+    UINT64_C(0x0080084400100102),
+    UINT64_C(0x4022408200014401),
+    UINT64_C(0x0040052040800082),
+    UINT64_C(0x0b08200280804000),
+    UINT64_C(0x008a80a008801000),
+    UINT64_C(0x4000480080801000),
+    UINT64_C(0x0911808800801401),
+    UINT64_C(0x822a003002001894),
+    UINT64_C(0x401068091400108a),
+    UINT64_C(0x000004a10a00004c),
+    UINT64_C(0x2000800640008024),
+    UINT64_C(0x1486408102020020),
+    UINT64_C(0x000100a000d50041),
+    UINT64_C(0x00810050020b0020),
+    UINT64_C(0x0204000800808004),
+    UINT64_C(0x00020048100a000c),
+    UINT64_C(0x0112000831020004),
+    UINT64_C(0x0009000040810002),
+    UINT64_C(0x0440490200208200),
+    UINT64_C(0x8910401000200040),
+    UINT64_C(0x6404200050008480),
+    UINT64_C(0x4b824a2010010100),
+    UINT64_C(0x04080801810c0080),
+    UINT64_C(0x00000400802a0080),
+    UINT64_C(0x8224080110026400),
+    UINT64_C(0x40002c4104088200),
+    UINT64_C(0x01002100104a0282),
+    UINT64_C(0x1208400811048021),
+    UINT64_C(0x3201014a40d02001),
+    UINT64_C(0x0005100019200501),
+    UINT64_C(0x0101000208001005),
+    UINT64_C(0x0002008450080702),
+    UINT64_C(0x001002080301d00c),
+    UINT64_C(0x410201ce5c030092)
 };
 
 const uint64_t BISHOP_MAGICS[64] = {
-    UINT64_C(0x28808801216001),
-    UINT64_C(0xc00444222012000a),
-    UINT64_C(0x100822020200011),
-    UINT64_C(0x4042004000000),
-    UINT64_C(0x62880a0220200808),
-    UINT64_C(0x2068080051921000),
-    UINT64_C(0x2004844802002010),
-    UINT64_C(0x89a1121896040240),
-    UINT64_C(0x8144042209100900),
-    UINT64_C(0x1008005410080802),
-    UINT64_C(0x30010c4108405004),
-    UINT64_C(0x2000840504006000),
-    UINT64_C(0x82080240060),
-    UINT64_C(0x840800910a0010),
-    UINT64_C(0x201c401040c0084),
-    UINT64_C(0x400492088408100),
-    UINT64_C(0x88010400410c9000),
-    UINT64_C(0x800054042000),
-    UINT64_C(0x40200200a42008),
-    UINT64_C(0x841000820080811),
-    UINT64_C(0x1004002802102001),
-    UINT64_C(0xf18140408012008),
-    UINT64_C(0x4800201208ca00),
-    UINT64_C(0x208081020014400),
-    UINT64_C(0x4800404002011c00),
-    UINT64_C(0x188071040440a00),
-    UINT64_C(0x658810000806011),
-    UINT64_C(0x941408200c002000),
-    UINT64_C(0x400c00c010142),
-    UINT64_C(0x2002081833080021),
-    UINT64_C(0x1004040051500081),
-    UINT64_C(0x520040470104290),
-    UINT64_C(0x809005202050100),
-    UINT64_C(0x102008e00040242),
-    UINT64_C(0x480810700020090),
-    UINT64_C(0x8040010040820802),
-    UINT64_C(0x80c0040400080120),
-    UINT64_C(0x4022401120400),
-    UINT64_C(0x511080202091021),
-    UINT64_C(0x104442040404200),
-    UINT64_C(0x208220a202004080),
-    UINT64_C(0x4012020c04210308),
-    UINT64_C(0x41010500040c020),
-    UINT64_C(0x3308082008200100),
-    UINT64_C(0x200014208040080),
-    UINT64_C(0x19001802081400),
-    UINT64_C(0x431008804142000),
-    UINT64_C(0x8002024220104080),
-    UINT64_C(0x822088220820214),
-    UINT64_C(0x40100400809000),
-    UINT64_C(0x2410204010040),
-    UINT64_C(0x21082088000),
-    UINT64_C(0x8200000041108022),
-    UINT64_C(0x2101004202410000),
-    UINT64_C(0x6803040141280a00),
-    UINT64_C(0x111040120082000),
-    UINT64_C(0x40102000a0a60140),
-    UINT64_C(0x2520081090008908),
-    UINT64_C(0x10008830412a00),
-    UINT64_C(0x1000042304105),
-    UINT64_C(0x90014004842410),
-    UINT64_C(0x402814422015008),
-    UINT64_C(0x910224040218c9),
-    UINT64_C(0x40808090012004),
+    UINT64_C(0x0440049104032280),
+    UINT64_C(0x1021023c82008040),
+    UINT64_C(0x0404040082000048),
+    UINT64_C(0x48c4440084048090),
+    UINT64_C(0x2801104026490000),
+    UINT64_C(0x4100880442040800),
+    UINT64_C(0x0181011002e06040),
+    UINT64_C(0x9101004104200e00),
+    UINT64_C(0x1240848848310401),
+    UINT64_C(0x2000142828050024),
+    UINT64_C(0x00001004024d5000),
+    UINT64_C(0x0102044400800200),
+    UINT64_C(0x8108108820112000),
+    UINT64_C(0xa880818210c00046),
+    UINT64_C(0x4008008801082000),
+    UINT64_C(0x0060882404049400),
+    UINT64_C(0x0104402004240810),
+    UINT64_C(0x000a002084250200),
+    UINT64_C(0x00100b0880801100),
+    UINT64_C(0x0004080201220101),
+    UINT64_C(0x0044008080a00000),
+    UINT64_C(0x0000202200842000),
+    UINT64_C(0x5006004882d00808),
+    UINT64_C(0x0000200045080802),
+    UINT64_C(0x0086100020200601),
+    UINT64_C(0xa802080a20112c02),
+    UINT64_C(0x0080411218080900),
+    UINT64_C(0x000200a0880080a0),
+    UINT64_C(0x9a01010000104000),
+    UINT64_C(0x0028008003100080),
+    UINT64_C(0x0211021004480417),
+    UINT64_C(0x0401004188220806),
+    UINT64_C(0x00825051400c2006),
+    UINT64_C(0x00140c0210943000),
+    UINT64_C(0x0000242800300080),
+    UINT64_C(0x00c2208120080200),
+    UINT64_C(0x2430008200002200),
+    UINT64_C(0x1010100112008040),
+    UINT64_C(0x8141050100020842),
+    UINT64_C(0x0000822081014405),
+    UINT64_C(0x800c049e40400804),
+    UINT64_C(0x4a0404028a000820),
+    UINT64_C(0x0022060201041200),
+    UINT64_C(0x0360904200840801),
+    UINT64_C(0x0881a08208800400),
+    UINT64_C(0x0060202c00400420),
+    UINT64_C(0x1204440086061400),
+    UINT64_C(0x0008184042804040),
+    UINT64_C(0x0064040315300400),
+    UINT64_C(0x0c01008801090a00),
+    UINT64_C(0x0808010401140c00),
+    UINT64_C(0x04004830c2020040),
+    UINT64_C(0x0080005002020054),
+    UINT64_C(0x40000c14481a0490),
+    UINT64_C(0x0010500101042048),
+    UINT64_C(0x1010100200424000),
+    UINT64_C(0x0000640901901040),
+    UINT64_C(0x00000a0201014840),
+    UINT64_C(0x00840082aa011002),
+    UINT64_C(0x010010840084240a),
+    UINT64_C(0x0420400810420608),
+    UINT64_C(0x8d40230408102100),
+    UINT64_C(0x4a00200612222409),
+    UINT64_C(0x0a08520292120600)
 };
 
 const uint8_t MAX_BITS_IN_TABLE = 12;
@@ -424,7 +424,7 @@ cibyl_errno_t alloc_magic_table(cibyl_error_t *err, bitboard_t *table[64], const
     square_t sq;
 
     for (sq.idx = 0; sq.idx < 64; sq.idx++) {
-        if ((table[sq.idx] = calloc(1 << NUM_BISHOP_BITS[sq.idx], sizeof(bitboard_t))) == 0) {
+        if ((table[sq.idx] = calloc(1 << bits[sq.idx], sizeof(bitboard_t))) == 0) {
             result = CIBYL_MKERR(err, CIBYL_ENOMEM, "calloc: %s", strerror(errno));
             goto out_free_tables;
         };
@@ -434,7 +434,7 @@ cibyl_errno_t alloc_magic_table(cibyl_error_t *err, bitboard_t *table[64], const
 out_free_tables:
     /* Unwind the calloc stack. */
     while (sq.idx > 0) {
-        free(bishop_atks[--sq.idx]);
+        free(table[--sq.idx]);
     }
 out_success:
     return result;
@@ -479,18 +479,18 @@ bitboard_t map_index_to_occ_mask(uint16_t idx, uint8_t num_bits, bitboard_t occ_
 cibyl_errno_t gen_bishop_map_for_sq(cibyl_error_t *err, bitboard_t *table[64],
         const uint64_t magics[64], square_t sq)
 {
-    cibyl_errno_t result;
+    cibyl_errno_t result = CIBYL_EOK;
     bitboard_t occupied_squares;
     bitboard_t legal_moves;
     bitboard_t occ;
     uint16_t key;
     int idx;
 
-    for (idx = 0; idx < (1 << NUM_BISHOP_BITS[sq.idx]); idx++) {
-        /* Generate the bishop occupancy mask. */
-        occ = get_bishop_occ_mask(sq);
-        bishop_occ_mask[sq.idx] = occ;
+    /* Generate the bishop occupancy mask. */
+    occ = get_bishop_occ_mask(sq);
+    bishop_occ_mask[sq.idx] = occ;
 
+    for (idx = 0; idx < (1 << NUM_BISHOP_BITS[sq.idx]); idx++) {
         /* Generate the relevant masks and key for the current index. */
         occupied_squares = map_index_to_occ_mask(idx, NUM_BISHOP_BITS[sq.idx], occ);
         legal_moves = get_bishop_atk_mask(sq, occupied_squares);
@@ -544,10 +544,11 @@ cibyl_errno_t gen_rook_map_for_sq(cibyl_error_t *err, bitboard_t *table[64],
     uint16_t key;
     int idx;
 
+    /* Generate the rook occupancy mask. */
+    occ = get_rook_occ_mask(sq);
+    rook_occ_mask[sq.idx] = occ;
+
     for (idx = 0; idx < (1 << NUM_ROOK_BITS[sq.idx]); idx++) {
-        /* Generate the rook occupancy mask. */
-        occ = get_rook_occ_mask(sq);
-        rook_occ_mask[sq.idx] = occ;
 
         /* Generate the relevant masks and key for the current index. */
         occupied_squares = map_index_to_occ_mask(idx, NUM_ROOK_BITS[sq.idx], occ);
@@ -631,14 +632,16 @@ void cb_free_magic_tables()
 
 uint64_t rand_u64()
 {
-    uint64_t high = rand();
-    uint64_t low = rand();
-    return (high << 32) | low;
+    uint64_t b1 = rand() & 0xFFFF;
+    uint64_t b2 = rand() & 0xFFFF;
+    uint64_t b3 = rand() & 0xFFFF;
+    uint64_t b4 = rand() & 0xFFFF;
+    return b1 | (b2 << 16) | (b3 << 32) | (b4 << 48);
 }
 
 uint64_t rand_u64_few_bits()
 {
-    return rand_u64() | rand_u64() | rand_u64();
+    return rand_u64() & rand_u64() & rand_u64();
 }
 
 /**
@@ -660,12 +663,12 @@ cibyl_errno_t cb_gen_rook_magics(cibyl_error_t *err, uint64_t magics[64])
 
     /* Generate random magics until one works. */
     for (sq.idx = 0; sq.idx < 64; sq.idx++) {
-        do {
+        for (i = 0; i < 10000000; i++) {
+            memset(atks[sq.idx], 0, (1 << NUM_ROOK_BITS[sq.idx]) * sizeof(bitboard_t));
             magics[sq.idx] = rand_u64_few_bits();
             if ((result = gen_rook_map_for_sq(err, atks, magics, sq)) == CIBYL_EOK)
                 break;
-            i++;
-        } while (i < 10000000);
+        }
 
         if (result != CIBYL_EOK)
             goto out_err;
@@ -697,7 +700,7 @@ cibyl_errno_t cb_gen_bishop_magics(cibyl_error_t *err, uint64_t magics[64])
     int i = 0;
 
     /* Allocate space for the attack table. */
-    if (alloc_magic_table(err, atks, NUM_ROOK_BITS)) {
+    if (alloc_magic_table(err, atks, NUM_BISHOP_BITS)) {
         result = CIBYL_ERR_ADD_CONTEXT(err);
         goto out;
     }
@@ -705,6 +708,7 @@ cibyl_errno_t cb_gen_bishop_magics(cibyl_error_t *err, uint64_t magics[64])
     /* Generate random magics until one works. */
     for (sq.idx = 0; sq.idx < 64; sq.idx++) {
         do {
+            memset(atks[sq.idx], 0, (1 << NUM_BISHOP_BITS[sq.idx]) * sizeof(bitboard_t));
             magics[sq.idx] = rand_u64_few_bits();
             if ((result = gen_bishop_map_for_sq(err, atks, magics, sq)) == CIBYL_EOK)
                 break;
@@ -735,6 +739,6 @@ out:
 void cb_print_magics(const uint64_t magics[64])
 {
     for (int i = 0; i < 64; i++) {
-        printf("0x%" PRIx64 "\n", magics[i]);
+        printf("0x%016" PRIx64 "\n", magics[i]);
     }
 }
