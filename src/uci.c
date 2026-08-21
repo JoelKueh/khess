@@ -89,7 +89,7 @@ cibyl_errno_t handle_position(cibyl_error_t *err, uci_engine_t *eng, char *opts)
     /* Split the input string into the fen and moves parts. */
     token = strtok_r(opts, STR_UCI_DELIMS, &saveptr);
     fen = strtok_r(NULL, "\n", &saveptr);
-    if ((moves = strstr(fen, "moves ")) != NULL) {
+    if (fen != NULL && (moves = strstr(fen, "moves ")) != NULL) {
         *(moves - 1) = '\0';
         moves += 6;
     }
@@ -106,6 +106,7 @@ cibyl_errno_t handle_position(cibyl_error_t *err, uci_engine_t *eng, char *opts)
             result = CIBYL_ERR_ADD_CONTEXT(err);
             goto out;
         }
+        goto out;
     } else {
         result = CIBYL_MKERR(err, CIBYL_EINVAL, "invalid position format specifier: %s", token);
         goto out;

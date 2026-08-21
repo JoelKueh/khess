@@ -34,13 +34,15 @@ typedef enum : uint8_t {
     CB_PID_WHITE_ROOK   = 0b0100,
     CB_PID_WHITE_QUEEN  = 0b0101,
     CB_PID_WHITE_KING   = 0b0110,
+    CB_PID_WHITE_INVAL  = 0b0111,
 
     CB_PID_BLACK_PAWN   = 0b1001,
     CB_PID_BLACK_KNIGHT = 0b1010,
     CB_PID_BLACK_BISHOP = 0b1011,
     CB_PID_BLACK_ROOK   = 0b1100,
     CB_PID_BLACK_QUEEN  = 0b1101,
-    CB_PID_BLACK_KING   = 0b1110
+    CB_PID_BLACK_KING   = 0b1110,
+    CB_PID_BLACK_INVAL  = 0b1111
 } cb_pid_t;
 
 /**
@@ -60,7 +62,7 @@ typedef enum : uint8_t {
 } cb_ptype_t;
 
 /* Converts a piece id to a piece type. */
-#define PID_TO_PTYPE(pid) ((pid - 1) & 0b111)
+#define PID_TO_PTYPE(pid) ((pid & 0b111) - 1)
 
 /**
  * @brief Simple type for a square.

@@ -169,7 +169,10 @@ void pesto_init()
     cb_pid_t pid = CB_PID_WHITE_PAWN;
     square_t sq;
 
-    for (pid = CB_PID_WHITE_PAWN; pid++ <= CB_PID_BLACK_KING; pid++) {
+    for (pid = CB_PID_WHITE_PAWN; pid <= CB_PID_BLACK_KING; pid++) {
+        if (PID_TO_PTYPE(pid) == CB_PTYPE_EMPTY)
+            continue;
+
         for (sq.idx = 0; sq.idx < 64; sq.idx++) {
             mg_table[pid]  [sq.idx] = MG_VALUE[PID_TO_PTYPE(pid)] + MG_PESTO_TABLE[pid][sq.idx];
             eg_table[pid]  [sq.idx] = EG_VALUE[PID_TO_PTYPE(pid)] + EG_PESTO_TABLE[pid][sq.idx];

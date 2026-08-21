@@ -215,8 +215,8 @@ static inline bitboard_t pin_adjust(cb_board_t *board, square_t sq, bitboard_t m
 {
     bitboard_t mask;
     square_t king_sq;
-    cb_dir_t dir = cb_get_ray_direction(king_sq, sq);
     king_sq.idx = peek_rbit(board->bb.piece[board->turn][CB_PTYPE_KING]);
+    cb_dir_t dir = cb_get_ray_direction(king_sq, sq);
     return (board->pins[dir] & (UINT64_C(1) << sq.idx)) == 0 ? moves : (moves & board->pins[dir]);
 }
 

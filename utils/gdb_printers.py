@@ -24,7 +24,7 @@ class BoardPrinter:
         gdb.set_convenience_variable("gdb_stream", stream)
         gdb.set_convenience_variable("gdb_value", self.value)
 
-        gdb.parse_and_eval("cb_print_boatd_ascii($gdb_stream, $gdb_value)")
+        gdb.parse_and_eval("cb_print_board_ascii($gdb_stream, $gdb_value)")
         board = gdb.parse_and_eval("gdb_get_output_buffer()")
 
         gdb.parse_and_eval("cb_print_state($gdb_stream, $gdb_value)")
@@ -47,11 +47,9 @@ class HistoryPrinter:
         gdb.set_convenience_variable("gdb_stream", stream)
         gdb.set_convenience_variable("gdb_value", self.value)
 
-        gdb.parse_and_eval("cb_print_boatd_ascii($gdb_stream, $gdb_value)")
-        board = gdb.parse_and_eval("gdb_get_output_buffer()")
-        gdb.parse_and_eval("cb_print_state($gdb_stream, $gdb_value)")
-        state = gdb.pasrse_and_eval("gdb_get_output_buffer()")
-        gdb
+        hist_top = gdb.parse_and_eval("($gdb_value).hist.data[($gdb_value).hist.count-1]")
+        gdb.set_convenience_variable("gdb_hist_top", self.value)
+        gdb.parse_and_eval("cb_print_history($gdb_stream, $gdb_hist_top)")
 
         return f"{int(self.value)}\n{buffer.string()}"
 

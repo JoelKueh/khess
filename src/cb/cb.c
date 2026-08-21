@@ -404,7 +404,7 @@ cibyl_errno_t parse_fen_main(cibyl_error_t *err, cb_board_t *board, char *fen_ma
 {
     cibyl_errno_t result = CIBYL_EOK;
     uint8_t rank;
-    square_t sq;
+    uint8_t file;
     char c;
     int i = 0;
     cb_color_t pcolor;
@@ -417,44 +417,52 @@ cibyl_errno_t parse_fen_main(cibyl_error_t *err, cb_board_t *board, char *fen_ma
 
     /* Parse the main portion of the fen string. */
     rank = 7;
+    file = 0;
     while ((c = fen_main[i++]) != '\0') {
+        /* Handle row overrun. */
+        if (c != '/' && file >= 8) {
+            result = CIBYL_MKERR(err, CIBYL_EINVAL, "expected '/' at the end of a row");
+            goto out;
+        }
+
         if ('1' <= c && c <= '8') {
-            sq.idx += c - '0';
-            /* Check if we should have had a '/' in our input string by now. */
-            if (sq.idx < rank * 8 || sq.idx > rank * 8 + 8) {
-                result = CIBYL_MKERR(err, CIBYL_EINVAL, "row overrun without encountering '/'");
-                goto out;
-            }
+            file += c - '0';
         } else if (c == 'p' || c == 'P') {
-            cb_write_piece(board, sq, CB_PTYPE_PAWN, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq.idx++;
+            cb_write_piece(board, (square_t){.idx = rank * 8 + file},
+                    CB_PTYPE_PAWN, c < 'a' ? CB_WHITE : CB_BLACK);
+            file++;
         } else if (c == 'n' || c == 'N') {
-            cb_write_piece(board, sq, CB_PTYPE_KNIGHT, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq.idx++;
+            cb_write_piece(board, (square_t){.idx = rank * 8 + file},
+		            CB_PTYPE_KNIGHT, c < 'a' ? CB_WHITE : CB_BLACK);
+            file++;
         } else if (c == 'b' || c == 'B') {
-            cb_write_piece(board, sq, CB_PTYPE_BISHOP, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq.idx++;
+            cb_write_piece(board, (square_t){.idx = rank * 8 + file},
+		            CB_PTYPE_BISHOP, c < 'a' ? CB_WHITE : CB_BLACK);
+            file++;
         } else if (c == 'r' || c == 'R') {
-            cb_write_piece(board, sq, CB_PTYPE_ROOK, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq.idx++;
+            cb_write_piece(board, (square_t){.idx = rank * 8 + file},
+		            CB_PTYPE_ROOK, c < 'a' ? CB_WHITE : CB_BLACK);
+            file++;
         } else if (c == 'q' || c == 'Q') {
-            cb_write_piece(board, sq, CB_PTYPE_QUEEN, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq.idx++;
+            cb_write_piece(board, (square_t){.idx = rank * 8 + file},
+		            CB_PTYPE_QUEEN, c < 'a' ? CB_WHITE : CB_BLACK);
+            file++;
         } else if (c == 'k' || c == 'K') {
-            cb_write_piece(board, sq, CB_PTYPE_KING, c < 'a' ? CB_WHITE : CB_BLACK);
-            sq.idx++;
+            cb_write_piece(board, (square_t){.idx = rank * 8 + file},
+		            CB_PTYPE_KING, c < 'a' ? CB_WHITE : CB_BLACK);
+            file++;
         } else if (c == '/') {
-            /* If we are not at the end of the row, we don't want to get a '/'. */
-            if (sq.file != 0) {
+            /* Handle overlength string or misplaced '/' */
+            if (file != 8) {
                 result = CIBYL_MKERR(err, CIBYL_EINVAL, "encountered '/' before the end of a row");
                 goto out;
             }
-            rank -= 1;
-            if (rank < 0) {
+            if (rank <= 0) {
                 result = CIBYL_MKERR(err, CIBYL_EINVAL, "too many rows in fen string");
                 goto out;
             }
-            sq.idx = rank * 8;
+            rank -= 1;
+            file = 0;
         } else {
             /* Any invalid characters return an error. */
             result = CIBYL_MKERR(err, CIBYL_EINVAL, "invalid character in fen body: %c", c);
@@ -463,7 +471,7 @@ cibyl_errno_t parse_fen_main(cibyl_error_t *err, cb_board_t *board, char *fen_ma
     }
 
     /* Throw errors for the write head not being at the end of the board. */
-    if (rank != 0 && sq.idx != 8) {
+    if (rank != 0 && file != 8) {
         result = CIBYL_MKERR(err, CIBYL_EINVAL, "unexpected end to fen body");
         goto out;
     }
