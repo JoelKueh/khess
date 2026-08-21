@@ -57,6 +57,9 @@ cibyl_errno_t eng_start_search(cibyl_error_t *err, engine_t *eng, const search_p
         }
         goto out;
     }
+    
+    /* Preform the initial evaluation. */
+
 
     /* Broadcast the search to the thinkers. */
     pthread_mutex_lock(&eng->sync_lock);
@@ -134,6 +137,9 @@ cibyl_errno_t thinker_search(cibyl_error_t *err, thinker_t *tk)
         result = CIBYL_ERR_ADD_CONTEXT(err);
         goto out;
     }
+
+    /* Update the initial evaluation of the position. */
+    if (eval_init(
 
     /* Complete the search. */
     if (iterative_deepening(err, &tk->eng->pv, tk, &tk->board) != CIBYL_EOK) {

@@ -148,7 +148,7 @@ typedef struct {
  * Maintaining this represenation improves efficienty of move generation and application.
  */
 typedef struct {
-    uint8_t data[64]; /* This is an array of cb_ptype_t but it is stored as a uint8_t. */
+    cb_ptype_t data[64];
 } cb_mailbox_t;
 
 /**
@@ -166,6 +166,9 @@ typedef struct {
     bitboard_t checks;       /**< A bitmask for all pieces that check the king. */
     bitboard_t check_blocks; /**< A bitmask for all squares that can break a check. */
     bitboard_t pins[10];     /**< A set of bitmasks for all active pin rays. */
+
+    uint32_t pesto_mg[2];    /**< The current PeSTO midgame eval (incrementally updated). */
+    uint32_t pesto_eg[2];    /**< The current PeSTO endgame eval (incrementally updated). */
 
     uint8_t turn;            /**< The current turn. */
     uint32_t fullmove_num;   /**< The fullmove number. */

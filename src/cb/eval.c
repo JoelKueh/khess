@@ -166,7 +166,7 @@ int eg_table[12][64];
 
 void pesto_init()
 {
-    cb_pid_t pid = CB_PID_WHITE_PAWN;
+    cb_pid_t pid;
     square_t sq;
 
     for (pid = CB_PID_WHITE_PAWN; pid <= CB_PID_BLACK_KING; pid++) {
@@ -179,6 +179,19 @@ void pesto_init()
             mg_table[pid+1][sq.idx] = MG_VALUE[PID_TO_PTYPE(pid)] + MG_PESTO_TABLE[pid][FLIP_RANK(sq)];
             eg_table[pid+1][sq.idx] = EG_VALUE[PID_TO_PTYPE(pid)] + EG_PESTO_TABLE[pid][FLIP_RANK(sq)];
         }
+    }
+}
+
+void pesto_eval(cb_board_t *board)
+{
+    square_t sq;
+
+    board->pesto_mg[CB_WHITE] = 0;
+    board->pesto_mg[CB_BLACK] = 0;
+    board->pesto_eg[CB_WHITE] = 0;
+    board->pesto_eg[CB_BLACK] = 0;
+
+    for (sq.idx = 0; sq.idx < 64; sq.idx++) {
     }
 }
 
@@ -203,11 +216,6 @@ int piece_differential(const cb_board_t *board)
     return diff;
 }
 
-int eval(const cb_board_t *board)
-{
-    return piece_differential(board);
-}
-
 void reorder_by_pv(cb_mvlst_t *mvlst, const cb_board_t *board, cb_move_t pvmv)
 {
 }
@@ -223,4 +231,29 @@ void reorder_mvlst(cb_mvlst_t *mvlst, const cb_board_t *board, cb_move_t pvmv)
         mvlst->moves[i] = mvlst->moves[0];
         mvlst->moves[0] = tmp;
     }
+}
+
+cb_incr_eval_t eval_reset(const cb_board_t *board)
+{
+    pesto_init
+}
+
+void eval_write_piece(cb_incr_eval_t *eval)
+{
+
+}
+
+void eval_delete_piece(cb_incr_eval_t *eval)
+{
+
+}
+
+void eval_replace_piece(cb_incr_eval_t *eval)
+{
+
+}
+
+int eval(const cb_board_t *board)
+{
+    return piece_differential(board);
 }
